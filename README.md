@@ -6,8 +6,8 @@ Appen som ligger på master har ingen eksterne avhengigheter, men det finnes bra
 funksjonalitet som WS eller databaser.
 
 ## Bruk:
-1. lag et nytt _TOMT_ repo for appen du skal lage på github
-2. klon ned innholdet i syfospringboot-kickstarter: `kommado`
+1. lag et nytt _TOMT_ repo for appen du skal lage på github uten license og .gitignore
+2. klon ned innholdet i syfospringboot-kickstarter:
     - `git clone --bare git@github.com:navikt/syfospringboot-kickstarter.git temp`
     - `cd temp`
     - `git push --mirror git push --mirror git@github.com:navikt/$APPLIKASJONSNAVN$.git`
@@ -15,4 +15,3 @@ funksjonalitet som WS eller databaser.
 3. oppdater pom.xml, README.md med riktig app-informasjon
 4. gjør en stringreplace på $APPLIKASJONSNAVN$ med nytt navn
 5. merge inn evt. brancher for funksjonalitet du trenger (DB, WS, Kafka osv.)
-
