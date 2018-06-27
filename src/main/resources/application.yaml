@@ -9,3 +9,6 @@ management:
 
 spring:
   main.banner-mode: 'off'
+  jta.atomikos.datasource:
+          max-pool-size: 32
+          min-pool-size: 8
