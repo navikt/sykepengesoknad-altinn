@@ -15,3 +15,8 @@ funksjonalitet som WS eller databaser.
 3. oppdater pom.xml, README.md med riktig app-informasjon
 4. gjør en stringreplace på $APPLIKASJONSNAVN$ med nytt navn
 5. merge inn evt. brancher for funksjonalitet du trenger (DB, WS, Kafka osv.)
+
+## Database
+Appen kjører med en lokal H2 in-memory database. Den spinnes opp som en del av applikasjonen og er 
+også tilgjengelig i tester. Du kan logge inn og kjøre spørringer på:
+`localhost/h2` med jdbc_url: `jdbc:h2:mem:testdb`
