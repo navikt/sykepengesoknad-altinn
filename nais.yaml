@@ -1,0 +1,31 @@
+name: $APPLIKASJONSNAVN$
+image: "repo.adeo.no:5443/$APPLIKASJONSNAVN$"
+replicas:
+  min: 1
+  max: 2
+  cpuThresholdPercentage: 90
+port: 8080
+healthcheck:
+  liveness:
+    path: /internal/isAlive
+    initialDelay: 60
+    timeout: 1
+    periodSeconds: 10
+    failureThreshold: 3
+  readiness:
+    path: /internal/isReady
+    initialDelay: 60
+    timeout: 1
+prometheus:
+  enabled: true
+  path: /internal/prometheus
+resources:
+  limits:
+    cpu: 1000m
+    memory: 512Mi
+  requests:
+    cpu: 500m
+    memory: 384Mi
+fasitResources:
+  exposed:
+  used:
