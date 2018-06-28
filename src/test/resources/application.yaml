@@ -1,0 +1,8 @@
+
+srvSyfospringboot:
+  username: "kek"
+  password: "bur"
+
+aktoer.v2.endpointurl: "aktoer.url"
+servicegateway.url: "servicegateway.url"
+securitytokenservice.url: "sts.url"

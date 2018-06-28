@@ -15,3 +15,7 @@ funksjonalitet som WS eller databaser.
 3. oppdater pom.xml, README.md med riktig app-informasjon
 4. gjør en stringreplace på $APPLIKASJONSNAVN$ med nytt navn
 5. merge inn evt. brancher for funksjonalitet du trenger (DB, WS, Kafka osv.)
+
+## WS:
+1. Fyll ut servicebruker i nais.yaml
+2. Stringreplace srvSyfospringboot med ny servicebruker

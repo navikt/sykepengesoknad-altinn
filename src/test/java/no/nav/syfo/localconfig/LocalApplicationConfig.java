@@ -11,5 +11,8 @@ public class LocalApplicationConfig {
             Her kan du ta inn properties som normalt settes av platformen slik at de er tilgjengelige runtime lokalt
             Eks: System.setProperty("$APPLIKASJONSNAVN$_USERNAME", environment.getProperty("$APPLIKASJONSNAVN$.username"));
          */
+        System.setProperty("SECURITYTOKENSERVICE_URL", environment.getProperty("securitytokenservice.url"));
+        System.setProperty("SRVSYFOSPRINGBOOT_USERNAME", environment.getProperty("srvSyfospringboot.username"));
+        System.setProperty("SRVSYFOSPRINGBOOT_PASSWORD", environment.getProperty("srvSyfospringboot.password"));
     }
 }
