@@ -15,3 +15,7 @@ funksjonalitet som WS eller databaser.
 3. oppdater pom.xml, README.md med riktig app-informasjon
 4. gjør en stringreplace på $APPLIKASJONSNAVN$ med nytt navn
 5. merge inn evt. brancher for funksjonalitet du trenger (DB, WS, Kafka osv.)
+
+## Tips og triks:
+En kan plukke commits fra kickstarter til prosjektene som arver fra den. Kommandoen er: `git fetch git@github.com:navikt/syfospringboot-kickstarter.git <branch> && git cherry-pick <commit_hash>
+`
