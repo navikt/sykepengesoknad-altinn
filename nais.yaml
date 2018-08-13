@@ -29,3 +29,5 @@ resources:
 fasitResources:
   exposed:
   used:
+  - alias: srv$APPLIKASJONSNAVN$
+    resourceType: credential
