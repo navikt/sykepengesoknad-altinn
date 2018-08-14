@@ -31,3 +31,5 @@ fasitResources:
   used:
   - alias: srv$APPLIKASJONSNAVN$
     resourceType: credential
+  - alias: kafka-brokers
+    resourceType: baseurl

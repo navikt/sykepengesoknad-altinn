@@ -2,24 +2,12 @@ fasit.environment.name: local
 
 app.name: $APPLIKASJONSNAVN$
 
+kafka-brokers.url: b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443
+
+srv$APPLIKASJONSNAVN$:
+  username: username
+  password: password
+
 javax.net.ssl:
   trustStore: test
   trustStorePassword: test
-
-spring:
-  kafka:
-    client-id: ${app.name}-${fasit.environment.name}
-#   TODO: Denne må vi flytte til fasit eller noe
-    bootstrap-servers: b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443
-    properties:
-      security.protocol: SASL_SSL
-      value.subject.name.strategy: io.confluent.kafka.serializers.subject.TopicRecordNameStrategy
-      sasl:
-        mechanism: PLAIN
-        jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${srv$APPLIKASJONSNAVN$.username}" password="${srv$APPLIKASJONSNAVN$.password}";
-      ssl.truststore:
-        location: ${javax.net.ssl.trustStore}
-        password: ${javax.net.ssl.trustStorePassword}
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
