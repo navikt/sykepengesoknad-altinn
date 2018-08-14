@@ -19,3 +19,31 @@ funksjonalitet som WS eller databaser.
 ## Tips og triks:
 En kan plukke commits fra kickstarter til prosjektene som arver fra den. Kommandoen er: `git fetch git@github.com:navikt/syfospringboot-kickstarter.git <branch> && git cherry-pick <commit_hash>
 `
+
+## Kafka
+For å ta i bruk kafka trenger man en topic. Denne oppretes gjennom [kafka-adminrest](https://github.com/navikt/kafka-adminrest). Apiet er dokumentert med swagger: https://kafka-adminrest-q4.nais.preprod.local/api/v1.
+
+1. `POST` til `/api/v1/topics` for å lage topic.
+2. `PUT` til `/api/v1/topics/{topicName}/groups` for å sette gruppe for producer og listener.
+3. `PUT` til `/api/v1/topics/{topicName}/groups` for å sette utviklere som managers for topicken.
+
+```json
+{
+  "type": "MANAGER",
+  "name": "{topicName}",
+  "members": [
+    "CN=B151344,OU=Users,OU=NAV,OU=BusinessUnits,DC=adeo,DC=no",
+    "CN=S149030,OU=Users,OU=NAV,OU=BusinessUnits,DC=adeo,DC=no",
+    "CN=O142910,OU=Users,OU=NAV,OU=BusinessUnits,DC=adeo,DC=no",
+    "CN=N143409,OU=Users,OU=NAV,OU=BusinessUnits,DC=adeo,DC=no"
+  ],
+  "ldapResult": {
+    "resultCode": {
+      "intValue": 0,
+      "name": "success",
+      "stringRepresentation": "0 (success)"
+    },
+    "message": ""
+  }
+}
+```
