@@ -23,10 +23,16 @@ En kan plukke commits fra kickstarter til prosjektene som arver fra den. Kommand
 ## Kafka
 For å ta i bruk kafka trenger man en topic. Denne oppretes gjennom [kafka-adminrest](https://github.com/navikt/kafka-adminrest). Apiet er dokumentert med swagger: https://kafka-adminrest-q4.nais.preprod.local/api/v1.
 
+Man må også legge til miljøvariabler for `ssl.truststore`. For å få disse ressursene, spør en utvikler nær deg. 
+
+Navngivingskonvenson for kafka topics finnes [her](https://confluence.adeo.no/display/SOAG/R2+-+Navngivning+av+Topic). TL;DR: navnet skal være i fortid og ha dette formatet: `aapen-syfo-<navn>-v1`.
+
+Dette skal til for å lage ny topic:
 1. `POST` til `/api/v1/topics` for å lage topic.
 2. `PUT` til `/api/v1/topics/{topicName}/groups` for å sette gruppe for producer og listener.
 3. `PUT` til `/api/v1/topics/{topicName}/groups` for å sette utviklere som managers for topicken.
 
+Eksempel:
 ```json
 {
   "type": "MANAGER",
