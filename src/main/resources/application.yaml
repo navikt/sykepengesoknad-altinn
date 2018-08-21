@@ -11,7 +11,6 @@ spring:
   main.banner-mode: 'off'
   kafka:
     client-id: ${app.name}-${fasit.environment.name}
-    bootstrap-servers: ${kafka-brokers.url}
     properties:
       security.protocol: SASL_SSL
       value.subject.name.strategy: io.confluent.kafka.serializers.subject.TopicRecordNameStrategy
@@ -24,3 +23,10 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: ${app.name}-${fasit.environment.name}
+      max-poll-records: 1
+      auto-offset-reset: latest # Som ny konsument / eller om vi mister offsettet vårt skal vi begynne på den siste meldingen
+      enable-auto-commit: false # Vi commiter selv offset ved lesing av meldinger

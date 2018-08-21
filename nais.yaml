@@ -33,3 +33,5 @@ fasitResources:
     resourceType: credential
   - alias: kafka-brokers
     resourceType: baseurl
+    propertyMap:
+      url: SPRING_KAFKA_BOOTSTRAP-SERVERS

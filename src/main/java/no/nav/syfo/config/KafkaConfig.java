@@ -1,8 +1,12 @@
 package no.nav.syfo.config;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import no.nav.syfo.kafka.KafkaErrorHandler;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
@@ -12,13 +16,16 @@ import org.springframework.kafka.core.*;
 public class KafkaConfig {
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory(ConsumerFactory<String, String> consumerFactory) {
+    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory(ConsumerFactory<String, String> consumerFactory, MeterRegistry meterRegistry) {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.getContainerProperties().setErrorHandler(new KafkaErrorHandler(meterRegistry));
         factory.setConsumerFactory(consumerFactory);
         return factory;
     }
 
     @Bean
+    @Profile(value = {"remote", "local-kafka"})
+    @Primary
     public ConsumerFactory<String, String> consumerFactory(KafkaProperties properties) {
         return new DefaultKafkaConsumerFactory<>(properties.buildConsumerProperties());
     }
@@ -29,6 +36,8 @@ public class KafkaConfig {
     }
 
     @Bean
+    @Profile(value = {"remote", "local-kafka"})
+    @Primary
     public ProducerFactory<String, String> producerFactory(KafkaProperties properties) {
         return new DefaultKafkaProducerFactory<>(properties.buildProducerProperties());
     }
