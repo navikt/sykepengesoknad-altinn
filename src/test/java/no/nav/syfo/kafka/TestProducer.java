@@ -8,18 +8,18 @@ import static java.util.UUID.randomUUID;
 
 @Component
 @Slf4j
-public class Producer {
+public class TestProducer {
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    public Producer(KafkaTemplate<String, String> kafkaTemplate) {
+    public TestProducer(KafkaTemplate<String, String> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void send() {
+    public void sendMelding() {
         kafkaTemplate.send(
                 "$topicName$",
                 randomUUID().toString(),
-                "data");
-        log.info("Data lagt på kø");
+                "test data");
+        log.info("Testdata er sendt");
     }
 }
