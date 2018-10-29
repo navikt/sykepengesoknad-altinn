@@ -16,6 +16,10 @@ funksjonalitet som WS eller databaser.
 4. gjør en stringreplace på $APPLIKASJONSNAVN$ med nytt navn
 5. merge inn evt. brancher for funksjonalitet du trenger (DB, WS, Kafka osv.)
 
+## Tips og triks:
+En kan plukke commits fra kickstarter til prosjektene som arver fra den. Kommandoen er: `git fetch git@github.com:navikt/syfospringboot-kickstarter.git <branch> && git cherry-pick <commit_hash>
+`
+
 ## Database
 Appen kjører med en lokal H2 in-memory database. Den spinnes opp som en del av applikasjonen og er 
 også tilgjengelig i tester. Du kan logge inn og kjøre spørringer på:
