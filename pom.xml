@@ -92,6 +92,12 @@
         </dependency>
 
         <dependency>
+            <groupId>no.nav.syfo.kafka</groupId>
+            <artifactId>kafkautils</artifactId>
+            <version>1</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.bitbucket.b_c</groupId>
             <artifactId>jose4j</artifactId>
             <version>${jose4j.version}</version>

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+import static java.util.Collections.singletonMap;
 import static java.util.UUID.randomUUID;
 
 @Component
@@ -17,9 +18,11 @@ public class Producer {
 
     public void send() {
         kafkaTemplate.send(
-                "$topicName$",
-                randomUUID().toString(),
-                "data");
+                new SyfoProducerRecord<>(
+                        "$topicName$",
+                        randomUUID().toString(),
+                        "data",
+                        singletonMap("example", "header")));
         log.info("Data lagt på kø");
     }
 }
