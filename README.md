@@ -18,4 +18,7 @@ funksjonalitet som WS eller databaser.
 
 ## Tips og triks:
 En kan plukke commits fra kickstarter til prosjektene som arver fra den. Kommandoen er: `git fetch git@github.com:navikt/syfospringboot-kickstarter.git <branch> && git cherry-pick <commit_hash>
-`
+
+## Call Id Filter
+Call id filteret plukker opp callId fra innkommende rest requester og legger den på MDC. Loggeren legger iden på  
+loggmeldinger slik at vi får en trace id som vi kan bruke for å spore feil på tvers av apper.
