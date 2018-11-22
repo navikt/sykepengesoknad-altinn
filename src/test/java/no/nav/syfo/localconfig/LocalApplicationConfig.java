@@ -9,7 +9,7 @@ public class LocalApplicationConfig {
     public LocalApplicationConfig(Environment environment) {
         /*
             Her kan du ta inn properties som normalt settes av platformen slik at de er tilgjengelige runtime lokalt
-            Eks: System.setProperty("$APPLIKASJONSNAVN$_USERNAME", environment.getProperty("$APPLIKASJONSNAVN$.username"));
+            Eks: System.setProperty("syfoaltinn_USERNAME", environment.getProperty("syfoaltinn.username"));
          */
     }
 }

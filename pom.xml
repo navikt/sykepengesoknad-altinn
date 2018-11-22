@@ -4,18 +4,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>no.nav.syfo</groupId>
-    <artifactId>syfospringboot-kickstarter</artifactId>
+    <artifactId>syfoaltinn</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0-SNAPSHOT</version>
-    <name>syfospringboot-kickstarter</name>
+    <name>syfoaltinn</name>
 
     <prerequisites>
         <maven>3.3.9</maven>
     </prerequisites>
 
     <scm>
-        <developerConnection>scm:git:https://github.com/navikt/syfospringboot-kickstarter.git</developerConnection>
-        <url>https://github.com/navikt/syfospringboot-kickstarter</url>
+        <developerConnection>scm:git:https://github.com/navikt/syfoaltinn.git</developerConnection>
+        <url>https://github.com/navikt/syfoaltinn</url>
         <tag>HEAD</tag>
     </scm>
 
