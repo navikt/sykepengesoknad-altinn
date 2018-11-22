@@ -47,6 +47,8 @@
         <spring-boot.version>2.0.6.RELEASE</spring-boot.version>
         <jose4j.version>0.5.0</jose4j.version>
         <logstash-logback-encoder.version>4.10</logstash-logback-encoder.version>
+        <prometheus.version>0.3.0</prometheus.version>
+        <micrometer-registry-prometheus.version>1.0.6</micrometer-registry-prometheus.version>
         <junit.version>4.12</junit.version>
         <mockito-all.version>2.15.0</mockito-all.version>
         <assertj-core.version>3.6.2</assertj-core.version>
@@ -107,6 +109,22 @@
             <groupId>no.nav.syfo.tjenester</groupId>
             <artifactId>aktoer-v2</artifactId>
             <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.syfo.kafka</groupId>
+            <artifactId>kafkautils</artifactId>
+            <version>1</version>
         </dependency>
 
         <dependency>
@@ -173,6 +191,8 @@
                 <version>1.0</version>
             </extension>
         </extensions>
+        <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+        <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
         <plugins>
             <plugin>
                 <artifactId>kotlin-maven-plugin</artifactId>
@@ -261,6 +281,25 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <configuration>
+                    <args>
+                        <arg>-Xjsr305=strict</arg>
+                    </args>
+                    <compilerPlugins>
+                        <plugin>spring</plugin>
+                    </compilerPlugins>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-allopen</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
