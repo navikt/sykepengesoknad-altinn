@@ -31,7 +31,7 @@ fasitResources:
   used:
   - alias: Aktoer_v2~
       resourceType: webserviceendpoint
-  - alias: Springboot-kickstarter
+  - alias: srvsyfoaltinn
     resourceType: credential
   - alias: securityTokenService
     resourceType: baseurl
