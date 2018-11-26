@@ -31,7 +31,7 @@ class KafkaErrorHandler(private val registry: MeterRegistry) : ContainerAwareErr
          */
         if (exceptionIsClass(thrownException, TopicAuthorizationException::class.java)) {
             log.error("Kafka infrastrukturfeil. TopicAuthorizationException ved lesing av topic")
-            registry.counter("\$APPLIKASJONSNAVN$.kafka.feil", Tags.of("type", "fatale")).increment()
+            registry.counter("syfoaltinn.kafka.feil", Tags.of("type", "fatale")).increment()
             return
         }
 

@@ -33,7 +33,7 @@ public class CallIdHeader extends AbstractPhaseInterceptor<Message> {
     }
 
     private String randomValue() {
-        return "$APPLIKASJONSNAVN$oppslag-" + (int) (Math.random() * 10000);
+        return "syfoaltinnoppslag-" + (int) (Math.random() * 10000);
     }
 
 }

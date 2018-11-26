@@ -29,8 +29,8 @@ resources:
 fasitResources:
   exposed:
   used:
-  - alias: Aktoer_v2~
-      resourceType: webserviceendpoint
+  - alias: Aktoer_v2
+    resourceType: webserviceendpoint
   - alias: srvsyfoaltinn
     resourceType: credential
   - alias: securityTokenService
@@ -39,9 +39,3 @@ fasitResources:
     resourceType: baseurl
     propertyMap:
       url: SPRING_KAFKA_BOOTSTRAP-SERVERS
-  - alias: syfoaltinnDB
-      resourceType: datasource
-      propertyMap:
-        url: SPRING_DATASOURCE_URL
-        username: SPRING_DATASOURCE_USERNAME
-        password: SPRING_DATASOURCE_PASSWORD

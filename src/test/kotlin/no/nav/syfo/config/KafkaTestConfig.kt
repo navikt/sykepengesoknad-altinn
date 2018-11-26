@@ -1,5 +1,10 @@
 package no.nav.syfo.config
 
+import no.nav.syfo.kafka.sykepengesoknad.deserializer.SykepengesoknadDeserializer
+import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
+import no.nav.syfo.kafka.sykepengesoknad.serializer.SykepengesoknadSerializer
+import org.apache.kafka.common.serialization.StringDeserializer
+import org.apache.kafka.common.serialization.StringSerializer
 import org.junit.ClassRule
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -23,12 +28,16 @@ class KafkaTestConfig {
     }
 
     @Bean
-    fun producerFactory(): ProducerFactory<String, String> {
-        return DefaultKafkaProducerFactory(producerProps(embeddedKafka))
+    fun producerFactory(): ProducerFactory<String, SykepengesoknadDTO> {
+        return DefaultKafkaProducerFactory(producerProps(embeddedKafka),
+                StringSerializer(),
+                SykepengesoknadSerializer())
     }
 
     @Bean
-    fun consumerFactory(): ConsumerFactory<String, String> {
-        return DefaultKafkaConsumerFactory(consumerProps("test", "false", embeddedKafka))
+    fun consumerFactory(): ConsumerFactory<String, SykepengesoknadDTO> {
+        return DefaultKafkaConsumerFactory(consumerProps("test", "false", embeddedKafka),
+                StringDeserializer(),
+                SykepengesoknadDeserializer())
     }
 }
