@@ -1,6 +1,7 @@
 package no.nav.syfo.kafka
 
 import no.nav.syfo.CALL_ID
+import no.nav.syfo.consumer.ws.client.AltinnConsumer
 import no.nav.syfo.kafka.KafkaHeaderConstants.getLastHeaderByKeyAsString
 import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
 import no.nav.syfo.log
@@ -10,9 +11,12 @@ import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
 import java.util.UUID.randomUUID
+import javax.inject.Inject
 
 @Component
-class SoknadListener {
+class SoknadListener @Inject
+constructor(private val altinnConsumer: AltinnConsumer) {
+
     val log = log()
 
     @KafkaListener(topics = ["syfo-soknad-v1"], id = "soknadSendt", idIsGroup = false)
@@ -26,6 +30,9 @@ class SoknadListener {
 
             //TODO behandle innsendt søknad
             log.info("har plukket opp søknad: {}", sykepengesoknad.toString())
+//            val sendSykepengesoknadTilArbeidsgiver = altinnConsumer.sendSykepengesoknadTilArbeidsgiver(SykepengesoknadAltinn(sykepengesoknad))
+//            log.info("Får denne kvitteringen etter innsending til altinn: " + sendSykepengesoknadTilArbeidsgiver)
+            log.info("ignorerer foreløpig den mottatte søknaden")
 
             acknowledgment.acknowledge()
         } catch (e: Exception) {

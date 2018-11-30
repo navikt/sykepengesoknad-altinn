@@ -1,0 +1,816 @@
+{
+  "id": "47302bbe-b012-4aac-a1a9-b36f177047c7",
+  "aktorId": "aktorId-745463060",
+  "sykmeldingId": "14e78e84-50a5-45bb-9919-191c54f99691",
+  "soknadstype": "ARBEIDSTAKERE",
+  "status": "SENDT",
+  "fom": "2018-10-29",
+  "tom": "2018-11-06",
+  "opprettetDato": "2018-11-29",
+  "innsendtDato": "2018-11-29",
+  "avbruttDato": null,
+  "startSykeforlop": "2018-10-29",
+  "sykmeldingUtskrevet": null,
+  "arbeidsgiver": "ARBEIDSGIVER A/S",
+  "korrigerer": null,
+  "korrigertAv": null,
+  "arbeidssituasjon": "ARBEIDSTAKER",
+  "soknadPerioder": [
+    {
+      "fom": "2018-10-29",
+      "tom": "2018-11-02",
+      "grad": 100
+    },
+    {
+      "fom": "2018-11-03",
+      "tom": "2018-11-06",
+      "grad": 40
+    }
+  ],
+  "sporsmal": [
+    {
+      "id": "55",
+      "tag": "ANSVARSERKLARING",
+      "sporsmalstekst": "Jeg vet at dersom jeg gir uriktige opplysninger, eller holder tilbake opplysninger som har betydning for min rett til sykepenger, kan pengene holdes tilbake eller kreves tilbake, og/eller det kan medføre straffeansvar. Jeg er også klar over at jeg må melde fra til NAV dersom jeg i sykmeldingsperioden satt i varetekt, sonet straff eller var under forvaring.",
+      "undertekst": null,
+      "svartype": "CHECKBOX_PANEL",
+      "min": null,
+      "max": null,
+      "pavirkerAndreSporsmal": false,
+      "kriterieForVisningAvUndersporsmal": null,
+      "svar": [
+        {
+          "verdi": "CHECKED"
+        }
+      ],
+      "undersporsmal": []
+    },
+    {
+      "id": "56",
+      "tag": "EGENMELDINGER",
+      "sporsmalstekst": "Vi har registrert at du ble sykmeldt mandag 29. oktober 2018. Brukte du egenmeldinger og/eller var du sykmeldt i perioden 13. - 28. oktober 2018?",
+      "undertekst": null,
+      "svartype": "JA_NEI",
+      "min": null,
+      "max": null,
+      "pavirkerAndreSporsmal": false,
+      "kriterieForVisningAvUndersporsmal": "JA",
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": [
+        {
+          "id": "57",
+          "tag": "EGENMELDINGER_NAR",
+          "sporsmalstekst": "Hvilke dager før 29. oktober 2018 var du borte fra jobb?",
+          "undertekst": null,
+          "svartype": "PERIODER",
+          "min": "2018-04-29",
+          "max": "2018-10-28",
+          "pavirkerAndreSporsmal": false,
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [
+            {
+              "verdi": "{\"fom\":\"2018-10-21\",\"tom\":\"2018-10-23\"}"
+            }
+          ],
+          "undersporsmal": []
+        }
+      ]
+    },
+    {
+      "id": "58",
+      "tag": "TILBAKE_I_ARBEID",
+      "sporsmalstekst": "Var du tilbake i fullt arbeid hos ARBEIDSGIVER A/S før 7. november 2018?",
+      "undertekst": null,
+      "svartype": "JA_NEI",
+      "min": null,
+      "max": null,
+      "pavirkerAndreSporsmal": false,
+      "kriterieForVisningAvUndersporsmal": "JA",
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": [
+        {
+          "id": "59",
+          "tag": "TILBAKE_NAR",
+          "sporsmalstekst": "Fra hvilken dato ble arbeidet gjenopptatt?",
+          "undertekst": null,
+          "svartype": "DATO",
+          "min": "2018-10-29",
+          "max": "2018-11-06",
+          "pavirkerAndreSporsmal": false,
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [
+            {
+              "verdi": "2018-11-05"
+            }
+          ],
+          "undersporsmal": []
+        }
+      ]
+    },
+    {
+      "id": "60",
+      "tag": "JOBBET_DU_100_PROSENT_0",
+      "sporsmalstekst": "I perioden 29. oktober - 2. november 2018 var du 100 % sykmeldt fra ARBEIDSGIVER A/S. Jobbet du noe i denne perioden?",
+      "undertekst": null,
+      "svartype": "JA_NEI",
+      "min": null,
+      "max": null,
+      "pavirkerAndreSporsmal": false,
+      "kriterieForVisningAvUndersporsmal": "JA",
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": [
+        {
+          "id": "61",
+          "tag": "HVOR_MANGE_TIMER_PER_UKE_0",
+          "sporsmalstekst": "Hvor mange timer jobbet du per uke før du ble sykmeldt?",
+          "undertekst": "timer per uke",
+          "svartype": "TALL",
+          "min": "1",
+          "max": "150",
+          "pavirkerAndreSporsmal": false,
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [
+            {
+              "verdi": "37,5"
+            }
+          ],
+          "undersporsmal": []
+        },
+        {
+          "id": "62",
+          "tag": "HVOR_MYE_HAR_DU_JOBBET_0",
+          "sporsmalstekst": "Hvor mye jobbet du totalt 29. oktober - 2. november 2018 hos ARBEIDSGIVER A/S?",
+          "undertekst": null,
+          "svartype": "RADIO_GRUPPE_TIMER_PROSENT",
+          "min": null,
+          "max": null,
+          "pavirkerAndreSporsmal": false,
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [],
+          "undersporsmal": [
+            {
+              "id": "63",
+              "tag": "HVOR_MYE_PROSENT_0",
+              "sporsmalstekst": "prosent",
+              "undertekst": null,
+              "svartype": "RADIO",
+              "min": null,
+              "max": null,
+              "pavirkerAndreSporsmal": false,
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [
+                {
+                  "verdi": "CHECKED"
+                }
+              ],
+              "undersporsmal": [
+                {
+                  "id": "64",
+                  "tag": "HVOR_MYE_PROSENT_VERDI_0",
+                  "sporsmalstekst": null,
+                  "undertekst": "prosent",
+                  "svartype": "TALL",
+                  "min": "1",
+                  "max": "99",
+                  "pavirkerAndreSporsmal": false,
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [
+                    {
+                      "verdi": "79"
+                    }
+                  ],
+                  "undersporsmal": []
+                }
+              ]
+            },
+            {
+              "id": "65",
+              "tag": "HVOR_MYE_TIMER_0",
+              "sporsmalstekst": "timer",
+              "undertekst": null,
+              "svartype": "RADIO",
+              "min": null,
+              "max": null,
+              "pavirkerAndreSporsmal": false,
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [],
+              "undersporsmal": [
+                {
+                  "id": "66",
+                  "tag": "HVOR_MYE_TIMER_VERDI_0",
+                  "sporsmalstekst": null,
+                  "undertekst": "timer totalt",
+                  "svartype": "TALL",
+                  "min": "1",
+                  "max": "107",
+                  "pavirkerAndreSporsmal": false,
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [],
+                  "undersporsmal": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "67",
+      "tag": "JOBBET_DU_GRADERT_1",
+      "sporsmalstekst": "I perioden 3. - 6. november 2018 skulle du jobbe 60 % av ditt normale arbeid hos ARBEIDSGIVER A/S. Jobbet du mer enn dette?",
+      "undertekst": null,
+      "svartype": "JA_NEI",
+      "min": null,
+      "max": null,
+      "pavirkerAndreSporsmal": false,
+      "kriterieForVisningAvUndersporsmal": "JA",
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": [
+        {
+          "id": "68",
+          "tag": "HVOR_MANGE_TIMER_PER_UKE_1",
+          "sporsmalstekst": "Hvor mange timer jobbet du per uke før du ble sykmeldt?",
+          "undertekst": "timer per uke",
+          "svartype": "TALL",
+          "min": "1",
+          "max": "150",
+          "pavirkerAndreSporsmal": false,
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [
+            {
+              "verdi": "37.5"
+            }
+          ],
+          "undersporsmal": []
+        },
+        {
+          "id": "69",
+          "tag": "HVOR_MYE_HAR_DU_JOBBET_1",
+          "sporsmalstekst": "Hvor mye jobbet du totalt 3. - 6. november 2018 hos ARBEIDSGIVER A/S?",
+          "undertekst": null,
+          "svartype": "RADIO_GRUPPE_TIMER_PROSENT",
+          "min": null,
+          "max": null,
+          "pavirkerAndreSporsmal": false,
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [],
+          "undersporsmal": [
+            {
+              "id": "70",
+              "tag": "HVOR_MYE_PROSENT_1",
+              "sporsmalstekst": "prosent",
+              "undertekst": null,
+              "svartype": "RADIO",
+              "min": null,
+              "max": null,
+              "pavirkerAndreSporsmal": false,
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [],
+              "undersporsmal": [
+                {
+                  "id": "71",
+                  "tag": "HVOR_MYE_PROSENT_VERDI_1",
+                  "sporsmalstekst": null,
+                  "undertekst": "prosent",
+                  "svartype": "TALL",
+                  "min": "61",
+                  "max": "99",
+                  "pavirkerAndreSporsmal": false,
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [],
+                  "undersporsmal": []
+                }
+              ]
+            },
+            {
+              "id": "72",
+              "tag": "HVOR_MYE_TIMER_1",
+              "sporsmalstekst": "timer",
+              "undertekst": null,
+              "svartype": "RADIO",
+              "min": null,
+              "max": null,
+              "pavirkerAndreSporsmal": false,
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [
+                {
+                  "verdi": "CHECKED"
+                }
+              ],
+              "undersporsmal": [
+                {
+                  "id": "73",
+                  "tag": "HVOR_MYE_TIMER_VERDI_1",
+                  "sporsmalstekst": null,
+                  "undertekst": "timer totalt",
+                  "svartype": "TALL",
+                  "min": "1",
+                  "max": "86",
+                  "pavirkerAndreSporsmal": false,
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [
+                    {
+                      "verdi": "66"
+                    }
+                  ],
+                  "undersporsmal": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "74",
+      "tag": "FERIE_PERMISJON_UTLAND",
+      "sporsmalstekst": "Har du hatt ferie, permisjon eller oppholdt deg utenfor Norge i perioden 29. oktober - 6. november 2018?",
+      "undertekst": null,
+      "svartype": "JA_NEI",
+      "min": null,
+      "max": null,
+      "pavirkerAndreSporsmal": false,
+      "kriterieForVisningAvUndersporsmal": "JA",
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": [
+        {
+          "id": "75",
+          "tag": "FERIE_PERMISJON_UTLAND_HVA",
+          "sporsmalstekst": "Kryss av alt som gjelder deg:",
+          "undertekst": null,
+          "svartype": "CHECKBOX_GRUPPE",
+          "min": null,
+          "max": null,
+          "pavirkerAndreSporsmal": false,
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [],
+          "undersporsmal": [
+            {
+              "id": "76",
+              "tag": "FERIE",
+              "sporsmalstekst": "Jeg tok ut ferie",
+              "undertekst": null,
+              "svartype": "CHECKBOX",
+              "min": null,
+              "max": null,
+              "pavirkerAndreSporsmal": false,
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [
+                {
+                  "verdi": "CHECKED"
+                }
+              ],
+              "undersporsmal": [
+                {
+                  "id": "77",
+                  "tag": "FERIE_NAR",
+                  "sporsmalstekst": null,
+                  "undertekst": null,
+                  "svartype": "PERIODER",
+                  "min": "2018-10-29",
+                  "max": "2018-11-06",
+                  "pavirkerAndreSporsmal": false,
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [
+                    {
+                      "verdi": "{\"fom\":\"2018-10-31\",\"tom\":\"2018-11-02\"}"
+                    }
+                  ],
+                  "undersporsmal": []
+                }
+              ]
+            },
+            {
+              "id": "78",
+              "tag": "PERMISJON",
+              "sporsmalstekst": "Jeg hadde permisjon",
+              "undertekst": null,
+              "svartype": "CHECKBOX",
+              "min": null,
+              "max": null,
+              "pavirkerAndreSporsmal": false,
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [],
+              "undersporsmal": [
+                {
+                  "id": "79",
+                  "tag": "PERMISJON_NAR",
+                  "sporsmalstekst": null,
+                  "undertekst": null,
+                  "svartype": "PERIODER",
+                  "min": "2018-10-29",
+                  "max": "2018-11-06",
+                  "pavirkerAndreSporsmal": false,
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [],
+                  "undersporsmal": []
+                }
+              ]
+            },
+            {
+              "id": "80",
+              "tag": "UTLAND",
+              "sporsmalstekst": "Jeg var utenfor Norge",
+              "undertekst": null,
+              "svartype": "CHECKBOX",
+              "min": null,
+              "max": null,
+              "pavirkerAndreSporsmal": false,
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [
+                {
+                  "verdi": "CHECKED"
+                }
+              ],
+              "undersporsmal": [
+                {
+                  "id": "81",
+                  "tag": "UTLAND_NAR",
+                  "sporsmalstekst": null,
+                  "undertekst": null,
+                  "svartype": "PERIODER",
+                  "min": "2018-10-29",
+                  "max": "2018-11-06",
+                  "pavirkerAndreSporsmal": false,
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [
+                    {
+                      "verdi": "{\"fom\":\"2018-10-30\",\"tom\":\"2018-10-31\"}"
+                    },
+                    {
+                      "verdi": "{\"fom\":\"2018-11-02\",\"tom\":\"2018-11-04\"}"
+                    }
+                  ],
+                  "undersporsmal": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "82",
+      "tag": "ANDRE_INNTEKTSKILDER",
+      "sporsmalstekst": "Har du andre inntektskilder, eller jobber du for andre enn ARBEIDSGIVER A/S?",
+      "undertekst": null,
+      "svartype": "JA_NEI",
+      "min": null,
+      "max": null,
+      "pavirkerAndreSporsmal": false,
+      "kriterieForVisningAvUndersporsmal": "JA",
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": [
+        {
+          "id": "83",
+          "tag": "HVILKE_ANDRE_INNTEKTSKILDER",
+          "sporsmalstekst": "Hvilke andre inntektskilder har du?",
+          "undertekst": "Du trenger ikke oppgi andre ytelser fra NAV",
+          "svartype": "CHECKBOX_GRUPPE",
+          "min": null,
+          "max": null,
+          "pavirkerAndreSporsmal": false,
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [],
+          "undersporsmal": [
+            {
+              "id": "84",
+              "tag": "INNTEKTSKILDE_ANDRE_ARBEIDSFORHOLD",
+              "sporsmalstekst": "Andre arbeidsforhold",
+              "undertekst": null,
+              "svartype": "CHECKBOX",
+              "min": null,
+              "max": null,
+              "pavirkerAndreSporsmal": false,
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [
+                {
+                  "verdi": "CHECKED"
+                }
+              ],
+              "undersporsmal": [
+                {
+                  "id": "85",
+                  "tag": "INNTEKTSKILDE_ANDRE_ARBEIDSFORHOLD_ER_DU_SYKMELDT",
+                  "sporsmalstekst": "Er du sykmeldt fra dette?",
+                  "undertekst": null,
+                  "svartype": "JA_NEI",
+                  "min": null,
+                  "max": null,
+                  "pavirkerAndreSporsmal": false,
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [
+                    {
+                      "verdi": "JA"
+                    }
+                  ],
+                  "undersporsmal": []
+                }
+              ]
+            },
+            {
+              "id": "86",
+              "tag": "INNTEKTSKILDE_SELVSTENDIG",
+              "sporsmalstekst": "Selvstendig næringsdrivende",
+              "undertekst": null,
+              "svartype": "CHECKBOX",
+              "min": null,
+              "max": null,
+              "pavirkerAndreSporsmal": false,
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [
+                {
+                  "verdi": "CHECKED"
+                }
+              ],
+              "undersporsmal": [
+                {
+                  "id": "87",
+                  "tag": "INNTEKTSKILDE_SELVSTENDIG_ER_DU_SYKMELDT",
+                  "sporsmalstekst": "Er du sykmeldt fra dette?",
+                  "undertekst": null,
+                  "svartype": "JA_NEI",
+                  "min": null,
+                  "max": null,
+                  "pavirkerAndreSporsmal": false,
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [
+                    {
+                      "verdi": "JA"
+                    }
+                  ],
+                  "undersporsmal": []
+                }
+              ]
+            },
+            {
+              "id": "88",
+              "tag": "INNTEKTSKILDE_SELVSTENDIG_DAGMAMMA",
+              "sporsmalstekst": "Selvstendig næringsdrivende dagmamma",
+              "undertekst": null,
+              "svartype": "CHECKBOX",
+              "min": null,
+              "max": null,
+              "pavirkerAndreSporsmal": false,
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [
+                {
+                  "verdi": "CHECKED"
+                }
+              ],
+              "undersporsmal": [
+                {
+                  "id": "89",
+                  "tag": "INNTEKTSKILDE_SELVSTENDIG_DAGMAMMA_ER_DU_SYKMELDT",
+                  "sporsmalstekst": "Er du sykmeldt fra dette?",
+                  "undertekst": null,
+                  "svartype": "JA_NEI",
+                  "min": null,
+                  "max": null,
+                  "pavirkerAndreSporsmal": false,
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [
+                    {
+                      "verdi": "NEI"
+                    }
+                  ],
+                  "undersporsmal": []
+                }
+              ]
+            },
+            {
+              "id": "90",
+              "tag": "INNTEKTSKILDE_JORDBRUKER",
+              "sporsmalstekst": "Jordbruker / Fisker / Reindriftsutøver",
+              "undertekst": null,
+              "svartype": "CHECKBOX",
+              "min": null,
+              "max": null,
+              "pavirkerAndreSporsmal": false,
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [],
+              "undersporsmal": [
+                {
+                  "id": "91",
+                  "tag": "INNTEKTSKILDE_JORDBRUKER_ER_DU_SYKMELDT",
+                  "sporsmalstekst": "Er du sykmeldt fra dette?",
+                  "undertekst": null,
+                  "svartype": "JA_NEI",
+                  "min": null,
+                  "max": null,
+                  "pavirkerAndreSporsmal": false,
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [],
+                  "undersporsmal": []
+                }
+              ]
+            },
+            {
+              "id": "92",
+              "tag": "INNTEKTSKILDE_FRILANSER",
+              "sporsmalstekst": "Frilanser",
+              "undertekst": null,
+              "svartype": "CHECKBOX",
+              "min": null,
+              "max": null,
+              "pavirkerAndreSporsmal": false,
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [],
+              "undersporsmal": [
+                {
+                  "id": "93",
+                  "tag": "INNTEKTSKILDE_FRILANSER_ER_DU_SYKMELDT",
+                  "sporsmalstekst": "Er du sykmeldt fra dette?",
+                  "undertekst": null,
+                  "svartype": "JA_NEI",
+                  "min": null,
+                  "max": null,
+                  "pavirkerAndreSporsmal": false,
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [],
+                  "undersporsmal": []
+                }
+              ]
+            },
+            {
+              "id": "94",
+              "tag": "INNTEKTSKILDE_ANNET",
+              "sporsmalstekst": "Annet",
+              "undertekst": null,
+              "svartype": "CHECKBOX",
+              "min": null,
+              "max": null,
+              "pavirkerAndreSporsmal": false,
+              "kriterieForVisningAvUndersporsmal": null,
+              "svar": [],
+              "undersporsmal": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "95",
+      "tag": "UTDANNING",
+      "sporsmalstekst": "Har du vært under utdanning i løpet av perioden 29. oktober - 6. november 2018?",
+      "undertekst": null,
+      "svartype": "JA_NEI",
+      "min": null,
+      "max": null,
+      "pavirkerAndreSporsmal": false,
+      "kriterieForVisningAvUndersporsmal": "JA",
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": [
+        {
+          "id": "96",
+          "tag": "UTDANNING_START",
+          "sporsmalstekst": "Når startet du på utdanningen?",
+          "undertekst": null,
+          "svartype": "DATO",
+          "min": null,
+          "max": "2018-11-06",
+          "pavirkerAndreSporsmal": false,
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [
+            {
+              "verdi": "2018-11-01"
+            }
+          ],
+          "undersporsmal": []
+        },
+        {
+          "id": "97",
+          "tag": "FULLTIDSSTUDIUM",
+          "sporsmalstekst": "Er utdanningen et fulltidsstudium?",
+          "undertekst": null,
+          "svartype": "JA_NEI",
+          "min": null,
+          "max": null,
+          "pavirkerAndreSporsmal": false,
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [
+            {
+              "verdi": "NEI"
+            }
+          ],
+          "undersporsmal": []
+        }
+      ]
+    },
+    {
+      "id": "98",
+      "tag": "VAER_KLAR_OVER_AT",
+      "sporsmalstekst": "Vær klar over at:",
+      "undertekst": "<ul><li>rett til sykepenger forutsetter at du er borte fra arbeid på grunn av egen sykdom. Sosiale eller økonomiske problemer gir ikke rett til sykepenger</li><li>du kan miste retten til sykepenger hvis du uten rimelig grunn nekter å opplyse om egen funksjonsevne eller nekter å ta imot tilbud om behandling og/eller tilrettelegging</li><li>sykepenger utbetales i maksimum 52 uker, også for gradert (delvis) sykmelding</li><li>fristen for å søke sykepenger er som hovedregel 3 måneder</li></ul>",
+      "svartype": "IKKE_RELEVANT",
+      "min": null,
+      "max": null,
+      "pavirkerAndreSporsmal": false,
+      "kriterieForVisningAvUndersporsmal": null,
+      "svar": [],
+      "undersporsmal": []
+    },
+    {
+      "id": "99",
+      "tag": "BEKREFT_OPPLYSNINGER",
+      "sporsmalstekst": "Jeg har lest all informasjonen jeg har fått i søknaden og bekrefter at opplysningene jeg har gitt er korrekte.",
+      "undertekst": null,
+      "svartype": "CHECKBOX_PANEL",
+      "min": null,
+      "max": null,
+      "pavirkerAndreSporsmal": false,
+      "kriterieForVisningAvUndersporsmal": null,
+      "svar": [
+        {
+          "verdi": "CHECKED"
+        }
+      ],
+      "undersporsmal": []
+    },
+    {
+      "id": "100",
+      "tag": "BETALER_ARBEIDSGIVER",
+      "sporsmalstekst": "Betaler arbeidsgiveren lønnen din når du er syk?",
+      "undertekst": null,
+      "svartype": "RADIO_GRUPPE",
+      "min": null,
+      "max": null,
+      "pavirkerAndreSporsmal": false,
+      "kriterieForVisningAvUndersporsmal": null,
+      "svar": [],
+      "undersporsmal": [
+        {
+          "id": "101",
+          "tag": "BETALER_ARBEIDSGIVER_JA",
+          "sporsmalstekst": "Ja",
+          "undertekst": "Arbeidsgiveren din mottar kopi av søknaden du sender til NAV.",
+          "svartype": "RADIO",
+          "min": null,
+          "max": null,
+          "pavirkerAndreSporsmal": false,
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [],
+          "undersporsmal": []
+        },
+        {
+          "id": "102",
+          "tag": "BETALER_ARBEIDSGIVER_NEI",
+          "sporsmalstekst": "Nei",
+          "undertekst": "Søknaden sendes til NAV. Arbeidsgiveren din får ikke kopi.",
+          "svartype": "RADIO",
+          "min": null,
+          "max": null,
+          "pavirkerAndreSporsmal": false,
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [],
+          "undersporsmal": []
+        },
+        {
+          "id": "103",
+          "tag": "BETALER_ARBEIDSGIVER_VET_IKKE",
+          "sporsmalstekst": "Vet ikke",
+          "undertekst": "Siden du ikke vet svaret på dette spørsmålet, vil arbeidsgiveren din motta en kopi av søknaden du sender til NAV.",
+          "svartype": "RADIO",
+          "min": null,
+          "max": null,
+          "pavirkerAndreSporsmal": false,
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [
+            {
+              "verdi": "CHECKED"
+            }
+          ],
+          "undersporsmal": []
+        }
+      ]
+    }
+  ]
+}

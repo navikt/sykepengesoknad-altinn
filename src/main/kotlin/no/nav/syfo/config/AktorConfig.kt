@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class AktoerConfig {
+class AktorConfig {
 
     @Bean
     fun aktoer(@Value("\${aktoer.v2.endpointurl}") serviceUrl: String): AktoerV2 {

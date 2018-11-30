@@ -13,13 +13,13 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class AktoerConsumerTest {
+class AktorConsumerTest {
 
     @Mock
     private val aktoerV2: AktoerV2? = null
 
     @InjectMocks
-    private val aktoerConsumer: AktoerConsumer? = null
+    private val aktoerConsumer: AktorConsumer? = null
 
     @Test
     @Throws(HentIdentForAktoerIdPersonIkkeFunnet::class)

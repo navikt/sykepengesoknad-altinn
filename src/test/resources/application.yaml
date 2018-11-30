@@ -9,6 +9,10 @@ fasit.environment.name: local
 
 app.name: syfoaltinn
 
+altinnUser.username: "username"
+altinnUser.password: "password"
+altinnServiceGateway.url: "altinnServiceGateway.url"
+
 srvsyfoaltinn:
   username: "kek"
   password: "bur"
