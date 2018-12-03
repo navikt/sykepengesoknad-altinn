@@ -11,7 +11,7 @@ app.name: syfoaltinn
 
 altinnUser.username: "username"
 altinnUser.password: "password"
-ekstern:altinn_behandlealtinnmelding_v1.endpoint.url: "ekstern:altinn_behandlealtinnmelding_v1.endpoint.url"
+ekstern.altinn.behandlealtinnmelding.v1.endpointurl: "ekstern.altinn.behandlealtinnmelding.v1.endpointurl"
 
 srvsyfoaltinn:
   username: "kek"
