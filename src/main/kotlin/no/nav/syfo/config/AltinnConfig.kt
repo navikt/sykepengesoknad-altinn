@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration
 class AltinnConfig {
 
     @Bean
-    fun iCorrespondenceAgencyExternalBasic(@Value("\${behandlealtinnmelding.endpoint.url}") behandleAltinnMeldingUrl: String): ICorrespondenceAgencyExternalBasic {
+    fun iCorrespondenceAgencyExternalBasic(@Value("\${ekstern:altinn_behandlealtinnmelding_v1.endpoint.url}") behandleAltinnMeldingUrl: String): ICorrespondenceAgencyExternalBasic {
         return WsClient<ICorrespondenceAgencyExternalBasic>().createPort(behandleAltinnMeldingUrl, ICorrespondenceAgencyExternalBasic::class.java, listOf(LogErrorHandler()))
     }
 
