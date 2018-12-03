@@ -41,5 +41,5 @@ fasitResources:
       url: SPRING_KAFKA_BOOTSTRAP-SERVERS
   - alias: altinnUser
     resourceType: credential
-  - alias: altinnServiceGateway
-    resourceType: baseurl
+  - alias: ekstern:altinn_behandlealtinnmelding_v1
+    resourceType: webserviceendpoint

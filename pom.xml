@@ -54,6 +54,7 @@
         <assertj-core.version>3.6.2</assertj-core.version>
         <cxf.version>3.2.0</cxf.version>
         <soknad.version>2</soknad.version>
+        <behandle-altinnmelding.version>1.0</behandle-altinnmelding.version>
         <altinn-correspondence-agency-external.version>1.0</altinn-correspondence-agency-external.version>
         <digisyfo-sykepengesoeknadarbeidsgiver.version>1.0.5</digisyfo-sykepengesoeknadarbeidsgiver.version>
         <bom.version>2018.10.23.14.04</bom.version>
@@ -94,6 +95,11 @@
             <version>${soknad.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav.syfo.tjeneste</groupId>
+            <artifactId>behandle-altinnmelding-v1</artifactId>
+            <version>${behandle-altinnmelding.version}</version>
+        </dependency>
         <dependency>
             <groupId>no.nav.syfo.tjenester</groupId>
             <artifactId>digisyfo-sykepengesoeknadarbeidsgiver</artifactId>
