@@ -12,6 +12,6 @@ class AktorConfig {
 
     @Bean
     fun aktoer(@Value("\${aktoer.v2.endpointurl}") serviceUrl: String): AktoerV2 {
-        return WsClient<AktoerV2>().createPort(serviceUrl, AktoerV2::class.java, listOf(LogErrorHandler()))
+        return WsClient<AktoerV2>().createPort(serviceUrl, AktoerV2::class.java, listOf(LogErrorHandler()), true)
     }
 }

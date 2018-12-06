@@ -13,7 +13,7 @@ class AltinnConfig {
 
     @Bean
     fun iCorrespondenceAgencyExternalBasic(@Value("\${ekstern.altinn.behandlealtinnmelding.v1.endpointurl}") behandleAltinnMeldingUrl: String): ICorrespondenceAgencyExternalBasic {
-        return WsClient<ICorrespondenceAgencyExternalBasic>().createPort(behandleAltinnMeldingUrl, ICorrespondenceAgencyExternalBasic::class.java, listOf(LogErrorHandler()))
+        return WsClient<ICorrespondenceAgencyExternalBasic>().createPort(behandleAltinnMeldingUrl, ICorrespondenceAgencyExternalBasic::class.java, listOf(LogErrorHandler()), false)
     }
 
 }
