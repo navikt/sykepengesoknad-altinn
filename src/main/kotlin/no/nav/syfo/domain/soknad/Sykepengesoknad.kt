@@ -6,7 +6,7 @@ import java.time.LocalDate
 data class Sykepengesoknad(
 
         val id: String,
-        val sykmeldingId: String,
+        val sykmeldingId: String? = null,
         val aktorId: String,
         val soknadstype: Soknadstype? = null,
         val status: Soknadstatus? = null,
