@@ -13,6 +13,8 @@ altinnUser.username: "username"
 altinnUser.password: "password"
 ekstern.altinn.behandlealtinnmelding.v1.endpointurl: "ekstern.altinn.behandlealtinnmelding.v1.endpointurl"
 
+virksomhet.Organisasjon.v4.endpointurl: "virksomhet.Organisasjon.v4.endpointurl"
+
 srvsyfoaltinn:
   username: "kek"
   password: "bur"

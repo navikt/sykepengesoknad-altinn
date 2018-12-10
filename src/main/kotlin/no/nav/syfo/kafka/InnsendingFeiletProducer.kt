@@ -5,18 +5,17 @@ import no.nav.syfo.log
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Component
 import java.util.Collections.singletonMap
-import java.util.UUID.randomUUID
 
 @Component
-class Producer(private val kafkaTemplate: KafkaTemplate<String, SykepengesoknadDTO>) {
+class InnsendingFeiletProducer(private val kafkaTemplate: KafkaTemplate<String, SykepengesoknadDTO>) {
     val log = log()
 
-    fun send() {
+    fun innsendingFeilet(sykepengesoknadDTO: SykepengesoknadDTO) {
         kafkaTemplate.send(
                 SyfoProducerRecord(
-                        "syfoaltinn-rebehandling-v1",
-                        randomUUID().toString(),
-                        SykepengesoknadDTO.builder().build(),
+                        "syfo-altinn-innsending-feilet-v1",
+                        sykepengesoknadDTO.id,
+                        sykepengesoknadDTO,
                         singletonMap<String, Any>("example", "header")
                 )
         )

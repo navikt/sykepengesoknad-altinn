@@ -57,6 +57,7 @@
         <behandle-altinnmelding.version>1.0</behandle-altinnmelding.version>
         <altinn-correspondence-agency-external.version>1.0</altinn-correspondence-agency-external.version>
         <digisyfo-sykepengesoeknadarbeidsgiver.version>1.0.5</digisyfo-sykepengesoeknadarbeidsgiver.version>
+        <organisasjonv4-tjenestespesifikasjon.version>1.0.1</organisasjonv4-tjenestespesifikasjon.version>
         <bom.version>2018.10.23.14.04</bom.version>
     </properties>
 
@@ -109,6 +110,11 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>altinn-correspondence-agency-external</artifactId>
             <version>${altinn-correspondence-agency-external.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>organisasjonv4-tjenestespesifikasjon</artifactId>
+            <version>${organisasjonv4-tjenestespesifikasjon.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>

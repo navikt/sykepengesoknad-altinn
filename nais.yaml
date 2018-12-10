@@ -43,3 +43,5 @@ fasitResources:
     resourceType: credential
   - alias: ekstern:altinn_behandlealtinnmelding_v1
     resourceType: webserviceendpoint
+  - alias: virksomhet:Organisasjon_v4
+    resourceType: webserviceendpoint

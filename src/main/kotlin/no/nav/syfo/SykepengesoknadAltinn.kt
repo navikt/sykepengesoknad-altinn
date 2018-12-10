@@ -32,4 +32,6 @@ class SykepengesoknadAltinn constructor(var sykepengesoknad: Sykepengesoknad) {
         }
         return hashSykepengesoeknadXML
     }*/
+
+
 }

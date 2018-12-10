@@ -19,8 +19,8 @@ data class Sykepengesoknad(
 
         //TODO ekstra felter - navn og fnr trengs også for pdf
         //andre felter også - fraværsperioder osv
-        var juridiskOrgnummerArbeidsgiver: String = "910067494",
         var orgnummerArbeidsgiver: String = "910067494",
+        var juridiskOrgnummerArbeidsgiver: String? = null,
         var arbeidsgiverForskutterer: String = "VET_IKKE",
         var fnr: String = "11111100000",
         var navn: String = "Navn Navnesen",

@@ -1,9 +1,8 @@
 package no.nav.syfo.kafka
 
 import no.nav.syfo.CALL_ID
-import no.nav.syfo.SendTilAltinnService
-import no.nav.syfo.domain.soknad.Soknadstatus
-import no.nav.syfo.domain.soknad.Soknadstype
+import no.nav.syfo.SykepengesoknadAltinn
+import no.nav.syfo.consumer.ws.client.AltinnConsumer
 import no.nav.syfo.kafka.KafkaHeaderConstants.getLastHeaderByKeyAsString
 import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
 import no.nav.syfo.log
@@ -16,14 +15,14 @@ import java.util.UUID.randomUUID
 import javax.inject.Inject
 
 @Component
-class SoknadListener @Inject
-constructor(private val sendTilAltinnService: SendTilAltinnService,
+class InnsendingFeiletListener @Inject
+constructor(private val altinnConsumer: AltinnConsumer,
             private val innsendingFeiletProducer: InnsendingFeiletProducer) {
 
     val log = log()
     var sendtForsteSoknad = false
 
-    @KafkaListener(topics = ["syfo-soknad-v1"], id = "soknadSendt", idIsGroup = false)
+    @KafkaListener(topics = ["syfo-altinn-innsending-feilet-v1"], id = "innsendingFeilet", idIsGroup = false)
     fun listen(cr: ConsumerRecord<String, SykepengesoknadDTO>, acknowledgment: Acknowledgment) {
         log.info("Melding mottatt på topic: {} med offsett: {}", cr.topic(), cr.offset())
 
@@ -32,20 +31,15 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
 
             val sykepengesoknad = konverter(cr.value())
 
-            if (Soknadstype.ARBEIDSTAKERE.equals(sykepengesoknad.soknadstype)
-                    && Soknadstatus.SENDT.equals(sykepengesoknad.status)) {
+            //TODO behandle innsendt søknad
+            log.info("har plukket opp søknad: {}", sykepengesoknad.toString())
 
-                //TODO behandle innsendt søknad
-                log.info("har plukket opp søknad: {}", sykepengesoknad.toString())
-
-                if (!sendtForsteSoknad) {
-                    sendtForsteSoknad = true
-                    val sendSykepengesoknadTilArbeidsgiver = sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
-                    log.info("Får denne kvitteringen etter innsending til altinn: " + sendSykepengesoknadTilArbeidsgiver)
-                }
-                log.info("ignorerer foreløpig den mottatte søknaden")
-
+            if (!sendtForsteSoknad) {
+                sendtForsteSoknad = true
+                val sendSykepengesoknadTilArbeidsgiver = altinnConsumer.sendSykepengesoknadTilArbeidsgiver(SykepengesoknadAltinn(sykepengesoknad))
+                log.info("Får denne kvitteringen etter innsending til altinn: " + sendSykepengesoknadTilArbeidsgiver)
             }
+            log.info("ignorerer foreløpig den mottatte søknaden")
 
             acknowledgment.acknowledge()
         } catch (e: Exception) {
