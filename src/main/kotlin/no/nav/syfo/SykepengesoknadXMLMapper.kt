@@ -6,35 +6,36 @@ import no.nav.syfo.domain.soknad.Sykepengesoknad
 
 
 //TODO gjøre denne mappingen når søknaden kommer på nytt format
-val sykepengesoeknadArbeidsgiver2XML = { sykepengesoknad: Sykepengesoknad ->
-    XMLSykepengesoeknadArbeidsgiver()
-            .withJuridiskOrganisasjonsnummer(sykepengesoknad.juridiskOrgnummerArbeidsgiver)
-            .withVirksomhetsnummer(sykepengesoknad.orgnummerArbeidsgiver)
-            //.withSykepengesoeknad(sykepengesoeknad2XML(sykepengesoknad))
-            .withSykepengesoeknad(XMLSykepengesoeknad())
-}
+    val sykepengesoeknadArbeidsgiver2XML = { sykepengesoknad: Sykepengesoknad ->
+        XMLSykepengesoeknadArbeidsgiver()
+                .withJuridiskOrganisasjonsnummer(sykepengesoknad.juridiskOrgnummerArbeidsgiver)
+                .withVirksomhetsnummer(sykepengesoknad.orgnummerArbeidsgiver)
+                .withSykepengesoeknad(XMLSykepengesoeknad())
+        //.withSykepengesoeknad(sykepengesoeknad2XML(sykepengesoknad))
+    }
 
-/*
-private val sykepengesoeknad2XML = { sykepengesoknad: Sykepengesoknad ->
-    XMLSykepengesoeknad()
-            .withSykepengesoeknadId(sykepengesoknad.id)
-            .withSykmeldingId(sykepengesoknad.sykmeldingId)
-            .withKorrigerer(sykepengesoknad.korrigerer)
-            .withPeriode(XMLPeriode().withFom(sykepengesoknad.fom).withTom(sykepengesoknad.tom))
-            .withSykmeldtesFnr(sykepengesoknad.fnr)
-            .withArbeidsgiverForskuttererLoenn(sykepengesoknad.arbeidsgiverForskutterer)
-            .withIdentdato(sykepengesoknad.startSykeforlop)
-            .withSykmeldingSkrevetDato(sykepengesoknad.sykmeldingUtskrevet)
-            .withArbeidGjenopptattDato(sykepengesoknad.arbeidGjenopptattDato)
-            .withHarBekreftetKorrektInformasjon(sykepengesoknad.bekreftetKorrektInformasjon)
-            .withHarBekreftetOpplysningsplikt(sykepengesoknad.bekreftetOpplysningsplikt)
-            .withFravaer(mapNullable(sykepengesoknad.fravaer, fravaersperioder2XMLFravaer))
-            .withSykmeldingsperiodeListe(map(sykepengesoknad, periode2XMLAktivitet))
-            .withUtdanning(mapNullable(sykepengesoknad.utdanning, sykepengesoeknad2XMLUtdanning))
-            .withAnnenInntektskildeListe(mapListe(sykepengesoknad.andreInntektskilder, annenInntektskilde2XML))
-            .withSendtTilArbeidsgiverDato(sykepengesoknad.sendtTilArbeidsgiverDato)
-            .withSendtTilNAVDato(sykepengesoknad.sendtTilNAVDato)
-}
+    /*private val sykepengesoeknad2XML = { sykepengesoknad: Sykepengesoknad ->
+        XMLSykepengesoeknad()
+                .withSykepengesoeknadId(sykepengesoknad.id)
+                .withSykmeldingId(sykepengesoknad.sykmeldingId)
+                .withKorrigerer(sykepengesoknad.korrigerer)
+                .withPeriode(XMLPeriode().withFom(sykepengesoknad.fom).withTom(sykepengesoknad.tom))
+                .withSykmeldtesFnr(sykepengesoknad.fnr)
+                .withArbeidsgiverForskuttererLoenn(sykepengesoknad.arbeidsgiverForskutterer)
+                .withIdentdato(sykepengesoknad.startSykeforlop)
+                .withSykmeldingSkrevetDato(sykepengesoknad.sykmeldingUtskrevet)
+                .withArbeidGjenopptattDato(sykepengesoknad.arbeidGjenopptattDato)
+                .withHarBekreftetKorrektInformasjon(sykepengesoknad.bekreftetKorrektInformasjon)
+                .withHarBekreftetOpplysningsplikt(sykepengesoknad.bekreftetOpplysningsplikt)
+                .withFravaer(mapNullable(sykepengesoknad.fravaer, fravaersperioder2XMLFravaer))
+                .withSykmeldingsperiodeListe(map(sykepengesoknad, periode2XMLAktivitet))
+                .withUtdanning(mapNullable(sykepengesoknad.utdanning, sykepengesoeknad2XMLUtdanning))
+                .withAnnenInntektskildeListe(mapListe(sykepengesoknad.andreInntektskilder, annenInntektskilde2XML))
+                .withSendtTilArbeidsgiverDato(sykepengesoknad.sendtTilArbeidsgiverDato)
+                .withSendtTilNAVDato(sykepengesoknad.sendtTilNAVDato)
+    }
+
+
 
 private val fravaersperioder2XMLFravaer = { fravaersperioder ->
     XMLFravaer()
