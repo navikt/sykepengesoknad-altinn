@@ -28,7 +28,7 @@ constructor(private val organisasjonV4: OrganisasjonV4) {
         return hentJuridiskOrgnummer
     }
 
-    @Cacheable(cacheNames = arrayOf("organisasjon"))
+    @Cacheable(cacheNames = ["organisasjon"])
     fun hentOrganisasjon(orgnummer: String): WSOrganisasjon {
         try {
             return organisasjonV4.hentOrganisasjon(WSHentOrganisasjonRequest()
