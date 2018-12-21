@@ -1,124 +1,136 @@
 package no.nav.syfo
 
-import no.nav.melding.virksomhet.sykepengesoeknadarbeidsgiver.v1.sykepengesoeknadarbeidsgiver.XMLSykepengesoeknad
-import no.nav.melding.virksomhet.sykepengesoeknadarbeidsgiver.v1.sykepengesoeknadarbeidsgiver.XMLSykepengesoeknadArbeidsgiver
-import no.nav.syfo.domain.soknad.Sykepengesoknad
+import no.nav.melding.virksomhet.sykepengesoeknadarbeidsgiver.v1.sykepengesoeknadarbeidsgiver.*
+import no.nav.syfo.domain.soknad.*
+import kotlin.streams.toList
 
-
-//TODO gjøre denne mappingen når søknaden kommer på nytt format
-    val sykepengesoeknadArbeidsgiver2XML = { sykepengesoknad: Sykepengesoknad ->
-        XMLSykepengesoeknadArbeidsgiver()
-                .withJuridiskOrganisasjonsnummer(sykepengesoknad.juridiskOrgnummerArbeidsgiver)
-                .withVirksomhetsnummer(sykepengesoknad.orgnummerArbeidsgiver)
-                .withSykepengesoeknad(XMLSykepengesoeknad())
-        //.withSykepengesoeknad(sykepengesoeknad2XML(sykepengesoknad))
-    }
-
-    /*private val sykepengesoeknad2XML = { sykepengesoknad: Sykepengesoknad ->
-        XMLSykepengesoeknad()
-                .withSykepengesoeknadId(sykepengesoknad.id)
-                .withSykmeldingId(sykepengesoknad.sykmeldingId)
-                .withKorrigerer(sykepengesoknad.korrigerer)
-                .withPeriode(XMLPeriode().withFom(sykepengesoknad.fom).withTom(sykepengesoknad.tom))
-                .withSykmeldtesFnr(sykepengesoknad.fnr)
-                .withArbeidsgiverForskuttererLoenn(sykepengesoknad.arbeidsgiverForskutterer)
-                .withIdentdato(sykepengesoknad.startSykeforlop)
-                .withSykmeldingSkrevetDato(sykepengesoknad.sykmeldingUtskrevet)
-                .withArbeidGjenopptattDato(sykepengesoknad.arbeidGjenopptattDato)
-                .withHarBekreftetKorrektInformasjon(sykepengesoknad.bekreftetKorrektInformasjon)
-                .withHarBekreftetOpplysningsplikt(sykepengesoknad.bekreftetOpplysningsplikt)
-                .withFravaer(mapNullable(sykepengesoknad.fravaer, fravaersperioder2XMLFravaer))
-                .withSykmeldingsperiodeListe(map(sykepengesoknad, periode2XMLAktivitet))
-                .withUtdanning(mapNullable(sykepengesoknad.utdanning, sykepengesoeknad2XMLUtdanning))
-                .withAnnenInntektskildeListe(mapListe(sykepengesoknad.andreInntektskilder, annenInntektskilde2XML))
-                .withSendtTilArbeidsgiverDato(sykepengesoknad.sendtTilArbeidsgiverDato)
-                .withSendtTilNAVDato(sykepengesoknad.sendtTilNAVDato)
-    }
-
-
-
-private val fravaersperioder2XMLFravaer = { fravaersperioder ->
-    XMLFravaer()
-            .withEgenmeldingsperiodeListe(mapNullable(filterListe(fravaersperioder, fravaersperiodefilter(EGENMELDING)), fravaersperiode2XMLPeriode))
-            .withFerieListe(mapNullable(filterListe(fravaersperioder, fravaersperiodefilter(FERIE)), fravaersperiode2XMLPeriode))
-            .withPermisjonListe(mapNullable(filterListe(fravaersperioder, fravaersperiodefilter(PERMISJON)), fravaersperiode2XMLPeriode))
-            .withOppholdUtenforNorge(tilOppholdUtenforNorge(fravaersperioder))
+val sykepengesoeknadArbeidsgiver2XML = { sykepengesoknad: Sykepengesoknad,
+                                         //TODO skal juridisk kunne være null?
+                                         juridiskOrgnummerArbeidsgiver: String?,
+                                         fnr: String ->
+    XMLSykepengesoeknadArbeidsgiver()
+            .withJuridiskOrganisasjonsnummer(juridiskOrgnummerArbeidsgiver)
+            .withVirksomhetsnummer(sykepengesoknad.arbeidsgiver.orgnummer)
+            .withSykepengesoeknad(sykepengesoeknad2XML(sykepengesoknad, fnr))
 }
 
-private val periode2XMLAktivitet = { sykepengesoeknad ->
-    val virtuellePeriode = finnUtsnittAvPerioder(sykepengesoeknad.getSykmeldingDokument().perioder, sykepengesoeknad.fom, sykepengesoeknad.tom)
+private val sykepengesoeknad2XML = { sykepengesoknad: Sykepengesoknad,
+                                     fnr: String ->
+    XMLSykepengesoeknad()
+            .withSykepengesoeknadId(sykepengesoknad.id)
+            .withSykmeldingId(sykepengesoknad.sykmeldingId)
+            .withKorrigerer(sykepengesoknad.korrigerer)
+            .withPeriode(XMLPeriode().withFom(sykepengesoknad.fom).withTom(sykepengesoknad.tom))
+            .withSykmeldtesFnr(fnr)
+            .withArbeidsgiverForskuttererLoenn(sykepengesoknad.arbeidsgiverForskutterer.name)
+            .withIdentdato(sykepengesoknad.startSykeforlop)
+            .withSykmeldingSkrevetDato(sykepengesoknad.sykmeldingSkrevet?.toLocalDate())
+            .withArbeidGjenopptattDato(sykepengesoknad.arbeidGjenopptatt)
+            //TODO hmmm... ->
+            .withHarBekreftetKorrektInformasjon("CHECKED".equals(sykepengesoknad.getSporsmalMedTag("BEKREFT_OPPLYSNINGER").svar[0]))
+            .withHarBekreftetOpplysningsplikt("CHECKED".equals(sykepengesoknad.getSporsmalMedTag("ANSVARSERKLARING").svar[0]))
+            .withFravaer(sykepengesoknad2XMLFravar(sykepengesoknad))
+            .withSykmeldingsperiodeListe(soknadsperioder2XMLSykmeldingsperiode(sykepengesoknad.soknadsperioder))
+            .withUtdanning(fravar2XMLUtdanning(sykepengesoknad.fravar))
+            .withAnnenInntektskildeListe(listOrNull(andreInntektskilder2XMLAnnenInntektskildeListe(sykepengesoknad.andreInntektskilder)))
+            .withSendtTilArbeidsgiverDato(sykepengesoknad.sendtArbeidsgiver?.toLocalDate())
+            .withSendtTilNAVDato(sykepengesoknad.sendtNav?.toLocalDate())
+}
 
-    virtuellePeriode.stream().map(
-            { p ->
+private val soknadsperioder2XMLSykmeldingsperiode = { soknadsperioder: List<Soknadsperiode> ->
+    soknadsperioder.stream()
+            .map { soknadsperiode ->
                 XMLSykmeldingsperiode()
-                        .withGraderingsperiode(map(p, periode2XML))
-                        .withSykmeldingsgrad(p.grad)
-                        .withKorrigertArbeidstid(
-                                mapNullable(
-                                        sykepengesoeknad.korrigertArbeidstid
-                                                .stream()
-                                                .filter({ ka -> ka.periode.id.equals(p.id) })
-                                                .findFirst()
-                                                .orElse(null),
-                                        korrigertArbeidstid2XML))
-            }).collect(toList())
+                        .withGraderingsperiode(XMLPeriode()
+                                .withFom(soknadsperiode.fom)
+                                .withTom(soknadsperiode.tom))
+                        .withSykmeldingsgrad(soknadsperiode.sykmeldingsgrad)
+                        .withKorrigertArbeidstid(soknadsperiode2XMLKorrigertArbeidstid(soknadsperiode))
+            }
+            .toList()
 }
 
-private val periode2XML = { periode ->
+private val soknadsperiode2XMLKorrigertArbeidstid = { soknadsperiode: Soknadsperiode ->
+    if (soknadsperiode.faktiskGrad == null && soknadsperiode.faktiskTimer == null)
+        null
+    else
+        XMLKorrigertArbeidstid()
+                .withArbeidstimerNormaluke(soknadsperiode.avtaltTimer!!)
+                .withArbeidsgrad(soknadsperiode.faktiskGrad)
+                .withFaktiskeArbeidstimer(XMLFaktiskeArbeidstimer()
+                        .withArbeidstimer(soknadsperiode.faktiskTimer!!))
+    //TODO bergen arbeidsgrad
+    //funker det med !! i de over her?
+    //.withBeregnetArbeidsgrad())
+}
+
+private val andreInntektskilder2XMLAnnenInntektskildeListe = { andreInntektskilder: List<Inntektskilde> ->
+    andreInntektskilder.stream()
+            .map { inntektskilde ->
+                XMLAnnenInntektskilde()
+                        .withErSykmeldt(inntektskilde.sykmeldt)
+                        .withType(XMLAnnenInntektskildeType.valueOf(inntektskilde.type.name))
+            }
+            .toList()
+}
+
+private val fravar2XMLUtdanning = { fravarListe: List<Fravar> ->
+    fravarListe.stream()
+            .filter { fravar -> Fravarstype.UTDANNING_DELTID == fravar.type || Fravarstype.UTDANNING_FULLTID == fravar.type }
+            .map { fravar ->
+                XMLUtdanning()
+                        .withFom(fravar.fom)
+                        .withErFulltidsstudie(Fravarstype.UTDANNING_FULLTID == fravar.type)
+            }
+            .findFirst()
+            .orElse(null)
+}
+
+private val sykepengesoknad2XMLFravar = { sykepengesoknad: Sykepengesoknad ->
+    if (sykepengesoknad.egenmeldinger.isNullOrEmpty() && sykepengesoknad.fravar.isNullOrEmpty())
+        null
+    else
+        XMLFravaer()
+                .withFerieListe(listOrNull(fravar2XMLPeriode(sykepengesoknad.fravar, Fravarstype.FERIE)))
+                .withPermisjonListe(listOrNull(fravar2XMLPeriode(sykepengesoknad.fravar, Fravarstype.PERMISJON)))
+                .withOppholdUtenforNorge(fravar2XMLOppholdUtenforNorge(sykepengesoknad.fravar, sykepengesoknad.soktUtenlandsopphold))
+                .withEgenmeldingsperiodeListe(listOrNull(egenmeldinger2XMLPeriode(sykepengesoknad.egenmeldinger)))
+}
+
+private val fravar2XMLOppholdUtenforNorge = { fravar: List<Fravar>, soktUtenlandsopphold: Boolean? ->
+    XMLOppholdUtenforNorge()
+            .withPeriodeListe(listOrNull(fravar2XMLPeriode(fravar, Fravarstype.UTLANDSOPPHOLD)))
+            .withHarSoektOmSykepengerForOppholdet(soktUtenlandsopphold)
+}
+
+private val egenmeldinger2XMLPeriode = { egenmeldinger: List<Periode> ->
+    egenmeldinger.stream()
+            .map { periode -> periode2XMLPeriode(periode) }
+            .toList()
+}
+
+private val periode2XMLPeriode = { periode: Periode ->
     XMLPeriode()
             .withFom(periode.fom)
             .withTom(periode.tom)
 }
 
-private val sykepengesoeknad2XMLUtdanning = { utdanning ->
-    XMLUtdanning()
-            .withFom(utdanning.fom)
-            .withErFulltidsstudie(utdanning.fulltidsstudie)
+private val fravar2XMLPeriode = { fravarListe: List<Fravar>, type: Fravarstype ->
+    fravarListe.stream()
+            .filter { fravar -> fravar.type == type }
+            .map { fravar ->
+                XMLPeriode()
+                        .withFom(fravar.fom)
+                        .withTom(fravar.tom)
+            }
+            .toList()
 }
 
-private val annenInntektskilde2XML = { annenInntektskilde ->
-    XMLAnnenInntektskilde()
-            .withErSykmeldt(annenInntektskilde.sykmeldt)
-            .withType(map(annenInntektskilde.type, ???({ valueOf() })))
-}
-
-private val fravaersperiode2XMLPeriode = { fp ->
-    fp.stream()
-            .map({ fravaer -> fravaer.fravaersperioder })
-            .flatMap(???({ it.stream() }))
-    .map { fravaersperiode -> XMLPeriode().withFom(fravaersperiode.fom).withTom(fravaersperiode.tom) }
-        .collect(toList())
-}
-
-private val korrigertArbeidstid2XML = { korrigertArbeidstid ->
-    XMLKorrigertArbeidstid()
-            .withArbeidstimerNormaluke(korrigertArbeidstid.arbeidstimerNormalUke)
-            .withArbeidsgrad(korrigertArbeidstid.arbeidsgrad)
-            .withFaktiskeArbeidstimer(mapNullable(korrigertArbeidstid.faktiskeArbeidstimer) { faktiskeArbeidstimer ->
-                XMLFaktiskeArbeidstimer()
-                        .withArbeidstimer(faktiskeArbeidstimer.toDouble())
-                        .withBeregnetArbeidsgrad(korrigertArbeidstid.beregnetArbeidsgrad)
-            })
-}
-
-private fun tilOppholdUtenforNorge(fravaersperioder: List<Fravaer>): XMLOppholdUtenforNorge? {
-    return if (filterListe(fravaersperioder, fravaersperiodefilter(OPPHOLD_UTENFOR_NORGE))
-                    .isEmpty())
+private inline fun <reified T> listOrNull(list: List<T>?): List<T>? {
+    return if (list.isNullOrEmpty())
         null
     else
-        mapNullable(fravaersperioder, fravaersperiode2XMLOppholdUtenforNorge)
+        list
 }
 
-val fravaersperiode2XMLOppholdUtenforNorge = { fravaerListe ->
-    XMLOppholdUtenforNorge()
-            .withPeriodeListe(mapNullable(filterListe(fravaerListe, fravaersperiodefilter(OPPHOLD_UTENFOR_NORGE)), fravaersperiode2XMLPeriode))
-            .withHarSoektOmSykepengerForOppholdet(fravaerListe.stream()
-                    .filter(fravaersperiodefilter(OPPHOLD_UTENFOR_NORGE))
-                    .findAny()
-                    .map({ f -> f.soektOmSykepengerIPerioden })
-                    .orElse(null))
-}
 
-private fun fravaersperiodefilter(vararg type: Fravaersperiodetype): Predicate<Fravaer> {
-    return { fravaersperiode -> Stream.of(type).anyMatch({ fravaersperiodetype -> fravaersperiodetype.equals(fravaersperiode.type) }) }
-}*/

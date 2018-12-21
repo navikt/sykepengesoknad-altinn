@@ -45,3 +45,5 @@ fasitResources:
     resourceType: webserviceendpoint
   - alias: virksomhet:Organisasjon_v4
     resourceType: webserviceendpoint
+  - alias: virksomhet:Person_v3
+    resourceType: webserviceendpoint

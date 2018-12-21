@@ -53,12 +53,15 @@
         <mockito-all.version>2.15.0</mockito-all.version>
         <assertj-core.version>3.6.2</assertj-core.version>
         <cxf.version>3.2.0</cxf.version>
-        <soknad.version>2</soknad.version>
+        <sykepengesoknad.version>1</sykepengesoknad.version>
         <behandle-altinnmelding.version>1.0</behandle-altinnmelding.version>
         <altinn-correspondence-agency-external.version>1.0</altinn-correspondence-agency-external.version>
         <digisyfo-sykepengesoeknadarbeidsgiver.version>1.0.5</digisyfo-sykepengesoeknadarbeidsgiver.version>
         <organisasjonv4-tjenestespesifikasjon.version>1.0.1</organisasjonv4-tjenestespesifikasjon.version>
         <bom.version>2018.10.23.14.04</bom.version>
+        <person.version>3.2.0</person.version>
+        <aktoer.version>1.0</aktoer.version>
+        <kafkautils.version>1</kafkautils.version>
     </properties>
 
     <dependencies>
@@ -91,12 +94,6 @@
         </dependency>
 
         <dependency>
-            <groupId>no.nav.syfo.kafka</groupId>
-            <artifactId>soknad</artifactId>
-            <version>${soknad.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>no.nav.syfo.tjeneste</groupId>
             <artifactId>behandle-altinnmelding-v1</artifactId>
             <version>${behandle-altinnmelding.version}</version>
@@ -116,7 +113,7 @@
             <artifactId>organisasjonv4-tjenestespesifikasjon</artifactId>
             <version>${organisasjonv4-tjenestespesifikasjon.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-cxf</artifactId>
             <version>${bom.version}</version>
@@ -126,7 +123,7 @@
                     <artifactId>jaxb-impl</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>org.apache.cxf</groupId>
@@ -152,7 +149,12 @@
         <dependency>
             <groupId>no.nav.syfo.tjenester</groupId>
             <artifactId>aktoer-v2</artifactId>
-            <version>1.0</version>
+            <version>${aktoer.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.tjenester</groupId>
+            <artifactId>nav-person-v3-tjenestespesifikasjon</artifactId>
+            <version>${person.version}</version>
         </dependency>
 
         <dependency>
@@ -168,7 +170,12 @@
         <dependency>
             <groupId>no.nav.syfo.kafka</groupId>
             <artifactId>kafkautils</artifactId>
-            <version>1</version>
+            <version>${kafkautils.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.syfo.kafka</groupId>
+            <artifactId>sykepengesoknad</artifactId>
+            <version>${sykepengesoknad.version}</version>
         </dependency>
 
         <dependency>

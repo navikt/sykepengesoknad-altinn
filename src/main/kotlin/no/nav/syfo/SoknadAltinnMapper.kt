@@ -20,7 +20,7 @@ import javax.xml.namespace.QName
 
 @Component
 class SoknadAltinnMapper @Inject
-constructor(private val pdfRestController: PDFRestController) {
+constructor() {
 
     val log = log()
 
@@ -38,7 +38,7 @@ constructor(private val pdfRestController: PDFRestController) {
         return InsertCorrespondenceV2()
                 .withAllowForwarding(JAXBElement<Boolean>(QName(namespace, "AllowForwarding"), Boolean::class.java, false))
                 .withReportee(JAXBElement<String>(QName(namespace, "Reportee"), String::class.java,
-                        sykepengesoknadAltinn.sykepengesoknad.orgnummerArbeidsgiver))
+                        sykepengesoknadAltinn.sykepengesoknad.arbeidsgiver.orgnummer))
                 .withMessageSender(JAXBElement<String>(QName(namespace, "MessageSender"), String::class.java,
                         byggMessageSender(sykepengesoknadAltinn)))
                 .withServiceCode(JAXBElement<String>(QName(namespace, "ServiceCode"), String::class.java, SYKEPENGESOEKNAD_TJENESTEKODE))
@@ -48,27 +48,20 @@ constructor(private val pdfRestController: PDFRestController) {
     }
 
     private fun opprettTittel(sykepengesoknadAltinn: SykepengesoknadAltinn): String {
-        val sykepengesoknad = sykepengesoknadAltinn.sykepengesoknad
+        val brukersNavn = sykepengesoknadAltinn.navn
+        val fnr = sykepengesoknadAltinn.fnr
 
-        val brukersNavn = sykepengesoknad.navn
-        val fnr = sykepengesoknad.fnr
-
-        //TODO er søknaden sendt til nav?
-        //return if (sykepengesoknad.sendtTilNAVDato != null) {
-        return if(true) {
-            "Søknad om sykepenger - " + periodeSomTekst(sykepengesoknad) + " - " + brukersNavn + " (" + fnr + ") - sendt til NAV"
+        return if (sykepengesoknadAltinn.sykepengesoknad.sendtNav != null) {
+            "Søknad om sykepenger - " + periodeSomTekst(sykepengesoknadAltinn) + " - " + brukersNavn + " (" + fnr + ") - sendt til NAV"
         } else {
-            "Søknad om sykepenger - " + periodeSomTekst(sykepengesoknad) + " - " + brukersNavn + " (" + fnr + ")"
+            "Søknad om sykepenger - " + periodeSomTekst(sykepengesoknadAltinn) + " - " + brukersNavn + " (" + fnr + ")"
         }
     }
 
     private fun opprettInnholdstekst(sykepengesoknad: Sykepengesoknad): String {
         try {
-            //TODO sjekk om soknad er sendt til både nav og arbeidsgiver
-            //return if (sykepengesoknad.sendtTilNAVDato != null && sykepengesoknad.sendtTilArbeidsgiverDato != null) {
-            return if (true) {
+            return if (sykepengesoknad.sendtNav != null && sykepengesoknad.sendtArbeidsgiver != null) {
                 SykepengesoknadAltinn::class.java.getResource("/sykepengesoknad-sendt-til-AG-og-NAV-tekst.html").readText()
-
             } else {
                 SykepengesoknadAltinn::class.java.getResource("/sykepengesoknad-sendt-til-AG-tekst.html").readText()
             }
@@ -86,10 +79,7 @@ constructor(private val pdfRestController: PDFRestController) {
             return "Autogenerert på grunn av et registrert dødsfall"
         }
 
-        val brukersNavn = sykepengesoknadAltinn.sykepengesoknad.navn
-        val fnr = sykepengesoknadAltinn.sykepengesoknad.fnr
-
-        return brukersNavn + " - " + fnr
+        return sykepengesoknadAltinn.navn + " - " + sykepengesoknadAltinn.fnr
     }
 
     private fun opprettNotifications(namespace: String): JAXBElement<NotificationBEList> {
@@ -123,8 +113,8 @@ constructor(private val pdfRestController: PDFRestController) {
                                         JAXBElement<BinaryAttachmentExternalBEV2List>(QName(namespace, "BinaryAttachments"), BinaryAttachmentExternalBEV2List::class.java,
                                                 BinaryAttachmentExternalBEV2List()
                                                         .withBinaryAttachmentV2(
-                                                                pdfVedlegg(binaryNamespace, sykepengesoknadAltinn),
-                                                                xmlVedlegg(binaryNamespace, sykepengesoknadAltinn)
+                                                                pdfVedlegg(binaryNamespace, sykepengesoknadAltinn.pdf),
+                                                                xmlVedlegg(binaryNamespace, sykepengesoknadAltinn.xml)
                                                         )
                                         )
                                 )
@@ -133,13 +123,13 @@ constructor(private val pdfRestController: PDFRestController) {
         )
     }
 
-    private fun pdfVedlegg(binaryNamespace: String, sykepengesoknadAltinn: SykepengesoknadAltinn): BinaryAttachmentV2 {
-        return opprettBinaertVedlegg(binaryNamespace, pdfRestController.getPDF(sykepengesoknadAltinn.sykepengesoknad, PDFTemplate.ARBEIDSTAKERE), SHOW_TO_ALL, "Sykepengesøknad", "Sykepengesøknad.pdf")
+    private fun pdfVedlegg(binaryNamespace: String, pdf: ByteArray): BinaryAttachmentV2 {
+        return opprettBinaertVedlegg(binaryNamespace, pdf, SHOW_TO_ALL, "Sykepengesøknad", "Sykepengesøknad.pdf")
     }
 
     //TODO få med XML
-    private fun xmlVedlegg(binaryNamespace: String, sykepengesoknadAltinn: SykepengesoknadAltinn): BinaryAttachmentV2 {
-        return opprettBinaertVedlegg(binaryNamespace, "DETTE ER EN XML".toByteArray(), SHOW_TO_ALL, "Sykepengesøknad maskinlesbar", "sykepengesoknad.xml")
+    private fun xmlVedlegg(binaryNamespace: String, xml: ByteArray): BinaryAttachmentV2 {
+        return opprettBinaertVedlegg(binaryNamespace, xml, SHOW_TO_ALL, "Sykepengesøknad maskinlesbar", "sykepengesoknad.xml")
     }
 
     private fun opprettBinaertVedlegg(binaryNamespace: String, bytes: ByteArray, restriction: UserTypeRestriction, name: String, fileName: String): BinaryAttachmentV2 {
@@ -163,9 +153,9 @@ constructor(private val pdfRestController: PDFRestController) {
                 .orElseGet({ getProperty("altinn.test.overstyr.orgnr", orgnummer) })
     }*/
 
-    fun periodeSomTekst(sykepengesoknad: Sykepengesoknad): String {
+    fun periodeSomTekst(sykepengesoknadAltinn: SykepengesoknadAltinn): String {
         val dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-        return dateTimeFormatter.format(sykepengesoknad.fom) + "-" + dateTimeFormatter.format(sykepengesoknad.tom)
+        return dateTimeFormatter.format(sykepengesoknadAltinn.sykepengesoknad.fom) + "-" + dateTimeFormatter.format(sykepengesoknadAltinn.sykepengesoknad.tom)
     }
 
 

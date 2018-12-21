@@ -1,6 +1,6 @@
 package no.nav.syfo.domain.soknad
 
-enum class Soknadstatus {
+enum class Soknadsstatus {
     NY,
     SENDT,
     FREMTIDIG,

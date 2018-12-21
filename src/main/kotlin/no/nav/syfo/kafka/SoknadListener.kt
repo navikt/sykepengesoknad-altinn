@@ -2,7 +2,7 @@ package no.nav.syfo.kafka
 
 import no.nav.syfo.CALL_ID
 import no.nav.syfo.SendTilAltinnService
-import no.nav.syfo.domain.soknad.Soknadstatus
+import no.nav.syfo.domain.soknad.Soknadsstatus
 import no.nav.syfo.domain.soknad.Soknadstype
 import no.nav.syfo.kafka.KafkaHeaderConstants.getLastHeaderByKeyAsString
 import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
@@ -17,13 +17,12 @@ import javax.inject.Inject
 
 @Component
 class SoknadListener @Inject
-constructor(private val sendTilAltinnService: SendTilAltinnService,
-            private val innsendingFeiletProducer: InnsendingFeiletProducer) {
+constructor(private val sendTilAltinnService: SendTilAltinnService) {
 
     val log = log()
     var sendtForsteSoknad = false
 
-    @KafkaListener(topics = ["syfo-soknad-v1"], id = "soknadSendt", idIsGroup = false)
+    @KafkaListener(topics = ["syfo-soknad-v2"], id = "soknadSendt", idIsGroup = false)
     fun listen(cr: ConsumerRecord<String, SykepengesoknadDTO>, acknowledgment: Acknowledgment) {
         log.info("Melding mottatt på topic: {} med offsett: {}", cr.topic(), cr.offset())
 
@@ -32,8 +31,8 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
 
             val sykepengesoknad = konverter(cr.value())
 
-            if (Soknadstype.ARBEIDSTAKERE.equals(sykepengesoknad.soknadstype)
-                    && Soknadstatus.SENDT.equals(sykepengesoknad.status)) {
+            if (Soknadstype.ARBEIDSTAKERE == sykepengesoknad.type
+                    && Soknadsstatus.SENDT == sykepengesoknad.status) {
 
                 //TODO behandle innsendt søknad
                 log.info("har plukket opp søknad: {}", sykepengesoknad.toString())
@@ -41,7 +40,7 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
                 if (!sendtForsteSoknad) {
                     sendtForsteSoknad = true
                     val sendSykepengesoknadTilArbeidsgiver = sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
-                    log.info("Får denne kvitteringen etter innsending til altinn: " + sendSykepengesoknadTilArbeidsgiver)
+                    log.info("Får denne kvitteringen etter innsending til altinn: $sendSykepengesoknadTilArbeidsgiver")
                 }
                 log.info("ignorerer foreløpig den mottatte søknaden")
 
@@ -52,7 +51,6 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
             log.error("Uventet feil ved behandling av søknad", e)
 
             //TODO putt på feil-topic
-            innsendingFeiletProducer.innsendingFeilet(cr.value())
 
             throw RuntimeException("Uventet feil ved behandling av søknad")
         } finally {
