@@ -53,7 +53,6 @@
         <mockito-all.version>2.15.0</mockito-all.version>
         <assertj-core.version>3.6.2</assertj-core.version>
         <cxf.version>3.2.0</cxf.version>
-        <sykepengesoknad.version>1</sykepengesoknad.version>
         <behandle-altinnmelding.version>1.0</behandle-altinnmelding.version>
         <altinn-correspondence-agency-external.version>1.0</altinn-correspondence-agency-external.version>
         <digisyfo-sykepengesoeknadarbeidsgiver.version>1.0.5</digisyfo-sykepengesoeknadarbeidsgiver.version>
@@ -61,7 +60,9 @@
         <bom.version>2018.10.23.14.04</bom.version>
         <person.version>3.2.0</person.version>
         <aktoer.version>1.0</aktoer.version>
-        <kafkautils.version>1</kafkautils.version>
+        <sykepengesoknad.version>1</sykepengesoknad.version>
+        <kafkautils.version>2</kafkautils.version>
+        <serialisering.version>1</serialisering.version>
     </properties>
 
     <dependencies>
@@ -171,6 +172,11 @@
             <groupId>no.nav.syfo.kafka</groupId>
             <artifactId>kafkautils</artifactId>
             <version>${kafkautils.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.syfo.kafka</groupId>
+            <artifactId>serialisering</artifactId>
+            <version>${serialisering.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.syfo.kafka</groupId>

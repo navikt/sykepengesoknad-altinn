@@ -19,7 +19,7 @@ fun konverter(sykepengesoknadDTO: SykepengesoknadDTO): Sykepengesoknad {
             arbeidsgiverForskutterer = ArbeidsverForskutterer.valueOf(sykepengesoknadDTO.arbeidsgiverForskutterer.name),
             fom = sykepengesoknadDTO.fom,
             tom = sykepengesoknadDTO.tom,
-            startSykeforlop = sykepengesoknadDTO.startSykeforlop,
+            startSykeforlop = sykepengesoknadDTO.startSyketilfelle,
             arbeidGjenopptatt = sykepengesoknadDTO.arbeidGjenopptatt,
             sykmeldingSkrevet = sykepengesoknadDTO.sykmeldingSkrevet,
             opprettet = sykepengesoknadDTO.opprettet,
@@ -37,7 +37,7 @@ fun konverter(sykepengesoknadDTO: SykepengesoknadDTO): Sykepengesoknad {
             andreInntektskilder = sykepengesoknadDTO.andreInntektskilder.stream()
                     .map(::konverter)
                     .collect(Collectors.toList()),
-            soknadsperioder = sykepengesoknadDTO.soknadPerioder.stream()
+            soknadsperioder = sykepengesoknadDTO.soknadsperioder.stream()
                     .map(::konverter)
                     .collect(Collectors.toList()),
             sporsmal = sykepengesoknadDTO.sporsmal.stream()
@@ -61,7 +61,7 @@ private fun konverter(sporsmalDTO: SporsmalDTO): Sporsmal {
             svartype = Svartype.valueOf(sporsmalDTO.svartype.name),
             min = sporsmalDTO.min,
             max = sporsmalDTO.max,
-            kriterieForVisningAvUndersporsmal = enumValueOrNull(sporsmalDTO.kriterieForVisningAvUndersporsmal.name),
+            kriterieForVisningAvUndersporsmal = enumValueOrNull(sporsmalDTO.kriteriumForVisningAvUndersporsmal.name),
             svar = sporsmalDTO.svar.stream()
                     .map(::konverter)
                     .collect(Collectors.toList()),
@@ -75,11 +75,11 @@ private fun konverter(soknadPeriodeDTO: SoknadsperiodeDTO): Soknadsperiode {
     return Soknadsperiode(
             fom = soknadPeriodeDTO.fom,
             tom = soknadPeriodeDTO.tom,
-            sykmeldingsgrad = soknadPeriodeDTO.sykmeldingGrad,
+            sykmeldingsgrad = soknadPeriodeDTO.sykmeldingsgrad,
             faktiskGrad = soknadPeriodeDTO.faktiskGrad,
             avtaltTimer = soknadPeriodeDTO.avtaltTimer,
             faktiskTimer = soknadPeriodeDTO.faktiskTimer,
-            sykmeldingstype = enumValueOrNull(soknadPeriodeDTO.sykmeldingtype.name))
+            sykmeldingstype = enumValueOrNull(soknadPeriodeDTO.sykmeldingstype.name))
 }
 
 private fun konverter(arbeidsgiverDTO: ArbeidsgiverDTO): Arbeidsgiver {
