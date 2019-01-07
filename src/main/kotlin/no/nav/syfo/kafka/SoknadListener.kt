@@ -21,7 +21,6 @@ class SoknadListener @Inject
 constructor(private val sendTilAltinnService: SendTilAltinnService) {
 
     val log = log()
-    var sendtForsteSoknad = false
 
     @KafkaListener(topics = ["syfo-soknad-v2"], id = "soknadSendt", idIsGroup = false)
     fun listen(cr: ConsumerRecord<String, Soknad>, acknowledgment: Acknowledgment) {
@@ -37,15 +36,12 @@ constructor(private val sendTilAltinnService: SendTilAltinnService) {
 
                 log.info("har plukket opp søknad: {}", sykepengesoknad.toString())
 
-                //TODO behandle alle innsendte søknader (nå behandles bare den første)
-                if (!sendtForsteSoknad) {
-                    sendtForsteSoknad = true
-                    val sendSykepengesoknadTilArbeidsgiver = sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
-                    //TODO denne må også logges til juridisk logg
-                    log.info("Får denne kvitteringen etter innsending til altinn: $sendSykepengesoknadTilArbeidsgiver")
-                }
-                log.info("ignorerer foreløpig den mottatte søknaden")
+                //TODO behandle alle innsendte søknader
+                //val sendSykepengesoknadTilArbeidsgiver = sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
+                //TODO denne må også logges til juridisk logg
+                //log.info("Får denne kvitteringen etter innsending til altinn: $sendSykepengesoknadTilArbeidsgiver")
 
+                log.info("ignorerer foreløpig den mottatte søknaden")
             }
 
             acknowledgment.acknowledge()
