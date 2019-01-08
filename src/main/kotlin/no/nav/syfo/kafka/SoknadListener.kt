@@ -1,9 +1,6 @@
 package no.nav.syfo.kafka
 
 import no.nav.syfo.CALL_ID
-import no.nav.syfo.SendTilAltinnService
-import no.nav.syfo.domain.soknad.Soknadsstatus
-import no.nav.syfo.domain.soknad.Soknadstype
 import no.nav.syfo.kafka.KafkaHeaderConstants.getLastHeaderByKeyAsString
 import no.nav.syfo.kafka.interfaces.Soknad
 import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
@@ -18,39 +15,25 @@ import javax.inject.Inject
 
 @Component
 class SoknadListener @Inject
-constructor(private val sendTilAltinnService: SendTilAltinnService) {
-
+constructor(private val internSoknadsbehandlingProducer: InternSoknadsbehandlingProducer) {
     val log = log()
 
     @KafkaListener(topics = ["syfo-soknad-v2"], id = "soknadSendt", idIsGroup = false)
     fun listen(cr: ConsumerRecord<String, Soknad>, acknowledgment: Acknowledgment) {
-        log.info("Melding mottatt på topic: {} med offsett: {}", cr.topic(), cr.offset())
+        log.info("Melding mottatt på topic: ${cr.topic()} med offsett: ${cr.offset()}")
 
         try {
             MDC.put(CALL_ID, getLastHeaderByKeyAsString(cr.headers(), CALL_ID).orElse(randomUUID().toString()))
 
-            val sykepengesoknad = konverter(cr.value() as SykepengesoknadDTO)
+            val sykepengesoknadDTO = cr.value() as SykepengesoknadDTO
 
-            if (Soknadstype.ARBEIDSTAKERE == sykepengesoknad.type
-                    && Soknadsstatus.SENDT == sykepengesoknad.status) {
-
-                log.info("har plukket opp søknad: {}", sykepengesoknad.toString())
-
-                //TODO behandle alle innsendte søknader
-                //val sendSykepengesoknadTilArbeidsgiver = sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
-                //TODO denne må også logges til juridisk logg
-                //log.info("Får denne kvitteringen etter innsending til altinn: $sendSykepengesoknadTilArbeidsgiver")
-
-                log.info("ignorerer foreløpig den mottatte søknaden")
-            }
+            log.info("har plukket opp søknad: ${sykepengesoknadDTO.id}, legger på intern topic")
+            internSoknadsbehandlingProducer.leggPaInternTopic(sykepengesoknadDTO)
 
             acknowledgment.acknowledge()
         } catch (e: Exception) {
-            log.error("Uventet feil ved behandling av søknad", e)
-
-            //TODO putt på feil-topic
-
-            throw RuntimeException("Uventet feil ved behandling av søknad")
+            log.error("Uventet feil ved mottak av søknad på topic: ${cr.topic()}", e)
+            throw RuntimeException("Uventet feil ved mottak av søknad på topic: ${cr.topic()}")
         } finally {
             MDC.remove(CALL_ID)
         }

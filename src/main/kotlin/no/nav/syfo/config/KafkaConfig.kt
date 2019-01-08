@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import io.micrometer.core.instrument.MeterRegistry
 import no.nav.syfo.kafka.KafkaErrorHandler
+import no.nav.syfo.kafka.KafkaHeaderConstants.MELDINGSTYPE
+import no.nav.syfo.kafka.KafkaHeaderConstants.getLastHeaderByKeyAsString
 import no.nav.syfo.kafka.interfaces.Soknad
 import no.nav.syfo.kafka.soknad.deserializer.MultiFunctionDeserializer
 import no.nav.syfo.kafka.soknad.serializer.FunctionSerializer
@@ -20,9 +22,11 @@ import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.*
 import org.springframework.kafka.listener.AbstractMessageListenerContainer
+import org.springframework.kafka.listener.adapter.RecordFilterStrategy
 import java.util.Collections.singletonMap
 import java.util.function.BiFunction
 import java.util.function.Function
+
 
 @Configuration
 @EnableKafka
@@ -33,14 +37,25 @@ class KafkaConfig {
             .configure(READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE, true)
 
     @Bean
+    fun recordFilterStrategy(): RecordFilterStrategy<String, Soknad> {
+        return RecordFilterStrategy { consumerRecord ->
+            !getLastHeaderByKeyAsString(consumerRecord.headers(), MELDINGSTYPE)
+                    .filter(listOf("SYKEPENGESOKNAD")::contains)
+                    .isPresent
+        }
+    }
+
+    @Bean
     fun kafkaListenerContainerFactory(
             consumerFactory: ConsumerFactory<String, Soknad>,
-            meterRegistry: MeterRegistry
+            meterRegistry: MeterRegistry,
+            recordFilterStrategy: RecordFilterStrategy<String, Soknad>
     ): ConcurrentKafkaListenerContainerFactory<String, Soknad> {
         val factory = ConcurrentKafkaListenerContainerFactory<String, Soknad>()
         factory.containerProperties.ackMode = AbstractMessageListenerContainer.AckMode.MANUAL_IMMEDIATE
         factory.containerProperties.setErrorHandler(KafkaErrorHandler(meterRegistry))
         factory.consumerFactory = consumerFactory
+        factory.setRecordFilterStrategy(recordFilterStrategy)
         return factory
     }
 
