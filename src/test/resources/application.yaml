@@ -9,11 +9,18 @@ fasit.environment.name: local
 
 app.name: syfoaltinn
 
+altinnUser.username: "username"
+altinnUser.password: "password"
+ekstern.altinn.behandlealtinnmelding.v1.endpointurl: "ekstern.altinn.behandlealtinnmelding.v1.endpointurl"
+
+virksomhet.Organisasjon.v4.endpointurl: "virksomhet.Organisasjon.v4.endpointurl"
+
 srvsyfoaltinn:
   username: "kek"
   password: "bur"
 
 aktoer.v2.endpointurl: "aktoer.url"
+virksomhet.Person.v3.endpointurl: "virksomhet.Person.v3.endpointurl"
 servicegateway.url: "servicegateway.url"
 securitytokenservice.url: "sts.url"
 

@@ -39,3 +39,11 @@ fasitResources:
     resourceType: baseurl
     propertyMap:
       url: SPRING_KAFKA_BOOTSTRAP-SERVERS
+  - alias: altinnUser
+    resourceType: credential
+  - alias: ekstern:altinn_behandlealtinnmelding_v1
+    resourceType: webserviceendpoint
+  - alias: virksomhet:Organisasjon_v4
+    resourceType: webserviceendpoint
+  - alias: virksomhet:Person_v3
+    resourceType: webserviceendpoint

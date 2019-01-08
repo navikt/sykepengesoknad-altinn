@@ -9,7 +9,7 @@ data class Sporsmal(
         val svartype: Svartype? = null,
         val min: String? = null,
         val max: String? = null,
-        val kriterieForVisningAvUndersporsmal: Visningskriterie? = null,
+        val kriterieForVisningAvUndersporsmal: Visningskriterium? = null,
         val svar: List<Svar> = arrayListOf(),
         val undersporsmal: List<Sporsmal> = arrayListOf()
 )

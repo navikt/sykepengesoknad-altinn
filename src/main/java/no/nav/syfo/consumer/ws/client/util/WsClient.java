@@ -16,11 +16,13 @@ import java.util.Objects;
 public class WsClient<T> {
 
     @SuppressWarnings("unchecked")
-    public T createPort(String serviceUrl, Class<?> portType, List<Handler> handlers, PhaseInterceptor<? extends Message>... interceptors) {
+    public T createPort(String serviceUrl, Class<?> portType, List<Handler> handlers, boolean inkluderWSAddressing, PhaseInterceptor<? extends Message>... interceptors) {
         JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
         jaxWsProxyFactoryBean.setServiceClass(portType);
         jaxWsProxyFactoryBean.setAddress(Objects.requireNonNull(serviceUrl));
-        jaxWsProxyFactoryBean.getFeatures().add(new WSAddressingFeature());
+        if (inkluderWSAddressing) {
+            jaxWsProxyFactoryBean.getFeatures().add(new WSAddressingFeature());
+        }
         T port = (T) jaxWsProxyFactoryBean.create();
         ((BindingProvider) port).getBinding().setHandlerChain(handlers);
         Client client = ClientProxy.getClient(port);

@@ -1,7 +1,7 @@
 package no.nav.syfo.domain.soknad
 
-enum class Visningskriterie {
+enum class ArbeidsverForskutterer {
     JA,
     NEI,
-    CHECKED
+    VET_IKKE
 }

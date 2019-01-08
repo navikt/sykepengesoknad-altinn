@@ -9,8 +9,8 @@ import org.springframework.util.StringUtils.isEmpty
 import javax.inject.Inject
 
 @Component
-class AktoerConsumer @Inject
-constructor(private val aktoerV2: AktoerV2) {
+class AktorConsumer @Inject
+constructor(private val aktorV2: AktoerV2) {
     val log = log()
 
     fun finnFnr(aktoerId: String): String {
@@ -19,7 +19,7 @@ constructor(private val aktoerV2: AktoerV2) {
         }
 
         try {
-            val fnr = aktoerV2.hentIdentForAktoerId(WSHentIdentForAktoerIdRequest().withAktoerId(aktoerId)).ident
+            val fnr = aktorV2.hentIdentForAktoerId(WSHentIdentForAktoerIdRequest().withAktoerId(aktoerId)).ident
             log.info("fant fnr for aktørid")
 
             return fnr

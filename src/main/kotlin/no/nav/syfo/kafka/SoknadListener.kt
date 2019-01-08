@@ -2,6 +2,7 @@ package no.nav.syfo.kafka
 
 import no.nav.syfo.CALL_ID
 import no.nav.syfo.kafka.KafkaHeaderConstants.getLastHeaderByKeyAsString
+import no.nav.syfo.kafka.interfaces.Soknad
 import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
 import no.nav.syfo.log
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -10,27 +11,29 @@ import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
 import java.util.UUID.randomUUID
+import javax.inject.Inject
 
 @Component
-class SoknadListener {
+class SoknadListener @Inject
+constructor(private val internSoknadsbehandlingProducer: InternSoknadsbehandlingProducer) {
     val log = log()
 
-    @KafkaListener(topics = ["syfo-soknad-v1"], id = "soknadSendt", idIsGroup = false)
-    fun listen(cr: ConsumerRecord<String, SykepengesoknadDTO>, acknowledgment: Acknowledgment) {
-        log.info("Melding mottatt på topic: {} med offsett: {}", cr.topic(), cr.offset())
+    @KafkaListener(topics = ["syfo-soknad-v2"], id = "soknadSendt", idIsGroup = false)
+    fun listen(cr: ConsumerRecord<String, Soknad>, acknowledgment: Acknowledgment) {
+        log.info("Melding mottatt på topic: ${cr.topic()} med offsett: ${cr.offset()}")
 
         try {
-            MDC.put(CALL_ID, getLastHeaderByKeyAsString(cr.headers(), CALL_ID, randomUUID().toString()))
+            MDC.put(CALL_ID, getLastHeaderByKeyAsString(cr.headers(), CALL_ID).orElse(randomUUID().toString()))
 
-            val sykepengesoknad = konverter(cr.value())
+            val sykepengesoknadDTO = cr.value() as SykepengesoknadDTO
 
-            //TODO behandle innsendt søknad
-            log.info("har plukket opp søknad: {}", sykepengesoknad.toString())
+            log.info("har plukket opp søknad: ${sykepengesoknadDTO.id}, legger på intern topic")
+            internSoknadsbehandlingProducer.leggPaInternTopic(sykepengesoknadDTO)
 
             acknowledgment.acknowledge()
         } catch (e: Exception) {
-            log.error("Uventet feil ved behandling av søknad", e)
-            throw RuntimeException("Uventet feil ved behandling av søknad")
+            log.error("Uventet feil ved mottak av søknad på topic: ${cr.topic()}", e)
+            throw RuntimeException("Uventet feil ved mottak av søknad på topic: ${cr.topic()}")
         } finally {
             MDC.remove(CALL_ID)
         }
