@@ -1,12 +1,16 @@
 package no.nav.syfo
 
+import no.nav.melding.virksomhet.sykepengesoeknadarbeidsgiver.v1.sykepengesoeknadarbeidsgiver.ObjectFactory
 import no.nav.syfo.consumer.ws.client.AktorConsumer
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
 import no.nav.syfo.consumer.ws.client.OrganisasjonConsumer
 import no.nav.syfo.consumer.ws.client.PersonConsumer
 import no.nav.syfo.domain.soknad.Sykepengesoknad
+import no.nav.syfo.rest.PDFRestController
+import no.nav.syfo.util.JAXB
 import org.springframework.stereotype.Service
 import javax.inject.Inject
+import javax.xml.bind.ValidationEvent
 
 
 @Service
@@ -21,47 +25,27 @@ constructor(private val aktorConsumer: AktorConsumer,
 
     fun sendSykepengesoknadTilAltinn(sykepengesoknad: Sykepengesoknad) {
 
-        val fnr = aktorConsumer.finnFnr(sykepengesoknad.aktorId)
-        val navn = personConsumer.finnBrukerPersonnavnByFnr(fnr)
-        val juridiskOrgnummerArbeidsgiver = organisasjonConsumer.hentJuridiskOrgnummer(sykepengesoknad.arbeidsgiver.orgnummer)
-        val pdf = pdfRestController.getPDF(sykepengesoknad, PDFTemplate.ARBEIDSTAKERE)
-        val xmlSykepengesoeknadArbeidsgiver = sykepengesoeknadArbeidsgiver2XML(sykepengesoknad, juridiskOrgnummerArbeidsgiver, fnr)
+        sykepengesoknad.fnr = aktorConsumer.finnFnr(sykepengesoknad.aktorId)
+        sykepengesoknad.navn = personConsumer.finnBrukerPersonnavnByFnr(sykepengesoknad.fnr)
+        sykepengesoknad.juridiskOrgnummerArbeidsgiver = organisasjonConsumer.hentJuridiskOrgnummer(sykepengesoknad.arbeidsgiver.orgnummer)
+        sykepengesoknad.pdf = pdfRestController.getPDFArbeidstakere(sykepengesoknad)
 
-        val sykepengesoknadAltinn = SykepengesoknadAltinn(sykepengesoknad,
-                fnr,
-                navn,
-                xmlSykepengesoeknadArbeidsgiver,
-                pdf)
+        // TODO XMLSykepengesoeknadArbeidsgiver må logges til juridisk logg
+        val validationEventer: MutableList<ValidationEvent> = mutableListOf()
+        sykepengesoknad.xml = JAXB.marshallSykepengesoeknadArbeidsgiver(
+                ObjectFactory().createSykepengesoeknadArbeidsgiver(sykepengesoeknadArbeidsgiver2XML(sykepengesoknad))
+        ) { event ->
+            validationEventer.add(event)
+            true
+        }.toByteArray()
 
-
-        //sykepengesoknad.getSykmeldingDokument().bruker.fnr = aktoerIdConsumer.finnFnr(sykepengesoknad.getSykmeldingDokument().bruker.aktoerId)
-        //sykepengesoknad.getSykmeldingDokument().arbeidsgiver.juridiskOrgnummer = organisasjonService.hentJuridiskOrgnummer(sykepengesoknad.getSykmeldingDokument().arbeidsgiver.orgnummer)
-
-        /*val metadata = Metadata(
-                organisasjonService.hentNavn(sykepengesoknad.getSykmeldingDokument().arbeidsgiver.orgnummer),
-                personConsumer.finnBrukerPersonnavnByFnr(sykepengesoknad.getSykmeldingDokument().getPasientFnr()),
-                sykepengesoknad.sykepengesoeknadUuid,
-                sykepengesoknad.korrigerer != null
-        )*/
-
-
-        //TODO validering
-        if (sykepengesoknadAltinn.validationEventer.isEmpty()) {
-            altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknadAltinn)
+        if (validationEventer.isEmpty()) {
+            altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
+        } else {
+            val feil = validationEventer.joinToString("\n") { it.message }
+            log.error("Validering feilet for sykepengesøknad med id ${sykepengesoknad.id} med følgende feil: $feil")
+            throw RuntimeException("Validering feilet for sykepengesøknad med id ${sykepengesoknad.id} med følgende feil: $feil")
         }
-        /*val event = createEvent("antallDagerInnsendingSykepengesoeknad")
-        val dager = DAYS.between(sykepengesoknad.tilgjengeliggjortDato(), now())
-        event.addFieldToReport("dager", dager)
-        event.report()*/
-        /*} else {
-            val feil = sykepengesoknadAltinn
-                    .validationEventer
-                    .stream()
-                    .map(Function<ValidationEvent, Any> { ValidationEvent.getMessage() })
-                    .collect(joining("\n"))
-            log.error("Validering feilet for sykepengesøknad med id $sykepengesoeknadId med følgende feil: {}", feil)
-            throw OppgaveValideringException("Validering feilet for sykepengesøknad med id $sykepengesoeknadId med følgende feil: $feil")
-        }*/
     }
 
 }

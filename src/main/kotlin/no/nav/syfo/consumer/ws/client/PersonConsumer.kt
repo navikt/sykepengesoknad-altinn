@@ -15,7 +15,7 @@ class PersonConsumer @Inject
 constructor(private val personV3: PersonV3) {
     val log = log()
 
-    fun finnBrukerPersonnavnByFnr(fnr: String): String? {
+    fun finnBrukerPersonnavnByFnr(fnr: String): String {
         return personV3.hentPersonnavnBolk(HentPersonnavnBolkRequest()
                 .withAktoerListe(PersonIdent().withIdent(NorskIdent().withIdent(fnr))))
                 .aktoerHarNavnListe
@@ -23,7 +23,10 @@ constructor(private val personV3: PersonV3) {
                 .map { it.personnavn }
                 .map { this.fulltNavn(it) }
                 .findFirst()
-                .orElse(null)
+                .orElseThrow {
+                    log.error("Finner ikke brukers personnavn")
+                    throw RuntimeException("finner ikke brukers personnavn")
+                }
     }
 
     private fun fulltNavn(personnavn: Personnavn): String {

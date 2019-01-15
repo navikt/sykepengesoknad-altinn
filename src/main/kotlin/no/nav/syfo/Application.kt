@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 const val CALL_ID = "callId"
+const val BEHANDLINGSTIDSPUNKT = "behandlingstidspunkt"
 
 @SpringBootApplication
 class Application

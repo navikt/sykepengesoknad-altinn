@@ -7,7 +7,6 @@ import java.util.stream.Stream
 import kotlin.streams.toList
 
 data class Sykepengesoknad(
-
         val id: String,
         val aktorId: String,
         val sykmeldingId: String? = null,
@@ -33,8 +32,13 @@ data class Sykepengesoknad(
         val fravar: List<Fravar> = arrayListOf(),
         val andreInntektskilder: List<Inntektskilde> = arrayListOf(),
         val sporsmal: List<Sporsmal> = arrayListOf()
-
 ) {
+    lateinit var fnr: String
+    lateinit var navn: String
+    lateinit var pdf: ByteArray
+    lateinit var xml: ByteArray
+    var juridiskOrgnummerArbeidsgiver: String? = null
+
     fun alleSporsmalOgUndersporsmal(): List<Sporsmal> {
         return flatten(sporsmal)
                 .toList()

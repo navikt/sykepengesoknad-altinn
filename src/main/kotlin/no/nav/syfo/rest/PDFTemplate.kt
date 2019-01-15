@@ -1,4 +1,4 @@
-package no.nav.syfo
+package no.nav.syfo.rest
 
 enum class PDFTemplate(private val endpoint: String) {
     ARBEIDSTAKERE("arbeidstakere"),

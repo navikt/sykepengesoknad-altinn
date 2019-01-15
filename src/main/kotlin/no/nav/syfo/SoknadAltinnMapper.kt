@@ -27,43 +27,35 @@ constructor() {
     private val SYKEPENGESOEKNAD_TJENESTEKODE = "4751" // OBS! VIKTIG! Denne må ikke endres, da kan feil personer få tilgang til sykepengesøknaden i Altinn!
     private val SYKEPENGESOEKNAD_TJENESTEVERSJON = "1"
 
-    fun sykepengesoeknadTilCorrespondence(sykepengesoknadAltinn: SykepengesoknadAltinn): InsertCorrespondenceV2 {
+    fun sykepengesoeknadTilCorrespondence(sykepengesoknad: Sykepengesoknad): InsertCorrespondenceV2 {
         val namespace = "http://schemas.altinn.no/services/ServiceEngine/Correspondence/2010/10"
         val binaryNamespace = "http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10"
-        val replyOptionNamespace = "http://schemas.altinn.no/services/ServiceEngine/Correspondence/2009/10"
 
-        val tittel = opprettTittel(sykepengesoknadAltinn)
-        val sykepengesoeknadTekst = opprettInnholdstekst(sykepengesoknadAltinn.sykepengesoknad)
+        val tittel = opprettTittel(sykepengesoknad)
+        val sykepengesoeknadTekst = opprettInnholdstekst(sykepengesoknad)
 
         return InsertCorrespondenceV2()
                 .withAllowForwarding(JAXBElement<Boolean>(QName(namespace, "AllowForwarding"), Boolean::class.java, false))
                 .withReportee(JAXBElement<String>(QName(namespace, "Reportee"), String::class.java,
-                        sykepengesoknadAltinn.sykepengesoknad.arbeidsgiver.orgnummer))
+                        sykepengesoknad.arbeidsgiver.orgnummer))
                 .withMessageSender(JAXBElement<String>(QName(namespace, "MessageSender"), String::class.java,
-                        byggMessageSender(sykepengesoknadAltinn)))
+                        byggMessageSender(sykepengesoknad)))
                 .withServiceCode(JAXBElement<String>(QName(namespace, "ServiceCode"), String::class.java, SYKEPENGESOEKNAD_TJENESTEKODE))
                 .withServiceEdition(JAXBElement<String>(QName(namespace, "ServiceEdition"), String::class.java, SYKEPENGESOEKNAD_TJENESTEVERSJON))
                 .withNotifications(opprettNotifications(namespace))
-                .withContent(tilInnhold(sykepengesoknadAltinn, namespace, binaryNamespace, tittel, sykepengesoeknadTekst))
+                .withContent(tilInnhold(sykepengesoknad, namespace, binaryNamespace, tittel, sykepengesoeknadTekst))
     }
 
-    private fun opprettTittel(sykepengesoknadAltinn: SykepengesoknadAltinn): String {
-        val brukersNavn = sykepengesoknadAltinn.navn
-        val fnr = sykepengesoknadAltinn.fnr
-
-        return if (sykepengesoknadAltinn.sykepengesoknad.sendtNav != null) {
-            "Søknad om sykepenger - " + periodeSomTekst(sykepengesoknadAltinn) + " - " + brukersNavn + " (" + fnr + ") - sendt til NAV"
-        } else {
-            "Søknad om sykepenger - " + periodeSomTekst(sykepengesoknadAltinn) + " - " + brukersNavn + " (" + fnr + ")"
-        }
+    private fun opprettTittel(sykepengesoknad: Sykepengesoknad): String {
+        return "Søknad om sykepenger - ${periodeSomTekst(sykepengesoknad)} - ${sykepengesoknad.navn} (${sykepengesoknad.fnr})${if (sykepengesoknad.sendtNav != null) " - sendt til NAV" else ""}"
     }
 
     private fun opprettInnholdstekst(sykepengesoknad: Sykepengesoknad): String {
         try {
             return if (sykepengesoknad.sendtNav != null && sykepengesoknad.sendtArbeidsgiver != null) {
-                SykepengesoknadAltinn::class.java.getResource("/sykepengesoknad-sendt-til-AG-og-NAV-tekst.html").readText()
+                SoknadAltinnMapper::class.java.getResource("/sykepengesoknad-sendt-til-AG-og-NAV-tekst.html").readText()
             } else {
-                SykepengesoknadAltinn::class.java.getResource("/sykepengesoknad-sendt-til-AG-tekst.html").readText()
+                SoknadAltinnMapper::class.java.getResource("/sykepengesoknad-sendt-til-AG-tekst.html").readText()
             }
         } catch (e: IOException) {
             log.error("Feil med henting av sykepengesoknad-sendt-til-AG-tekst.html", e)
@@ -72,14 +64,14 @@ constructor() {
         return ""
     }
 
-    private fun byggMessageSender(sykepengesoknadAltinn: SykepengesoknadAltinn): String {
+    private fun byggMessageSender(sykepengesoknad: Sykepengesoknad): String {
         //TODO er søknaden autogenerert?
-        //if (sykepengesoknadAltinn.sykepengesoknad.isAutogenerertBrukerDoed()) {
+        //if (sykepengesoknad.sykepengesoknad.isAutogenerertBrukerDoed()) {
         if (false) {
             return "Autogenerert på grunn av et registrert dødsfall"
         }
 
-        return sykepengesoknadAltinn.navn + " - " + sykepengesoknadAltinn.fnr
+        return sykepengesoknad.navn + " - " + sykepengesoknad.fnr
     }
 
     private fun opprettNotifications(namespace: String): JAXBElement<NotificationBEList> {
@@ -101,7 +93,7 @@ constructor() {
                 "Gå til " + smsLenkeAltinnPortal() + " for å se søknaden. Vennlig hilsen NAV."))
     }
 
-    private fun tilInnhold(sykepengesoknadAltinn: SykepengesoknadAltinn, namespace: String, binaryNamespace: String, tittel: String, sykepengesoeknadTekst: String): JAXBElement<ExternalContentV2> {
+    private fun tilInnhold(sykepengesoknad: Sykepengesoknad, namespace: String, binaryNamespace: String, tittel: String, sykepengesoeknadTekst: String): JAXBElement<ExternalContentV2> {
         return JAXBElement<ExternalContentV2>(QName(namespace, "Content"), ExternalContentV2::class.java, ExternalContentV2()
                 .withLanguageCode(JAXBElement<String>(QName(namespace, "LanguageCode"), String::class.java, "1044"))
                 .withMessageTitle(JAXBElement<String>(QName(namespace, "MessageTitle"), String::class.java, tittel))
@@ -113,8 +105,8 @@ constructor() {
                                         JAXBElement<BinaryAttachmentExternalBEV2List>(QName(namespace, "BinaryAttachments"), BinaryAttachmentExternalBEV2List::class.java,
                                                 BinaryAttachmentExternalBEV2List()
                                                         .withBinaryAttachmentV2(
-                                                                pdfVedlegg(binaryNamespace, sykepengesoknadAltinn.pdf),
-                                                                xmlVedlegg(binaryNamespace, sykepengesoknadAltinn.xml)
+                                                                pdfVedlegg(binaryNamespace, sykepengesoknad.pdf),
+                                                                xmlVedlegg(binaryNamespace, sykepengesoknad.xml)
                                                         )
                                         )
                                 )
@@ -127,7 +119,6 @@ constructor() {
         return opprettBinaertVedlegg(binaryNamespace, pdf, SHOW_TO_ALL, "Sykepengesøknad", "Sykepengesøknad.pdf")
     }
 
-    //TODO få med XML
     private fun xmlVedlegg(binaryNamespace: String, xml: ByteArray): BinaryAttachmentV2 {
         return opprettBinaertVedlegg(binaryNamespace, xml, SHOW_TO_ALL, "Sykepengesøknad maskinlesbar", "sykepengesoknad.xml")
     }
@@ -143,7 +134,7 @@ constructor() {
                 .withData(JAXBElement<ByteArray>(QName("http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10", "Data"), ByteArray::class.java, bytes))
     }
 
-    //TODO trengs denne?
+    //TODO trengs denne? JA, dette skal med - bør gjøres med unleash
     /*fun getOrgnummerForSendingTilAltinn(orgnummer: String): String {
         return ofNullable(getProperty("altinn.test.whitelist.orgnr"))
                 .map({ whitelist -> asList(whitelist.split(",")) })
@@ -153,9 +144,9 @@ constructor() {
                 .orElseGet({ getProperty("altinn.test.overstyr.orgnr", orgnummer) })
     }*/
 
-    fun periodeSomTekst(sykepengesoknadAltinn: SykepengesoknadAltinn): String {
+    fun periodeSomTekst(sykepengesoknad: Sykepengesoknad): String {
         val dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-        return dateTimeFormatter.format(sykepengesoknadAltinn.sykepengesoknad.fom) + "-" + dateTimeFormatter.format(sykepengesoknadAltinn.sykepengesoknad.tom)
+        return dateTimeFormatter.format(sykepengesoknad.fom) + "-" + dateTimeFormatter.format(sykepengesoknad.tom)
     }
 
 

@@ -4,7 +4,7 @@ import no.altinn.schemas.services.intermediary.receipt._2009._10.ReceiptStatusEn
 import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondenceAgencyExternalBasic
 import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondenceAgencyExternalInsertCorrespondenceV2AltinnFaultFaultFaultMessage
 import no.nav.syfo.SoknadAltinnMapper
-import no.nav.syfo.SykepengesoknadAltinn
+import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.log
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -22,13 +22,13 @@ constructor(private val iCorrespondenceAgencyExternalBasic: ICorrespondenceAgenc
 
     val SYSTEM_USER_CODE = "NAV_DIGISYFO"
 
-    fun sendSykepengesoknadTilArbeidsgiver(sykepengesoknadAltinn: SykepengesoknadAltinn): Int? {
+    fun sendSykepengesoknadTilArbeidsgiver(sykepengesoknad: Sykepengesoknad): Int? {
         try {
             val receiptExternal = iCorrespondenceAgencyExternalBasic.insertCorrespondenceBasicV2(altinnUsername,
                     altinnPassword,
                     SYSTEM_USER_CODE,
-                    sykepengesoknadAltinn.sykepengesoknad.id,
-                    soknadAltinnMapper.sykepengesoeknadTilCorrespondence(sykepengesoknadAltinn))
+                    sykepengesoknad.id,
+                    soknadAltinnMapper.sykepengesoeknadTilCorrespondence(sykepengesoknad))
             if (receiptExternal.receiptStatusCode != ReceiptStatusEnum.OK) {
                 log.error("Fikk uventet statuskode fra Altinn {}", receiptExternal.receiptStatusCode)
                 throw RuntimeException("feil")

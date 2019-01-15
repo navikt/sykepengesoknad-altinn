@@ -4,14 +4,11 @@ import no.nav.melding.virksomhet.sykepengesoeknadarbeidsgiver.v1.sykepengesoekna
 import no.nav.syfo.domain.soknad.*
 import kotlin.streams.toList
 
-val sykepengesoeknadArbeidsgiver2XML = { sykepengesoknad: Sykepengesoknad,
-                                         //TODO skal juridisk kunne være null?
-                                         juridiskOrgnummerArbeidsgiver: String?,
-                                         fnr: String ->
+val sykepengesoeknadArbeidsgiver2XML = { sykepengesoknad: Sykepengesoknad ->
     XMLSykepengesoeknadArbeidsgiver()
-            .withJuridiskOrganisasjonsnummer(juridiskOrgnummerArbeidsgiver)
+            .withJuridiskOrganisasjonsnummer(sykepengesoknad.juridiskOrgnummerArbeidsgiver)
             .withVirksomhetsnummer(sykepengesoknad.arbeidsgiver.orgnummer)
-            .withSykepengesoeknad(sykepengesoeknad2XML(sykepengesoknad, fnr))
+            .withSykepengesoeknad(sykepengesoeknad2XML(sykepengesoknad, sykepengesoknad.fnr))
 }
 
 private val sykepengesoeknad2XML = { sykepengesoknad: Sykepengesoknad,
@@ -26,7 +23,6 @@ private val sykepengesoeknad2XML = { sykepengesoknad: Sykepengesoknad,
             .withIdentdato(sykepengesoknad.startSykeforlop)
             .withSykmeldingSkrevetDato(sykepengesoknad.sykmeldingSkrevet?.toLocalDate())
             .withArbeidGjenopptattDato(sykepengesoknad.arbeidGjenopptatt)
-            //TODO hmmm... ->
             .withHarBekreftetKorrektInformasjon("CHECKED".equals(sykepengesoknad.getSporsmalMedTag("BEKREFT_OPPLYSNINGER").svar[0]))
             .withHarBekreftetOpplysningsplikt("CHECKED".equals(sykepengesoknad.getSporsmalMedTag("ANSVARSERKLARING").svar[0]))
             .withFravaer(sykepengesoknad2XMLFravar(sykepengesoknad))
@@ -51,17 +47,19 @@ private val soknadsperioder2XMLSykmeldingsperiode = { soknadsperioder: List<Sokn
 }
 
 private val soknadsperiode2XMLKorrigertArbeidstid = { soknadsperiode: Soknadsperiode ->
-    if (soknadsperiode.faktiskGrad == null && soknadsperiode.faktiskTimer == null)
-        null
-    else
-        XMLKorrigertArbeidstid()
+    when {
+        soknadsperiode.faktiskTimer != null -> XMLKorrigertArbeidstid()
+                .withArbeidstimerNormaluke(soknadsperiode.avtaltTimer!!)
+                .withFaktiskeArbeidstimer(XMLFaktiskeArbeidstimer()
+                        .withArbeidstimer(soknadsperiode.faktiskTimer)
+                        .withBeregnetArbeidsgrad(soknadsperiode.faktiskGrad))
+
+        soknadsperiode.faktiskGrad != null -> XMLKorrigertArbeidstid()
                 .withArbeidstimerNormaluke(soknadsperiode.avtaltTimer!!)
                 .withArbeidsgrad(soknadsperiode.faktiskGrad)
-                .withFaktiskeArbeidstimer(XMLFaktiskeArbeidstimer()
-                        .withArbeidstimer(soknadsperiode.faktiskTimer!!))
-    //TODO bergen arbeidsgrad
-    //funker det med !! i de over her?
-    //.withBeregnetArbeidsgrad())
+
+        else -> null
+    }
 }
 
 private val andreInntektskilder2XMLAnnenInntektskildeListe = { andreInntektskilder: List<Inntektskilde> ->
