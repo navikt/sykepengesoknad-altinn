@@ -1,7 +1,6 @@
 package no.nav.syfo.rest
 
 import no.nav.syfo.domain.soknad.Soknadsperiode
-import no.nav.syfo.domain.soknad.Sporsmal
 import no.nav.syfo.domain.soknad.Sykepengesoknad
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -10,7 +9,6 @@ import org.springframework.http.HttpStatus.OK
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.web.client.RestTemplate
-import java.time.LocalDate
 import java.util.*
 import javax.inject.Inject
 
@@ -39,16 +37,16 @@ constructor(private val restTemplate: RestTemplate) {
     }
 
     private class PDFSoknad(sykepengesoknad: Sykepengesoknad) {
-        val id: String = sykepengesoknad.id
-        val fnr: String = sykepengesoknad.fnr
-        val navn: String = sykepengesoknad.navn
-        val sendtNav: LocalDate? = sykepengesoknad.sendtNav?.toLocalDate()
-        val sendtArbeidsgiver: LocalDate? = sykepengesoknad.sendtArbeidsgiver?.toLocalDate()
-        val sykmeldingSkrevet: LocalDate? = sykepengesoknad.sykmeldingSkrevet?.toLocalDate()
-        val arbeidsgivernavn: String? = sykepengesoknad.arbeidsgiver.navn
-        val korrigerer: String? = sykepengesoknad.korrigerer
-        val soknadsperioder: List<Soknadsperiode> = sykepengesoknad.soknadsperioder
-        val sporsmal: List<Sporsmal> = sykepengesoknad.sporsmal
+        val soknadId = sykepengesoknad.id
+        val fnr = sykepengesoknad.fnr
+        val navn = sykepengesoknad.navn
+        val innsendtDato = sykepengesoknad.sendtNav?.toLocalDate()
+        val sendtArbeidsgiver = sykepengesoknad.sendtArbeidsgiver?.toLocalDate()
+        val sykmeldingUtskrevet = sykepengesoknad.sykmeldingSkrevet?.toLocalDate()
+        val arbeidsgiver = sykepengesoknad.arbeidsgiver.navn
+        val korrigerer = sykepengesoknad.korrigerer
+        val soknadPerioder = sykepengesoknad.soknadsperioder.map { PDFPeriode(it) }
+        val sporsmal = sykepengesoknad.sporsmal
                 .sortedWith(Comparator.comparingInt {
                     when (it.tag) {
                         "BEKREFT_OPPLYSNINGER", "ANSVARSERKLARING" -> 1
@@ -56,6 +54,12 @@ constructor(private val restTemplate: RestTemplate) {
                         else -> 0
                     }
                 })
+    }
+
+    private class PDFPeriode(soknadsperiode: Soknadsperiode) {
+        val fom = soknadsperiode.fom
+        val tom = soknadsperiode.tom
+        val grad = soknadsperiode.sykmeldingsgrad
     }
 
 }
