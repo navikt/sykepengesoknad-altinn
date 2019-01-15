@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus.OK
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.web.client.RestTemplate
-import java.time.LocalDateTime
+import java.time.LocalDate
 import java.util.*
 import javax.inject.Inject
 
@@ -42,9 +42,9 @@ constructor(private val restTemplate: RestTemplate) {
         val id: String = sykepengesoknad.id
         val fnr: String = sykepengesoknad.fnr
         val navn: String = sykepengesoknad.navn
-        val sendtNav: LocalDateTime? = sykepengesoknad.sendtNav
-        val sendtArbeidsgiver: LocalDateTime? = sykepengesoknad.sendtArbeidsgiver
-        val sykmeldingSkrevet: LocalDateTime? = sykepengesoknad.sykmeldingSkrevet
+        val sendtNav: LocalDate? = sykepengesoknad.sendtNav?.toLocalDate()
+        val sendtArbeidsgiver: LocalDate? = sykepengesoknad.sendtArbeidsgiver?.toLocalDate()
+        val sykmeldingSkrevet: LocalDate? = sykepengesoknad.sykmeldingSkrevet?.toLocalDate()
         val arbeidsgivernavn: String? = sykepengesoknad.arbeidsgiver.navn
         val korrigerer: String? = sykepengesoknad.korrigerer
         val soknadsperioder: List<Soknadsperiode> = sykepengesoknad.soknadsperioder
