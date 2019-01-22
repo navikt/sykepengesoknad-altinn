@@ -16,17 +16,16 @@ constructor(private val personV3: PersonV3) {
     val log = log()
 
     fun finnBrukerPersonnavnByFnr(fnr: String): String {
-        return personV3.hentPersonnavnBolk(HentPersonnavnBolkRequest()
+        return (personV3.hentPersonnavnBolk(HentPersonnavnBolkRequest()
                 .withAktoerListe(PersonIdent().withIdent(NorskIdent().withIdent(fnr))))
                 .aktoerHarNavnListe
-                .stream()
                 .map { it.personnavn }
-                .map { this.fulltNavn(it) }
-                .findFirst()
-                .orElseThrow {
-                    log.error("Finner ikke brukers personnavn")
+                .map { fulltNavn(it) }
+                .firstOrNull()
+                ?: run {
+                    log.error("finner ikke brukers personnavn")
                     throw RuntimeException("finner ikke brukers personnavn")
-                }
+                })
     }
 
     private fun fulltNavn(personnavn: Personnavn): String {

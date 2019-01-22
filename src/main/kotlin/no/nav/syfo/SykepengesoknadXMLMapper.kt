@@ -49,13 +49,13 @@ private val soknadsperioder2XMLSykmeldingsperiode = { soknadsperioder: List<Sokn
 private val soknadsperiode2XMLKorrigertArbeidstid = { soknadsperiode: Soknadsperiode ->
     when {
         soknadsperiode.faktiskTimer != null -> XMLKorrigertArbeidstid()
-                .withArbeidstimerNormaluke(soknadsperiode.avtaltTimer!!)
+                .withArbeidstimerNormaluke(soknadsperiode.avtaltTimer ?: throw RuntimeException("avtaltTimer er null - denne skal være satt"))
                 .withFaktiskeArbeidstimer(XMLFaktiskeArbeidstimer()
                         .withArbeidstimer(soknadsperiode.faktiskTimer)
-                        .withBeregnetArbeidsgrad(soknadsperiode.faktiskGrad))
+                        .withBeregnetArbeidsgrad(soknadsperiode.faktiskGrad ?: throw RuntimeException("faktiskGrad er null - denne skal være satt")))
 
         soknadsperiode.faktiskGrad != null -> XMLKorrigertArbeidstid()
-                .withArbeidstimerNormaluke(soknadsperiode.avtaltTimer!!)
+                .withArbeidstimerNormaluke(soknadsperiode.avtaltTimer ?: throw RuntimeException("avtaltTimer er null - denne skal være satt"))
                 .withArbeidsgrad(soknadsperiode.faktiskGrad)
 
         else -> null

@@ -33,7 +33,7 @@ constructor(private val restTemplate: RestTemplate) {
             throw RuntimeException("getPDFArbeidstakere feiler med HTTP-" + result.statusCode + " for søknad med id: " + sykepengesoknad.id)
         }
 
-        return result.body!!
+        return result.body ?: throw RuntimeException("pdfgen returnerer null - dette er en feil")
     }
 
     private class PDFSoknad(sykepengesoknad: Sykepengesoknad) {

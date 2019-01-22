@@ -21,7 +21,7 @@ class KafkaErrorHandler(private val registry: MeterRegistry) : ContainerAwareErr
         thrownException: Exception,
         records: List<ConsumerRecord<*, *>>?,
         consumer: Consumer<*, *>?,
-        container: MessageListenerContainer?
+        container: MessageListenerContainer
     ) {
         log.error("Feil i listener:", thrownException)
 
@@ -43,7 +43,7 @@ class KafkaErrorHandler(private val registry: MeterRegistry) : ContainerAwareErr
             )
         }
 
-        STOPPING_ERROR_HANDLER.handle(thrownException, records, consumer, container!!)
+        STOPPING_ERROR_HANDLER.handle(thrownException, records, consumer, container)
     }
 
     private fun exceptionIsClass(throwable: Throwable?, klazz: Class<*>): Boolean {
