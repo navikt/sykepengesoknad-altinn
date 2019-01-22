@@ -16,18 +16,18 @@ import org.mockito.junit.MockitoJUnitRunner
 class AktorConsumerTest {
 
     @Mock
-    private val aktoerV2: AktoerV2? = null
+    private lateinit var aktoerV2: AktoerV2
 
     @InjectMocks
-    private val aktoerConsumer: AktorConsumer? = null
+    private lateinit var aktoerConsumer: AktorConsumer
 
     @Test
     @Throws(HentIdentForAktoerIdPersonIkkeFunnet::class)
     fun finnFnr() {
-        `when`(aktoerV2!!.hentIdentForAktoerId(WSHentIdentForAktoerIdRequest().withAktoerId("aktoerId")))
+        `when`(aktoerV2.hentIdentForAktoerId(WSHentIdentForAktoerIdRequest().withAktoerId("aktoerId")))
             .thenReturn(WSHentIdentForAktoerIdResponse().withIdent("fnr"))
 
-        val fnr = aktoerConsumer!!.finnFnr("aktoerId")
+        val fnr = aktoerConsumer.finnFnr("aktoerId")
         assertThat(fnr).isEqualTo("fnr")
     }
 }

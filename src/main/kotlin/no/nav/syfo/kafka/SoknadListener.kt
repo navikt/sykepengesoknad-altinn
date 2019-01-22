@@ -10,6 +10,7 @@ import org.slf4j.MDC
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime.now
 import java.util.UUID.randomUUID
 import javax.inject.Inject
 
@@ -28,7 +29,7 @@ constructor(private val internSoknadsbehandlingProducer: InternSoknadsbehandling
             val sykepengesoknadDTO = cr.value() as SykepengesoknadDTO
 
             log.info("har plukket opp søknad: ${sykepengesoknadDTO.id}, legger på intern topic")
-            internSoknadsbehandlingProducer.leggPaInternTopic(sykepengesoknadDTO)
+            internSoknadsbehandlingProducer.leggPaInternTopic(sykepengesoknadDTO, now())
 
             acknowledgment.acknowledge()
         } catch (e: Exception) {
