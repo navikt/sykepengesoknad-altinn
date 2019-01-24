@@ -10,7 +10,11 @@ import no.altinn.schemas.services.serviceengine.notification._2009._10.Notificat
 import no.altinn.schemas.services.serviceengine.subscription._2009._10.AttachmentFunctionType
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentExternalBEV2List
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentV2
+import no.finn.unleash.UnleashContext
 import no.nav.syfo.domain.soknad.Sykepengesoknad
+import no.nav.syfo.unleash.FeatureToggle.ORGNUMMER_WHITELISTET
+import no.nav.syfo.unleash.Toggle
+import no.nav.syfo.unleash.strategy.ByOrgnummerStrategy.UNLEASH_PROPERTY_NAME_ORGNUMMER
 import org.springframework.stereotype.Component
 import java.io.IOException
 import java.time.format.DateTimeFormatter
@@ -20,7 +24,7 @@ import javax.xml.namespace.QName
 
 @Component
 class SoknadAltinnMapper @Inject
-constructor() {
+constructor(private val toggle: Toggle) {
 
     val log = log()
 
@@ -37,7 +41,7 @@ constructor() {
         return InsertCorrespondenceV2()
                 .withAllowForwarding(JAXBElement<Boolean>(QName(namespace, "AllowForwarding"), Boolean::class.java, false))
                 .withReportee(JAXBElement<String>(QName(namespace, "Reportee"), String::class.java,
-                        sykepengesoknad.arbeidsgiver.orgnummer))
+                        getOrgnummerForSendingTilAltinn(sykepengesoknad.arbeidsgiver.orgnummer)))
                 .withMessageSender(JAXBElement<String>(QName(namespace, "MessageSender"), String::class.java,
                         byggMessageSender(sykepengesoknad)))
                 .withServiceCode(JAXBElement<String>(QName(namespace, "ServiceCode"), String::class.java, SYKEPENGESOEKNAD_TJENESTEKODE))
@@ -134,15 +138,13 @@ constructor() {
                 .withData(JAXBElement<ByteArray>(QName("http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10", "Data"), ByteArray::class.java, bytes))
     }
 
-    //TODO trengs denne? JA, dette skal med - bør gjøres med unleash
-    /*fun getOrgnummerForSendingTilAltinn(orgnummer: String): String {
-        return ofNullable(getProperty("altinn.test.whitelist.orgnr"))
-                .map({ whitelist -> asList(whitelist.split(",")) })
-                .map({ whitelist -> whitelist.contains(orgnummer) })
-                .filter(Predicate<Any> { it.booleanValue() })
-                .map({ b -> orgnummer })
-                .orElseGet({ getProperty("altinn.test.overstyr.orgnr", orgnummer) })
-    }*/
+    fun getOrgnummerForSendingTilAltinn(orgnummer: String): String {
+        return if (toggle.isProd || toggle.isEnabled(ORGNUMMER_WHITELISTET, UnleashContext.builder()
+                        .addProperty(UNLEASH_PROPERTY_NAME_ORGNUMMER, orgnummer)
+                        .build()))
+            orgnummer
+        else "910067494" //dette er default orgnummer i test: 'GODVIK OG FLATÅSEN'
+    }
 
     fun periodeSomTekst(sykepengesoknad: Sykepengesoknad): String {
         val dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")

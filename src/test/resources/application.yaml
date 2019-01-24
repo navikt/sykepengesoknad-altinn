@@ -9,6 +9,14 @@ fasit.environment.name: local
 
 app.name: syfoaltinn
 
+unleash-api.url: http://unleash-api/api/
+
+toggle.config:
+  SKAL_BRUKE_NYTT_SOKNADSFORMAT:
+    enabled: true
+    byEnvironment:
+      - local
+
 altinnUser.username: "username"
 altinnUser.password: "password"
 ekstern.altinn.behandlealtinnmelding.v1.endpointurl: "ekstern.altinn.behandlealtinnmelding.v1.endpointurl"
