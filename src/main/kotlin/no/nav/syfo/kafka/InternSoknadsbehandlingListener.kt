@@ -3,8 +3,6 @@ package no.nav.syfo.kafka
 import no.nav.syfo.BEHANDLINGSTIDSPUNKT
 import no.nav.syfo.CALL_ID
 import no.nav.syfo.SendTilAltinnService
-import no.nav.syfo.domain.soknad.Soknadsstatus
-import no.nav.syfo.domain.soknad.Soknadstype
 import no.nav.syfo.kafka.interfaces.Soknad
 import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
 import no.nav.syfo.log
@@ -28,7 +26,7 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
 
     @KafkaListener(topics = ["privat-syfoaltinn-soknad-v1"], id = "syfoaltinnIntern", idIsGroup = false)
     fun listen(cr: ConsumerRecord<String, Soknad>, acknowledgment: Acknowledgment) {
-        log.info("Melding mottatt på topic: ${cr.topic()} med offsett: ${cr.offset()}")
+        log.info("Melding mottatt på intern topic: ${cr.topic()} med offset: ${cr.offset()}")
 
         try {
             MDC.put(CALL_ID, KafkaHeaderConstants.getLastHeaderByKeyAsString(cr.headers(), CALL_ID).orElse(UUID.randomUUID().toString()))
@@ -40,14 +38,10 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
                     ?.apply { return }
 
             val sykepengesoknad = konverter(cr.value() as SykepengesoknadDTO)
-            if (Soknadstype.ARBEIDSTAKERE == sykepengesoknad.type
-                    && Soknadsstatus.SENDT == sykepengesoknad.status) {
-
-                log.info("intern behandling av søknad: ${sykepengesoknad.id}")
-                val sendSykepengesoknadTilArbeidsgiver = sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
-                //TODO denne må også logges til juridisk logg
-                log.info("Får denne kvitteringen etter innsending til altinn: $sendSykepengesoknadTilArbeidsgiver")
-            }
+            log.info("intern behandling av søknad: ${sykepengesoknad.id}")
+            val sendSykepengesoknadTilArbeidsgiver = sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
+            //TODO denne må også logges til juridisk logg
+            log.info("Får denne kvitteringen etter innsending til altinn: $sendSykepengesoknadTilArbeidsgiver")
             acknowledgment.acknowledge()
         } catch (e: Exception) {
             val sykepengesoknadDTO = cr.value() as SykepengesoknadDTO

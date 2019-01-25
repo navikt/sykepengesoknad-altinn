@@ -2,7 +2,6 @@ package no.nav.syfo.kafka
 
 import no.nav.syfo.domain.soknad.*
 import no.nav.syfo.kafka.sykepengesoknad.dto.*
-import java.util.stream.Collectors
 
 fun konverter(sykepengesoknadDTO: SykepengesoknadDTO): Sykepengesoknad {
     return Sykepengesoknad(
@@ -16,7 +15,7 @@ fun konverter(sykepengesoknadDTO: SykepengesoknadDTO): Sykepengesoknad {
             korrigertAv = sykepengesoknadDTO.korrigertAv,
             korrigerer = sykepengesoknadDTO.korrigerer,
             soktUtenlandsopphold = sykepengesoknadDTO.soktUtenlandsopphold,
-            arbeidsgiverForskutterer = ArbeidsverForskutterer.valueOf(sykepengesoknadDTO.arbeidsgiverForskutterer.name),
+            arbeidsgiverForskutterer = enumValueOrNull(sykepengesoknadDTO.arbeidsgiverForskutterer?.name),
             fom = sykepengesoknadDTO.fom,
             tom = sykepengesoknadDTO.tom,
             startSykeforlop = sykepengesoknadDTO.startSyketilfelle,
@@ -25,24 +24,24 @@ fun konverter(sykepengesoknadDTO: SykepengesoknadDTO): Sykepengesoknad {
             opprettet = sykepengesoknadDTO.opprettet,
             sendtNav = sykepengesoknadDTO.sendtNav,
             sendtArbeidsgiver = sykepengesoknadDTO.sendtArbeidsgiver,
-            egenmeldinger = sykepengesoknadDTO.egenmeldinger.stream()
-                    .map(::konverter)
-                    .collect(Collectors.toList()),
-            papirsykmeldinger = sykepengesoknadDTO.papirsykmeldinger.stream()
-                    .map(::konverter)
-                    .collect(Collectors.toList()),
-            fravar = sykepengesoknadDTO.fravar.stream()
-                    .map(::konverter)
-                    .collect(Collectors.toList()),
-            andreInntektskilder = sykepengesoknadDTO.andreInntektskilder.stream()
-                    .map(::konverter)
-                    .collect(Collectors.toList()),
-            soknadsperioder = sykepengesoknadDTO.soknadsperioder.stream()
-                    .map(::konverter)
-                    .collect(Collectors.toList()),
-            sporsmal = sykepengesoknadDTO.sporsmal.stream()
-                    .map(::konverter)
-                    .collect(Collectors.toList())
+            egenmeldinger = sykepengesoknadDTO.egenmeldinger
+                    ?.map { konverter(it) }
+                    .orEmpty(),
+            papirsykmeldinger = sykepengesoknadDTO.papirsykmeldinger
+                    ?.map { konverter(it) }
+                    .orEmpty(),
+            fravar = sykepengesoknadDTO.fravar
+                    ?.map { konverter(it) }
+                    .orEmpty(),
+            andreInntektskilder = sykepengesoknadDTO.andreInntektskilder
+                    ?.map { konverter(it) }
+                    .orEmpty(),
+            soknadsperioder = sykepengesoknadDTO.soknadsperioder
+                    ?.map { konverter(it) }
+                    .orEmpty(),
+            sporsmal = sykepengesoknadDTO.sporsmal
+                    ?.map { konverter(it) }
+                    .orEmpty()
     )
 }
 
@@ -61,13 +60,13 @@ private fun konverter(sporsmalDTO: SporsmalDTO): Sporsmal {
             svartype = Svartype.valueOf(sporsmalDTO.svartype.name),
             min = sporsmalDTO.min,
             max = sporsmalDTO.max,
-            kriterieForVisningAvUndersporsmal = enumValueOrNull(sporsmalDTO.kriteriumForVisningAvUndersporsmal.name),
-            svar = sporsmalDTO.svar.stream()
-                    .map(::konverter)
-                    .collect(Collectors.toList()),
-            undersporsmal = sporsmalDTO.undersporsmal.stream()
-                    .map(::konverter)
-                    .collect(Collectors.toList())
+            kriterieForVisningAvUndersporsmal = enumValueOrNull(sporsmalDTO.kriteriumForVisningAvUndersporsmal?.name),
+            svar = sporsmalDTO.svar
+                    ?.map { konverter(it) }
+                    .orEmpty(),
+            undersporsmal = sporsmalDTO.undersporsmal
+                    ?.map { konverter(it) }
+                    .orEmpty()
     )
 }
 

@@ -4,7 +4,7 @@ import java.time.LocalDate
 
 data class Fravar(
         val fom: LocalDate,
-        val tom: LocalDate,
+        val tom: LocalDate?,
         val type: Fravarstype
 
 )
