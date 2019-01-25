@@ -12,10 +12,10 @@ app.name: syfoaltinn
 unleash-api.url: http://unleash-api/api/
 
 toggle.config:
-  SKAL_BRUKE_NYTT_SOKNADSFORMAT:
+  ORGNUMMER_WHITELISTET:
     enabled: true
-    byEnvironment:
-      - local
+    byOrgnummer:
+      - orgnummer
 
 altinnUser.username: "username"
 altinnUser.password: "password"

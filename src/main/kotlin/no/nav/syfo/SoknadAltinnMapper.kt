@@ -11,20 +11,18 @@ import no.altinn.schemas.services.serviceengine.subscription._2009._10.Attachmen
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentExternalBEV2List
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentV2
 import no.finn.unleash.UnleashContext
+import no.nav.syfo.config.unleash.FeatureToggle.ORGNUMMER_WHITELISTET
+import no.nav.syfo.config.unleash.Toggle
+import no.nav.syfo.config.unleash.strategy.UNLEASH_PROPERTY_NAME_ORGNUMMER
 import no.nav.syfo.domain.soknad.Sykepengesoknad
-import no.nav.syfo.unleash.FeatureToggle.ORGNUMMER_WHITELISTET
-import no.nav.syfo.unleash.Toggle
-import no.nav.syfo.unleash.strategy.ByOrgnummerStrategy.UNLEASH_PROPERTY_NAME_ORGNUMMER
 import org.springframework.stereotype.Component
 import java.io.IOException
 import java.time.format.DateTimeFormatter
-import javax.inject.Inject
 import javax.xml.bind.JAXBElement
 import javax.xml.namespace.QName
 
 @Component
-class SoknadAltinnMapper @Inject
-constructor(private val toggle: Toggle) {
+class SoknadAltinnMapper(private val toggle: Toggle) {
 
     val log = log()
 
@@ -138,13 +136,12 @@ constructor(private val toggle: Toggle) {
                 .withData(JAXBElement<ByteArray>(QName("http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10", "Data"), ByteArray::class.java, bytes))
     }
 
-    fun getOrgnummerForSendingTilAltinn(orgnummer: String): String {
-        return if (toggle.isProd || toggle.isEnabled(ORGNUMMER_WHITELISTET, UnleashContext.builder()
-                        .addProperty(UNLEASH_PROPERTY_NAME_ORGNUMMER, orgnummer)
-                        .build()))
-            orgnummer
-        else "910067494" //dette er default orgnummer i test: 'GODVIK OG FLATÅSEN'
-    }
+    fun getOrgnummerForSendingTilAltinn(orgnummer: String) =
+            if (toggle.isProd || toggle.isEnabled(ORGNUMMER_WHITELISTET, UnleashContext.builder()
+                            .addProperty(UNLEASH_PROPERTY_NAME_ORGNUMMER, orgnummer)
+                            .build()))
+                orgnummer
+            else "910067494" //dette er default orgnummer i test: 'GODVIK OG FLATÅSEN'
 
     fun periodeSomTekst(sykepengesoknad: Sykepengesoknad): String {
         val dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
