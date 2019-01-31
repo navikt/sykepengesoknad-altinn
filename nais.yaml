@@ -31,8 +31,6 @@ fasitResources:
   used:
   - alias: unleash-api
     resourceType: restservice
-  - alias: Aktoer_v2
-    resourceType: webserviceendpoint
   - alias: srvsyfoaltinn
     resourceType: credential
   - alias: securityTokenService
@@ -49,3 +47,9 @@ fasitResources:
     resourceType: webserviceendpoint
   - alias: virksomhet:Person_v3
     resourceType: webserviceendpoint
+  - alias: aktoerregister.api.v1
+    resourceType: restservice
+  - alias: LagreJuridiskLogg_Rest
+    resourceType: restservice
+  - alias: security-token-service-token
+    resourceType: restservice

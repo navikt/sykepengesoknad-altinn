@@ -5,8 +5,8 @@ import no.nav.syfo.consumer.rest.aktor.Aktor
 import no.nav.syfo.consumer.rest.aktor.AktorResponse
 import no.nav.syfo.consumer.rest.aktor.AktorRestConsumer
 import no.nav.syfo.consumer.rest.aktor.Ident
-import no.nav.syfo.token.Token
-import no.nav.syfo.token.TokenConsumer
+import no.nav.syfo.consumer.rest.token.Token
+import no.nav.syfo.consumer.rest.token.TokenConsumer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test

@@ -1,4 +1,4 @@
-package no.nav.syfo.rest
+package no.nav.syfo.consumer.rest.pdf
 
 import no.nav.syfo.domain.soknad.Soknadsperiode
 import no.nav.syfo.domain.soknad.Sykepengesoknad

@@ -1,9 +1,8 @@
 package no.nav.syfo.consumer.rest.aktor
 
 import no.nav.syfo.CALL_ID
-import no.nav.syfo.consumer.rest.aktor.AktorResponse
 import no.nav.syfo.log
-import no.nav.syfo.token.TokenConsumer
+import no.nav.syfo.consumer.rest.token.TokenConsumer
 import no.nav.syfo.util.MDCOperations.getFromMDC
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
@@ -15,6 +14,11 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
+import java.util.HashMap
+
+class AktorResponse : HashMap<String, Aktor>()
+data class Aktor(val identer: List<Ident>? = null, val feilmelding: String? = null)
+data class Ident(val ident: String, val identgruppe: String, val gjeldende: Boolean)
 
 @Component
 class AktorRestConsumer(private val tokenConsumer: TokenConsumer,
@@ -69,7 +73,5 @@ class AktorRestConsumer(private val tokenConsumer: TokenConsumer,
             log.error("Feil ved oppslag i aktørtjenesten", e)
             throw RuntimeException(e)
         }
-
     }
 }
-
