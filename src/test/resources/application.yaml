@@ -5,7 +5,7 @@ management:
     exposure.include: prometheus
     path-mapping.prometheus: /prometheus
 
-nais.cluster.name: local
+fasit.environment.name: local
 
 app.name: syfoaltinn
 
