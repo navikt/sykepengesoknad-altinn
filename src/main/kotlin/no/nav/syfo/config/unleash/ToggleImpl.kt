@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service
 @Profile("remote")
 @Primary
 class ToggleImpl(private val unleash: Unleash,
-                 @Value("\${fasit.environment.name:p}") fasitEnvironmentName: String) : Toggle {
-    override val isProd: Boolean = "p" == fasitEnvironmentName
+                 @Value("\${nais.cluster.name:prod-fss}") clusterName: String) : Toggle {
+    override val isProd: Boolean = "prod-fss" == clusterName
 
     override fun isEnabled(toggle: FeatureToggle, unleashContext: UnleashContext?): Boolean =
             when {

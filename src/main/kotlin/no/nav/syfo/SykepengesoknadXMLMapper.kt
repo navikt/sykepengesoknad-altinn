@@ -2,16 +2,27 @@ package no.nav.syfo
 
 import no.nav.melding.virksomhet.sykepengesoeknadarbeidsgiver.v1.sykepengesoeknadarbeidsgiver.*
 import no.nav.syfo.domain.soknad.*
+import no.nav.syfo.util.JAXB
+import javax.xml.bind.ValidationEvent
 
-val sykepengesoeknadArbeidsgiver2XML = { sykepengesoknad: Sykepengesoknad ->
+val sykepengesoknad2XMLByteArray = { sykepengesoknad: Sykepengesoknad, validationeventer: MutableList<ValidationEvent> ->
+    JAXB.marshallSykepengesoeknadArbeidsgiver(
+            ObjectFactory().createSykepengesoeknadArbeidsgiver(sykepengesoknad2XMLArbeidsgiver(sykepengesoknad))
+    ) { event ->
+        validationeventer.add(event)
+        true
+    }.toByteArray()
+}
+
+private val sykepengesoknad2XMLArbeidsgiver = { sykepengesoknad: Sykepengesoknad ->
     XMLSykepengesoeknadArbeidsgiver()
             .withJuridiskOrganisasjonsnummer(sykepengesoknad.juridiskOrgnummerArbeidsgiver)
             .withVirksomhetsnummer(sykepengesoknad.arbeidsgiver.orgnummer)
-            .withSykepengesoeknad(sykepengesoeknad2XML(sykepengesoknad, sykepengesoknad.fnr))
+            .withSykepengesoeknad(sykepengesoknad2XML(sykepengesoknad, sykepengesoknad.fnr))
 }
 
-private val sykepengesoeknad2XML = { sykepengesoknad: Sykepengesoknad,
-                                     fnr: String ->
+private val sykepengesoknad2XML = { sykepengesoknad: Sykepengesoknad,
+                                    fnr: String ->
     XMLSykepengesoeknad()
             .withSykepengesoeknadId(sykepengesoknad.id)
             .withSykmeldingId(sykepengesoknad.sykmeldingId)
@@ -108,7 +119,7 @@ private val fravar2XMLOppholdUtenforNorge = { fravar: List<Fravar>, soktUtenland
         null
     else
         XMLOppholdUtenforNorge()
-                .withPeriodeListe()
+                .withPeriodeListe(periodeliste)
                 .withHarSoektOmSykepengerForOppholdet(soktUtenlandsopphold)
 }
 
