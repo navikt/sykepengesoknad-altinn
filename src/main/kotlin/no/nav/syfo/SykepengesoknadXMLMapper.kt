@@ -2,29 +2,39 @@ package no.nav.syfo
 
 import no.nav.melding.virksomhet.sykepengesoeknadarbeidsgiver.v1.sykepengesoeknadarbeidsgiver.*
 import no.nav.syfo.domain.soknad.*
-import kotlin.streams.toList
+import no.nav.syfo.util.JAXB
+import javax.xml.bind.ValidationEvent
 
-val sykepengesoeknadArbeidsgiver2XML = { sykepengesoknad: Sykepengesoknad ->
+val sykepengesoknad2XMLByteArray = { sykepengesoknad: Sykepengesoknad, validationeventer: MutableList<ValidationEvent> ->
+    JAXB.marshallSykepengesoeknadArbeidsgiver(
+            ObjectFactory().createSykepengesoeknadArbeidsgiver(sykepengesoknad2XMLArbeidsgiver(sykepengesoknad))
+    ) { event ->
+        validationeventer.add(event)
+        true
+    }.toByteArray()
+}
+
+private val sykepengesoknad2XMLArbeidsgiver = { sykepengesoknad: Sykepengesoknad ->
     XMLSykepengesoeknadArbeidsgiver()
             .withJuridiskOrganisasjonsnummer(sykepengesoknad.juridiskOrgnummerArbeidsgiver)
             .withVirksomhetsnummer(sykepengesoknad.arbeidsgiver.orgnummer)
-            .withSykepengesoeknad(sykepengesoeknad2XML(sykepengesoknad, sykepengesoknad.fnr))
+            .withSykepengesoeknad(sykepengesoknad2XML(sykepengesoknad, sykepengesoknad.fnr))
 }
 
-private val sykepengesoeknad2XML = { sykepengesoknad: Sykepengesoknad,
-                                     fnr: String ->
+private val sykepengesoknad2XML = { sykepengesoknad: Sykepengesoknad,
+                                    fnr: String ->
     XMLSykepengesoeknad()
             .withSykepengesoeknadId(sykepengesoknad.id)
             .withSykmeldingId(sykepengesoknad.sykmeldingId)
             .withKorrigerer(sykepengesoknad.korrigerer)
             .withPeriode(XMLPeriode().withFom(sykepengesoknad.fom).withTom(sykepengesoknad.tom))
             .withSykmeldtesFnr(fnr)
-            .withArbeidsgiverForskuttererLoenn(sykepengesoknad.arbeidsgiverForskutterer.name)
+            .withArbeidsgiverForskuttererLoenn(sykepengesoknad.arbeidsgiverForskutterer?.name)
             .withIdentdato(sykepengesoknad.startSykeforlop)
             .withSykmeldingSkrevetDato(sykepengesoknad.sykmeldingSkrevet?.toLocalDate())
             .withArbeidGjenopptattDato(sykepengesoknad.arbeidGjenopptatt)
-            .withHarBekreftetKorrektInformasjon("CHECKED".equals(sykepengesoknad.getSporsmalMedTag("BEKREFT_OPPLYSNINGER").svar[0]))
-            .withHarBekreftetOpplysningsplikt("CHECKED".equals(sykepengesoknad.getSporsmalMedTag("ANSVARSERKLARING").svar[0]))
+            .withHarBekreftetKorrektInformasjon("CHECKED".equals(sykepengesoknad.getSporsmalMedTag("BEKREFT_OPPLYSNINGER").svar.getOrNull(0)?.verdi))
+            .withHarBekreftetOpplysningsplikt("CHECKED".equals(sykepengesoknad.getSporsmalMedTag("ANSVARSERKLARING").svar.getOrNull(0)?.verdi))
             .withFravaer(sykepengesoknad2XMLFravar(sykepengesoknad))
             .withSykmeldingsperiodeListe(soknadsperioder2XMLSykmeldingsperiode(sykepengesoknad.soknadsperioder))
             .withUtdanning(fravar2XMLUtdanning(sykepengesoknad.fravar))
@@ -34,7 +44,7 @@ private val sykepengesoeknad2XML = { sykepengesoknad: Sykepengesoknad,
 }
 
 private val soknadsperioder2XMLSykmeldingsperiode = { soknadsperioder: List<Soknadsperiode> ->
-    soknadsperioder.stream()
+    soknadsperioder
             .map { soknadsperiode ->
                 XMLSykmeldingsperiode()
                         .withGraderingsperiode(XMLPeriode()
@@ -43,19 +53,21 @@ private val soknadsperioder2XMLSykmeldingsperiode = { soknadsperioder: List<Sokn
                         .withSykmeldingsgrad(soknadsperiode.sykmeldingsgrad)
                         .withKorrigertArbeidstid(soknadsperiode2XMLKorrigertArbeidstid(soknadsperiode))
             }
-            .toList()
 }
 
 private val soknadsperiode2XMLKorrigertArbeidstid = { soknadsperiode: Soknadsperiode ->
     when {
         soknadsperiode.faktiskTimer != null -> XMLKorrigertArbeidstid()
-                .withArbeidstimerNormaluke(soknadsperiode.avtaltTimer ?: throw RuntimeException("avtaltTimer er null - denne skal være satt"))
+                .withArbeidstimerNormaluke(soknadsperiode.avtaltTimer
+                        ?: throw RuntimeException("avtaltTimer er null - denne skal være satt"))
                 .withFaktiskeArbeidstimer(XMLFaktiskeArbeidstimer()
                         .withArbeidstimer(soknadsperiode.faktiskTimer)
-                        .withBeregnetArbeidsgrad(soknadsperiode.faktiskGrad ?: throw RuntimeException("faktiskGrad er null - denne skal være satt")))
+                        .withBeregnetArbeidsgrad(soknadsperiode.faktiskGrad
+                                ?: throw RuntimeException("faktiskGrad er null - denne skal være satt")))
 
         soknadsperiode.faktiskGrad != null -> XMLKorrigertArbeidstid()
-                .withArbeidstimerNormaluke(soknadsperiode.avtaltTimer ?: throw RuntimeException("avtaltTimer er null - denne skal være satt"))
+                .withArbeidstimerNormaluke(soknadsperiode.avtaltTimer
+                        ?: throw RuntimeException("avtaltTimer er null - denne skal være satt"))
                 .withArbeidsgrad(soknadsperiode.faktiskGrad)
 
         else -> null
@@ -63,25 +75,31 @@ private val soknadsperiode2XMLKorrigertArbeidstid = { soknadsperiode: Soknadsper
 }
 
 private val andreInntektskilder2XMLAnnenInntektskildeListe = { andreInntektskilder: List<Inntektskilde> ->
-    andreInntektskilder.stream()
+    andreInntektskilder
             .map { inntektskilde ->
                 XMLAnnenInntektskilde()
                         .withErSykmeldt(inntektskilde.sykmeldt)
-                        .withType(XMLAnnenInntektskildeType.valueOf(inntektskilde.type.name))
+                        .withType(when (inntektskilde.type) {
+                            Inntektskildetype.ANDRE_ARBEIDSFORHOLD -> XMLAnnenInntektskildeType.ANDRE_ARBEIDSFORHOLD
+                            Inntektskildetype.FRILANSER -> XMLAnnenInntektskildeType.FRILANSER
+                            Inntektskildetype.SELVSTENDIG_NARINGSDRIVENDE -> XMLAnnenInntektskildeType.SELVSTENDIG_NAERINGSDRIVENDE
+                            Inntektskildetype.SELVSTENDIG_NARINGSDRIVENDE_DAGMAMMA -> XMLAnnenInntektskildeType.SELVSTENDIG_NAERINGSDRIVENDE_DAGMAMMA
+                            Inntektskildetype.JORDBRUKER_FISKER_REINDRIFTSUTOVER -> XMLAnnenInntektskildeType.JORDBRUKER_FISKER_REINDRIFTSUTOEVER
+                            Inntektskildetype.ANNET -> XMLAnnenInntektskildeType.ANNET
+                            else -> throw IllegalArgumentException("Ugyldig inntektskildetype")
+                        })
             }
-            .toList()
 }
 
 private val fravar2XMLUtdanning = { fravarListe: List<Fravar> ->
-    fravarListe.stream()
+    fravarListe
             .filter { fravar -> Fravarstype.UTDANNING_DELTID == fravar.type || Fravarstype.UTDANNING_FULLTID == fravar.type }
             .map { fravar ->
                 XMLUtdanning()
                         .withFom(fravar.fom)
                         .withErFulltidsstudie(Fravarstype.UTDANNING_FULLTID == fravar.type)
             }
-            .findFirst()
-            .orElse(null)
+            .firstOrNull()
 }
 
 private val sykepengesoknad2XMLFravar = { sykepengesoknad: Sykepengesoknad ->
@@ -96,15 +114,18 @@ private val sykepengesoknad2XMLFravar = { sykepengesoknad: Sykepengesoknad ->
 }
 
 private val fravar2XMLOppholdUtenforNorge = { fravar: List<Fravar>, soktUtenlandsopphold: Boolean? ->
-    XMLOppholdUtenforNorge()
-            .withPeriodeListe(listOrNull(fravar2XMLPeriode(fravar, Fravarstype.UTLANDSOPPHOLD)))
-            .withHarSoektOmSykepengerForOppholdet(soktUtenlandsopphold)
+    val periodeliste = listOrNull(fravar2XMLPeriode(fravar, Fravarstype.UTLANDSOPPHOLD))
+    if (periodeliste == null && soktUtenlandsopphold == null)
+        null
+    else
+        XMLOppholdUtenforNorge()
+                .withPeriodeListe(periodeliste)
+                .withHarSoektOmSykepengerForOppholdet(soktUtenlandsopphold)
 }
 
 private val egenmeldinger2XMLPeriode = { egenmeldinger: List<Periode> ->
-    egenmeldinger.stream()
+    egenmeldinger
             .map { periode -> periode2XMLPeriode(periode) }
-            .toList()
 }
 
 private val periode2XMLPeriode = { periode: Periode ->
@@ -114,14 +135,13 @@ private val periode2XMLPeriode = { periode: Periode ->
 }
 
 private val fravar2XMLPeriode = { fravarListe: List<Fravar>, type: Fravarstype ->
-    fravarListe.stream()
+    fravarListe
             .filter { fravar -> fravar.type == type }
             .map { fravar ->
                 XMLPeriode()
                         .withFom(fravar.fom)
                         .withTom(fravar.tom)
             }
-            .toList()
 }
 
 private inline fun <reified T> listOrNull(list: List<T>?): List<T>? {

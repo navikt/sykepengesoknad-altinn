@@ -9,6 +9,14 @@ fasit.environment.name: local
 
 app.name: syfoaltinn
 
+unleash-api.url: http://unleash-api/api/
+
+toggle.config:
+  ORGNUMMER_WHITELISTET:
+    enabled: true
+    byOrgnummer:
+      - orgnummer
+
 altinnUser.username: "username"
 altinnUser.password: "password"
 ekstern.altinn.behandlealtinnmelding.v1.endpointurl: "ekstern.altinn.behandlealtinnmelding.v1.endpointurl"

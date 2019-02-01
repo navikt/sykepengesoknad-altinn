@@ -1,13 +1,11 @@
 package no.nav.syfo
 
-import no.nav.melding.virksomhet.sykepengesoeknadarbeidsgiver.v1.sykepengesoeknadarbeidsgiver.ObjectFactory
 import no.nav.syfo.consumer.ws.client.AktorConsumer
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
 import no.nav.syfo.consumer.ws.client.OrganisasjonConsumer
 import no.nav.syfo.consumer.ws.client.PersonConsumer
 import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.rest.PDFRestController
-import no.nav.syfo.util.JAXB
 import org.springframework.stereotype.Service
 import javax.inject.Inject
 import javax.xml.bind.ValidationEvent
@@ -31,18 +29,13 @@ constructor(private val aktorConsumer: AktorConsumer,
         sykepengesoknad.pdf = pdfRestController.getPDFArbeidstakere(sykepengesoknad)
 
         // TODO XMLSykepengesoeknadArbeidsgiver må logges til juridisk logg
-        val validationEventer: MutableList<ValidationEvent> = mutableListOf()
-        sykepengesoknad.xml = JAXB.marshallSykepengesoeknadArbeidsgiver(
-                ObjectFactory().createSykepengesoeknadArbeidsgiver(sykepengesoeknadArbeidsgiver2XML(sykepengesoknad))
-        ) { event ->
-            validationEventer.add(event)
-            true
-        }.toByteArray()
+        val validationeventer: MutableList<ValidationEvent> = mutableListOf()
+        sykepengesoknad.xml = sykepengesoknad2XMLByteArray(sykepengesoknad, validationeventer)
 
-        if (validationEventer.isEmpty()) {
+        if (validationeventer.isEmpty()) {
             altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
         } else {
-            val feil = validationEventer.joinToString("\n") { it.message }
+            val feil = validationeventer.joinToString("\n") { it.message }
             log.error("Validering feilet for sykepengesøknad med id ${sykepengesoknad.id} med følgende feil: $feil")
             throw RuntimeException("Validering feilet for sykepengesøknad med id ${sykepengesoknad.id} med følgende feil: $feil")
         }

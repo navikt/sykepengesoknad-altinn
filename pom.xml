@@ -63,6 +63,7 @@
         <sykepengesoknad.version>1</sykepengesoknad.version>
         <kafkautils.version>2</kafkautils.version>
         <serialisering.version>1</serialisering.version>
+        <unleash.version>3.1.0</unleash.version>
     </properties>
 
     <dependencies>
@@ -182,6 +183,12 @@
             <groupId>no.nav.syfo.kafka</groupId>
             <artifactId>sykepengesoknad</artifactId>
             <version>${sykepengesoknad.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>no.finn.unleash</groupId>
+            <artifactId>unleash-client-java</artifactId>
+            <version>${unleash.version}</version>
         </dependency>
 
         <dependency>
