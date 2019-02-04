@@ -40,7 +40,6 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
             val sykepengesoknad = konverter(cr.value() as SykepengesoknadDTO)
             log.info("intern behandling av søknad: ${sykepengesoknad.id}")
             val sendSykepengesoknadTilArbeidsgiver = sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
-            //TODO denne må også logges til juridisk logg
             log.info("Får denne kvitteringen etter innsending til altinn: $sendSykepengesoknadTilArbeidsgiver")
             acknowledgment.acknowledge()
         } catch (e: Exception) {

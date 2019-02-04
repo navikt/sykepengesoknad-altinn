@@ -35,8 +35,8 @@ constructor(private val aktorRestConsumer: AktorRestConsumer,
         sykepengesoknad.xml = sykepengesoknad2XMLByteArray(sykepengesoknad, validationeventer)
 
         if (validationeventer.isEmpty()) {
-            altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
             juridiskLoggConsumer.lagreIJuriskLogg(sykepengesoknad)
+            altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
         } else {
             val feil = validationeventer.joinToString("\n") { it.message }
             log.error("Validering feilet for sykepengesøknad med id ${sykepengesoknad.id} med følgende feil: $feil")
