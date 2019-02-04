@@ -74,7 +74,7 @@ class JuridiskLoggConsumerTest {
 
     /* Denne testen vil brekke om innholdet i xml-utgaven av søknaden endrer seg. Da må en bumpe versjonen i metadata
      * og bytte ut hashen med den nye. Det er så vi skal ha mulighet til å gå tilbake og regenerere en slik hash i en
-     * evt. juridisk tvist hvor vi må bevise at en søknad faktisk med innhold X faktisk er sendt til Altinn
+     * evt. juridisk tvist hvor vi må bevise at en søknad med innhold X faktisk er sendt til Altinn
      */
     @Test
     fun sjekkInnholdIPayload() {
