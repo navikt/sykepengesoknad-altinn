@@ -15,17 +15,15 @@ private val objectMapper = ObjectMapper()
 val mockSykepengesoknadDTO: SykepengesoknadDTO =
         objectMapper.readValue(LocalApplication::class.java.getResource("/arbeidstakersoknad.json"), SykepengesoknadDTO::class.java)
 
-val mockSykepengesoknad: Sykepengesoknad = opprettMockSykepengesoknad()
-
-private fun opprettMockSykepengesoknad(): Sykepengesoknad {
-    val sykepengesoknad = konverter(mockSykepengesoknadDTO)
-    sykepengesoknad.fnr = "12345678910"
-    sykepengesoknad.navn = "Navn Navnesen"
-    sykepengesoknad.juridiskOrgnummerArbeidsgiver = "999999999"
-    sykepengesoknad.xml = sykepengesoknad2XMLByteArray(sykepengesoknad, mutableListOf())
-    return sykepengesoknad
-}
-
+val mockSykepengesoknad: Sykepengesoknad
+    get() {
+        val sykepengesoknad = konverter(mockSykepengesoknadDTO)
+        sykepengesoknad.fnr = "12345678910"
+        sykepengesoknad.navn = "Navn Navnesen"
+        sykepengesoknad.juridiskOrgnummerArbeidsgiver = "999999999"
+        sykepengesoknad.xml = sykepengesoknad2XMLByteArray(sykepengesoknad, mutableListOf())
+        return sykepengesoknad
+    }
 
 // Hjelpemetoder for å brygge bro mellom nullbare argumenter i Mockitos argumentMatcher og Kotlin
 fun <T> any(): T {
