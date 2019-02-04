@@ -27,10 +27,12 @@ srvsyfoaltinn:
   username: "kek"
   password: "bur"
 
-aktoer.v2.endpointurl: "aktoer.url"
 virksomhet.Person.v3.endpointurl: "virksomhet.Person.v3.endpointurl"
 servicegateway.url: "servicegateway.url"
 securitytokenservice.url: "sts.url"
+aktoerregister.api.v1.url: "aktor.url"
+lagrejuridisklogg.rest.url: "lagrejuridisk.url"
+security-token-service-token.url: "security-token-service-token.url"
 
 javax.net.ssl:
   trustStore: truststore
