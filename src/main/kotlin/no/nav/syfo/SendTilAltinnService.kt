@@ -30,7 +30,6 @@ constructor(private val aktorRestConsumer: AktorRestConsumer,
         sykepengesoknad.juridiskOrgnummerArbeidsgiver = organisasjonConsumer.hentJuridiskOrgnummer(sykepengesoknad.arbeidsgiver.orgnummer)
         sykepengesoknad.pdf = pdfRestController.getPDFArbeidstakere(sykepengesoknad)
 
-        // TODO XMLSykepengesoeknadArbeidsgiver må logges til juridisk logg
         val validationeventer: MutableList<ValidationEvent> = mutableListOf()
         sykepengesoknad.xml = sykepengesoknad2XMLByteArray(sykepengesoknad, validationeventer)
 
@@ -42,8 +41,5 @@ constructor(private val aktorRestConsumer: AktorRestConsumer,
             log.error("Validering feilet for sykepengesøknad med id ${sykepengesoknad.id} med følgende feil: $feil")
             throw RuntimeException("Validering feilet for sykepengesøknad med id ${sykepengesoknad.id} med følgende feil: $feil")
         }
-
-
     }
-
 }
