@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.kafka.konverter
 import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
+import org.mockito.Mockito
 
 private val objectMapper = ObjectMapper()
         .registerModule(JavaTimeModule())
@@ -14,12 +15,23 @@ private val objectMapper = ObjectMapper()
 val mockSykepengesoknadDTO: SykepengesoknadDTO =
         objectMapper.readValue(LocalApplication::class.java.getResource("/arbeidstakersoknad.json"), SykepengesoknadDTO::class.java)
 
-val mockSykepengesoknad: Sykepengesoknad = oppretttMockSykepengesoknad()
+val mockSykepengesoknad: Sykepengesoknad = opprettMockSykepengesoknad()
 
-private fun oppretttMockSykepengesoknad(): Sykepengesoknad {
+private fun opprettMockSykepengesoknad(): Sykepengesoknad {
     val sykepengesoknad = konverter(mockSykepengesoknadDTO)
     sykepengesoknad.fnr = "12345678910"
     sykepengesoknad.navn = "Navn Navnesen"
     sykepengesoknad.juridiskOrgnummerArbeidsgiver = "999999999"
+    sykepengesoknad.xml = sykepengesoknad2XMLByteArray(sykepengesoknad, mutableListOf())
     return sykepengesoknad
 }
+
+
+// Hjelpemetoder for å brygge bro mellom nullbare argumenter i Mockitos argumentMatcher og Kotlin
+fun <T> any(): T {
+    Mockito.any<T>()
+    return uninitialized()
+}
+
+private fun <T> uninitialized(): T = null as T
+// END

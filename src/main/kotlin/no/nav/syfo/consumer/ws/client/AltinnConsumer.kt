@@ -22,7 +22,7 @@ constructor(private val iCorrespondenceAgencyExternalBasic: ICorrespondenceAgenc
 
     val SYSTEM_USER_CODE = "NAV_DIGISYFO"
 
-    fun sendSykepengesoknadTilArbeidsgiver(sykepengesoknad: Sykepengesoknad): Int? {
+    fun sendSykepengesoknadTilArbeidsgiver(sykepengesoknad: Sykepengesoknad): Int {
         try {
             val receiptExternal = iCorrespondenceAgencyExternalBasic.insertCorrespondenceBasicV2(altinnUsername,
                     altinnPassword,

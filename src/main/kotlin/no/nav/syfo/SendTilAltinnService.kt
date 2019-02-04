@@ -1,7 +1,8 @@
 package no.nav.syfo
 
-import no.nav.syfo.consumer.rest.JuridiskLoggConsumer
+import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
 import no.nav.syfo.consumer.rest.aktor.AktorRestConsumer
+import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggException
 import no.nav.syfo.consumer.rest.pdf.PDFRestController
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
 import no.nav.syfo.consumer.ws.client.OrganisasjonConsumer
@@ -33,13 +34,19 @@ constructor(private val aktorRestConsumer: AktorRestConsumer,
         val validationeventer: MutableList<ValidationEvent> = mutableListOf()
         sykepengesoknad.xml = sykepengesoknad2XMLByteArray(sykepengesoknad, validationeventer)
 
+        val receiptId:Int?
         if (validationeventer.isEmpty()) {
-            juridiskLoggConsumer.lagreIJuriskLogg(sykepengesoknad)
-            altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
+             receiptId = altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
         } else {
             val feil = validationeventer.joinToString("\n") { it.message }
             log.error("Validering feilet for sykepengesøknad med id ${sykepengesoknad.id} med følgende feil: $feil")
             throw RuntimeException("Validering feilet for sykepengesøknad med id ${sykepengesoknad.id} med følgende feil: $feil")
+        }
+
+        try {
+            juridiskLoggConsumer.lagreIJuriskLogg(sykepengesoknad, receiptId)
+        } catch (e:JuridiskLoggException) {
+            log.warn("Ved innsending av sykepengesøknad: ${sykepengesoknad.id} feilet juridisk logging")
         }
     }
 }
