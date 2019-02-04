@@ -44,7 +44,7 @@ constructor(private val aktorRestConsumer: AktorRestConsumer,
         }
 
         try {
-            juridiskLoggConsumer.lagreIJuriskLogg(sykepengesoknad, receiptId)
+            juridiskLoggConsumer.lagreIJuridiskLogg(sykepengesoknad, receiptId)
         } catch (e:JuridiskLoggException) {
             log.warn("Ved innsending av sykepengesøknad: ${sykepengesoknad.id} feilet juridisk logging")
         }

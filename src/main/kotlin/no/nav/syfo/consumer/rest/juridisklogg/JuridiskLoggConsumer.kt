@@ -22,7 +22,7 @@ class JuridiskLoggConsumer(private val basicAuthRestTemplate: RestTemplate,
 
     val log = log()
 
-    fun lagreIJuriskLogg(sykepengesoknad: Sykepengesoknad, altinnKvitteringsId:Number): Number {
+    fun lagreIJuridiskLogg(sykepengesoknad: Sykepengesoknad, altinnKvitteringsId:Number): Number {
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON

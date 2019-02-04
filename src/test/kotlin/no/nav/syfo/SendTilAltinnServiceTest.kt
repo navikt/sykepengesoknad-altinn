@@ -7,8 +7,6 @@ import no.nav.syfo.consumer.rest.pdf.PDFRestController
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
 import no.nav.syfo.consumer.ws.client.OrganisasjonConsumer
 import no.nav.syfo.consumer.ws.client.PersonConsumer
-import no.nav.syfo.domain.soknad.Sykepengesoknad
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -51,12 +49,12 @@ class SendTilAltinnServiceTest {
     fun senderTilAltinnOgLoggerJuridisk() {
         sendTilAltinnService.sendSykepengesoknadTilAltinn(mockSykepengesoknad)
 
-        Mockito.verify(juridiskLoggConsumer).lagreIJuriskLogg(any(), ArgumentMatchers.anyInt())
+        Mockito.verify(juridiskLoggConsumer).lagreIJuridiskLogg(any(), ArgumentMatchers.anyInt())
     }
 
     @Test
     fun feilIJuridiskStopperIkkeInnsending() {
-        given(juridiskLoggConsumer.lagreIJuriskLogg(any(), any())).willThrow(JuridiskLoggException())
+        given(juridiskLoggConsumer.lagreIJuridiskLogg(any(), any())).willThrow(JuridiskLoggException())
 
         sendTilAltinnService.sendSykepengesoknadTilAltinn(mockSykepengesoknad)
     }

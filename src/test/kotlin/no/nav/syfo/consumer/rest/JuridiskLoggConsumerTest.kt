@@ -44,7 +44,7 @@ class JuridiskLoggConsumerTest {
 
     @Test
     fun lagrerIJurdiskLogg() {
-        val ref = juridiskLoggConsumer.lagreIJuriskLogg(mockSykepengesoknad, 123)
+        val ref = juridiskLoggConsumer.lagreIJuridiskLogg(mockSykepengesoknad, 123)
         assertThat(ref).isEqualTo(123)
     }
 
@@ -57,7 +57,7 @@ class JuridiskLoggConsumerTest {
                 BDDMockito.eq(JuridiskRespose::class.java)
         )).willReturn(ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR))
 
-        juridiskLoggConsumer.lagreIJuriskLogg(mockSykepengesoknad, 123)
+        juridiskLoggConsumer.lagreIJuridiskLogg(mockSykepengesoknad, 123)
     }
 
     @Test(expected = JuridiskLoggException::class)
@@ -69,7 +69,7 @@ class JuridiskLoggConsumerTest {
                 BDDMockito.eq(JuridiskRespose::class.java)
         )).willThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST, "", "Payload må være base64-encodet".toByteArray(charset("UTF-8")), null))
 
-        juridiskLoggConsumer.lagreIJuriskLogg(mockSykepengesoknad, 123)
+        juridiskLoggConsumer.lagreIJuridiskLogg(mockSykepengesoknad, 123)
     }
 
     /* Denne testen vil brekke om innholdet i xml-utgaven av søknaden endrer seg. Da må en bumpe versjonen i metadata
@@ -80,7 +80,7 @@ class JuridiskLoggConsumerTest {
     fun sjekkInnholdIPayload() {
         val argumentCaptor = ArgumentCaptor.forClass(HttpEntity::class.java)
 
-        juridiskLoggConsumer.lagreIJuriskLogg(mockSykepengesoknad, 123)
+        juridiskLoggConsumer.lagreIJuridiskLogg(mockSykepengesoknad, 123)
 
         Mockito.verify(basicAuthRestTemplate).exchange(
                 BDDMockito.anyString(),
