@@ -14,6 +14,7 @@ import no.finn.unleash.UnleashContext
 import no.nav.syfo.config.unleash.FeatureToggle.ORGNUMMER_WHITELISTET
 import no.nav.syfo.config.unleash.Toggle
 import no.nav.syfo.config.unleash.strategy.UNLEASH_PROPERTY_NAME_ORGNUMMER
+import no.nav.syfo.domain.soknad.Avsendertype.*
 import no.nav.syfo.domain.soknad.Sykepengesoknad
 import org.springframework.stereotype.Component
 import java.io.IOException
@@ -67,9 +68,7 @@ class SoknadAltinnMapper(private val toggle: Toggle) {
     }
 
     private fun byggMessageSender(sykepengesoknad: Sykepengesoknad): String {
-        //TODO er søknaden autogenerert?
-        //if (sykepengesoknad.sykepengesoknad.isAutogenerertBrukerDoed()) {
-        if (false) {
+        if (sykepengesoknad.avsendertype == SYSTEM) {
             return "Autogenerert på grunn av et registrert dødsfall"
         }
 
