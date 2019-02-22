@@ -29,7 +29,7 @@ private val sykepengesoknad2XML = { sykepengesoknad: Sykepengesoknad,
             .withKorrigerer(sykepengesoknad.korrigerer)
             .withPeriode(XMLPeriode().withFom(sykepengesoknad.fom).withTom(sykepengesoknad.tom))
             .withSykmeldtesFnr(fnr)
-            .withArbeidsgiverForskuttererLoenn(sykepengesoknad.arbeidsgiverForskutterer?.name)
+            .withArbeidsgiverForskuttererLoenn(sykepengesoknad.arbeidsgiverForskutterer?.name ?: "IKKE_SPURT")
             .withIdentdato(sykepengesoknad.startSykeforlop)
             .withSykmeldingSkrevetDato(sykepengesoknad.sykmeldingSkrevet?.toLocalDate())
             .withArbeidGjenopptattDato(sykepengesoknad.arbeidGjenopptatt)
