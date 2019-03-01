@@ -26,8 +26,6 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
 
     @KafkaListener(topics = ["privat-syfoaltinn-soknad-v1"], id = "syfoaltinnIntern", idIsGroup = false)
     fun listen(cr: ConsumerRecord<String, Soknad>, acknowledgment: Acknowledgment) {
-        log.info("Melding mottatt på intern topic: ${cr.topic()} med offset: ${cr.offset()}")
-
         try {
             MDC.put(CALL_ID, KafkaHeaderConstants.getLastHeaderByKeyAsString(cr.headers(), CALL_ID).orElse(UUID.randomUUID().toString()))
             cr.headers().lastHeader(BEHANDLINGSTIDSPUNKT)
@@ -35,19 +33,23 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
                     ?.let { String(it, UTF_8) }
                     ?.let { LocalDateTime.parse(it, ISO_LOCAL_DATE_TIME) }
                     ?.takeIf { now().isBefore(it) }
-                    ?.apply { return }
+                    ?.apply {
+                        log.info("Plukket opp søknad ${cr.key()} med senere behandlingstidspunkt, venter 10 sekunder og legger tilbake på kø...")
+                        Thread.sleep(10000)
+                        internSoknadsbehandlingProducer.leggPaInternTopic(cr.value() as SykepengesoknadDTO, this)
+                        acknowledgment.acknowledge()
+                        return
+                    }
 
             val sykepengesoknad = konverter(cr.value() as SykepengesoknadDTO)
-            log.info("intern behandling av søknad: ${sykepengesoknad.id}")
-            val sendSykepengesoknadTilArbeidsgiver = sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
-            log.info("Får denne kvitteringen etter innsending til altinn: $sendSykepengesoknadTilArbeidsgiver")
+            sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
+            log.info("Søknad ${sykepengesoknad.id} er sendt til Altinn")
             acknowledgment.acknowledge()
         } catch (e: Exception) {
             val sykepengesoknadDTO = cr.value() as SykepengesoknadDTO
 
-            log.error("Uventet feil ved behandling av søknad ${sykepengesoknadDTO.id}", e)
+            log.error("Uventet feil ved behandling av søknad ${sykepengesoknadDTO.id}, legger søknaden tilbake på kø", e)
             internSoknadsbehandlingProducer.leggPaInternTopic(sykepengesoknadDTO, now().plusMinutes(1))
-            log.info("Behandling feiler, legger søknad på intern topic")
             acknowledgment.acknowledge()
         } finally {
             MDC.remove(CALL_ID)
