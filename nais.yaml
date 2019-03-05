@@ -1,4 +1,5 @@
 name: syfoaltinn
+team: teamsykefravr
 image: "repo.adeo.no:5443/syfoaltinn"
 replicas:
   min: 1
