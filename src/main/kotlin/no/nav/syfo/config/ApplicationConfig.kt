@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter
 import org.springframework.jdbc.datasource.DataSourceTransactionManager
-import org.springframework.transaction.jta.JtaTransactionManager
 import org.springframework.web.client.RestTemplate
 import javax.sql.DataSource
 

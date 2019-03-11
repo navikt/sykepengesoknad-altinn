@@ -1,4 +1,0 @@
-INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT)
-VALUES ('1', 'ressurs1', 'altinnid1', date '2018-10-30');
-INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT)
-VALUES ('2', 'ressurs2', 'altinnid2', date '2018-12-30');
