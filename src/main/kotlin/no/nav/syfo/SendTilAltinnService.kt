@@ -44,7 +44,7 @@ constructor(private val aktorRestConsumer: AktorRestConsumer,
         val receiptId: Int?
         if (validationeventer.isEmpty()) {
             receiptId = altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
-            sendtSoknadDao.lagreSendtSoknad(SendtSoknad(ressursId = sykepengesoknad.id, altinnId = Integer.toString(receiptId), sendt = now()))
+            sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, Integer.toString(receiptId), now()))
         } else {
             val feil = validationeventer.joinToString("\n") { it.message }
             log.error("Validering feilet for sykepengesøknad med id ${sykepengesoknad.id} med følgende feil: $feil")

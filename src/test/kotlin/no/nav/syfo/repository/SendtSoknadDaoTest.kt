@@ -33,13 +33,12 @@ class SendtSoknadDaoTest {
     @Test
     fun lagreSendtSoknadLagrerIDb() {
         val sendt = LocalDateTime.now()
-        val sendtSoknad = SendtSoknad(ressursId = "ressursId", altinnId = "altinnId", sendt = sendt)
+        val sendtSoknad = SendtSoknad("ressursId", "altinnId", sendt)
 
         sendtSoknadDao.lagreSendtSoknad(sendtSoknad)
 
         val sendteSoknader = jdbcTemplate.query("SELECT * FROM SENDT_SOKNAD", sendtSoknadRowMapper)
         assertThat(sendteSoknader).hasSize(1)
-        assertThat(sendteSoknader.first().id).isEqualTo("1")
         assertThat(sendteSoknader.first().ressursId).isEqualTo("ressursId")
         assertThat(sendteSoknader.first().altinnId).isEqualTo("altinnId")
         assertThat(sendteSoknader.first().sendt).isEqualTo(sendt)
@@ -62,9 +61,8 @@ class SendtSoknadDaoTest {
 
 val sendtSoknadRowMapper = RowMapper { resultSet, _ ->
     SendtSoknad(
-            id = resultSet.getString("ID"),
-            ressursId = resultSet.getString("RESSURS_ID"),
-            altinnId = resultSet.getString("ALTINN_ID"),
-            sendt = resultSet.getTimestamp("SENDT").toLocalDateTime()
+            resultSet.getString("RESSURS_ID"),
+            resultSet.getString("ALTINN_ID"),
+            resultSet.getTimestamp("SENDT").toLocalDateTime()
     )
 }

@@ -7,12 +7,10 @@ import no.nav.syfo.consumer.rest.pdf.PDFRestController
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
 import no.nav.syfo.consumer.ws.client.OrganisasjonConsumer
 import no.nav.syfo.consumer.ws.client.PersonConsumer
-import no.nav.syfo.domain.SendtSoknad
 import no.nav.syfo.repository.SendtSoknadDao
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
 import org.mockito.BDDMockito.*
 import org.mockito.InjectMocks
 import org.mockito.Mock
