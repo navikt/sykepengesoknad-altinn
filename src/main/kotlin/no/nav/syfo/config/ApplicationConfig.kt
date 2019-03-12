@@ -2,11 +2,15 @@ package no.nav.syfo.config
 
 import com.fasterxml.jackson.databind.SerializationFeature
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Primary
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter
+import org.springframework.jdbc.datasource.DataSourceTransactionManager
 import org.springframework.web.client.RestTemplate
+import javax.sql.DataSource
 
 @Configuration
 class ApplicationConfig {
@@ -27,5 +31,18 @@ class ApplicationConfig {
         return RestTemplateBuilder()
                 .basicAuthorization(username, password)
                 .build()
+    }
+
+    @Bean
+    @Primary
+    fun datasourceTransactionManager(dataSource: DataSource): DataSourceTransactionManager {
+        val dataSourceTransactionManager = DataSourceTransactionManager()
+        dataSourceTransactionManager.dataSource = dataSource
+        return dataSourceTransactionManager
+    }
+
+    @Bean
+    fun flywayMigrationStrategy(dataSourceTransactionManager: DataSourceTransactionManager): FlywayMigrationStrategy {
+        return FlywayMigrationStrategy { it.migrate() }
     }
 }

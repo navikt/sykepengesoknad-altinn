@@ -78,7 +78,7 @@ private val andreInntektskilder2XMLAnnenInntektskildeListe = { andreInntektskild
     andreInntektskilder
             .map { inntektskilde ->
                 XMLAnnenInntektskilde()
-                        .withErSykmeldt(inntektskilde.sykmeldt)
+                        .withErSykmeldt(inntektskilde.sykmeldt ?: false)
                         .withType(when (inntektskilde.type) {
                             Inntektskildetype.ANDRE_ARBEIDSFORHOLD -> XMLAnnenInntektskildeType.ANDRE_ARBEIDSFORHOLD
                             Inntektskildetype.FRILANSER -> XMLAnnenInntektskildeType.FRILANSER
