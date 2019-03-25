@@ -1,7 +1,9 @@
 package no.nav.syfo
 
-import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
+import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.Tags
 import no.nav.syfo.consumer.rest.aktor.AktorRestConsumer
+import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggException
 import no.nav.syfo.consumer.rest.pdf.PDFRestController
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
@@ -12,19 +14,19 @@ import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.repository.SendtSoknadDao
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime.now
-import javax.inject.Inject
 import javax.xml.bind.ValidationEvent
 
 
 @Service
-class SendTilAltinnService @Inject
-constructor(private val aktorRestConsumer: AktorRestConsumer,
-            private val personConsumer: PersonConsumer,
-            private val altinnConsumer: AltinnConsumer,
-            private val pdfRestController: PDFRestController,
-            private val organisasjonConsumer: OrganisasjonConsumer,
-            private val juridiskLoggConsumer: JuridiskLoggConsumer,
-            private val sendtSoknadDao: SendtSoknadDao) {
+class SendTilAltinnService(
+        private val aktorRestConsumer: AktorRestConsumer,
+        private val personConsumer: PersonConsumer,
+        private val altinnConsumer: AltinnConsumer,
+        private val pdfRestController: PDFRestController,
+        private val organisasjonConsumer: OrganisasjonConsumer,
+        private val juridiskLoggConsumer: JuridiskLoggConsumer,
+        private val sendtSoknadDao: SendtSoknadDao,
+        private val registry: MeterRegistry) {
 
     val log = log()
 
@@ -45,6 +47,7 @@ constructor(private val aktorRestConsumer: AktorRestConsumer,
         if (validationeventer.isEmpty()) {
             receiptId = altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
             sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, Integer.toString(receiptId), now()))
+            registry.counter("syfoaltinn.soknadSendtTilAltinn", Tags.of("type", "info"))
         } else {
             val feil = validationeventer.joinToString("\n") { it.message }
             log.error("Validering feilet for sykepengesøknad med id ${sykepengesoknad.id} med følgende feil: $feil")
