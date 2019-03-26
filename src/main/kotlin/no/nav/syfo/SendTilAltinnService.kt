@@ -1,7 +1,7 @@
 package no.nav.syfo
 
-import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
 import no.nav.syfo.consumer.rest.aktor.AktorRestConsumer
+import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggException
 import no.nav.syfo.consumer.rest.pdf.PDFRestController
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
@@ -29,7 +29,8 @@ constructor(private val aktorRestConsumer: AktorRestConsumer,
     val log = log()
 
     fun sendSykepengesoknadTilAltinn(sykepengesoknad: Sykepengesoknad) {
-        if (sendtSoknadDao.soknadErSendt(sykepengesoknad.id)) {
+        val erEttersending = soknadErEttersending(sykepengesoknad)
+        if (sendtSoknadDao.soknadErSendt(sykepengesoknad.id, erEttersending)) {
             log.warn("Forsøkte å sende søknad om sykepenger med id {} til Altinn som allerede er sendt", sykepengesoknad.id)
             return
         }
@@ -44,7 +45,7 @@ constructor(private val aktorRestConsumer: AktorRestConsumer,
         val receiptId: Int?
         if (validationeventer.isEmpty()) {
             receiptId = altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
-            sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, Integer.toString(receiptId), now()))
+            sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, Integer.toString(receiptId), now(), erEttersending))
         } else {
             val feil = validationeventer.joinToString("\n") { it.message }
             log.error("Validering feilet for sykepengesøknad med id ${sykepengesoknad.id} med følgende feil: $feil")
@@ -56,5 +57,12 @@ constructor(private val aktorRestConsumer: AktorRestConsumer,
         } catch (e: JuridiskLoggException) {
             log.warn("Ved innsending av sykepengesøknad: ${sykepengesoknad.id} feilet juridisk logging")
         }
+    }
+
+    private fun soknadErEttersending(sykepengesoknad: Sykepengesoknad): Boolean {
+        if (sykepengesoknad.sendtArbeidsgiver == sykepengesoknad.sendtNav) {
+            return false
+        }
+        return true
     }
 }

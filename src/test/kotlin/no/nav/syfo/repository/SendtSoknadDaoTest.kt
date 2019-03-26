@@ -8,7 +8,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.jdbc.core.RowMapper
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.junit4.SpringRunner
 import java.time.LocalDateTime
@@ -33,7 +32,7 @@ class SendtSoknadDaoTest {
     @Test
     fun lagreSendtSoknadLagrerIDb() {
         val sendt = LocalDateTime.now()
-        val sendtSoknad = SendtSoknad("ressursId", "altinnId", sendt)
+        val sendtSoknad = SendtSoknad("ressursId", "altinnId", sendt, false)
 
         sendtSoknadDao.lagreSendtSoknad(sendtSoknad)
 
@@ -42,27 +41,57 @@ class SendtSoknadDaoTest {
         assertThat(sendteSoknader.first().ressursId).isEqualTo("ressursId")
         assertThat(sendteSoknader.first().altinnId).isEqualTo("altinnId")
         assertThat(sendteSoknader.first().sendt).isEqualTo(sendt)
+        assertThat(sendteSoknader.first().ettersendt).isFalse()
+    }
+
+    @Test
+    fun lagreSendtSoknadOppdatererDbVedEttersending() {
+        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT, ETTERSENDT) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30', '0')")
+        val sendt = LocalDateTime.now()
+        val sendtSoknad = SendtSoknad("ressursId", "altinnId2", sendt, true)
+
+        sendtSoknadDao.lagreSendtSoknad(sendtSoknad)
+
+        val sendteSoknader = jdbcTemplate.query("SELECT * FROM SENDT_SOKNAD", sendtSoknadRowMapper)
+        assertThat(sendteSoknader).hasSize(1)
+        assertThat(sendteSoknader.first().ressursId).isEqualTo("ressursId")
+        assertThat(sendteSoknader.first().altinnId).isEqualTo("altinnId2")
+        assertThat(sendteSoknader.first().sendt).isEqualTo(sendt)
+        assertThat(sendteSoknader.first().ettersendt).isTrue()
     }
 
     @Test
     fun soknadErSendtReturnererTrueHvisSoknadErSendt() {
-        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30')")
+        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT, ETTERSENDT) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30', '0')")
 
-        assertThat(sendtSoknadDao.soknadErSendt("ressursId")).isTrue()
+        assertThat(sendtSoknadDao.soknadErSendt("ressursId", false)).isTrue()
     }
 
     @Test
     fun soknadErSendtReturnererFalseHvisSoknadIkkeErSendt() {
-        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30')")
+        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT, ETTERSENDT) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30', '0')")
 
-        assertThat(sendtSoknadDao.soknadErSendt("annenRessursId")).isFalse()
+        assertThat(sendtSoknadDao.soknadErSendt("annenRessursId", false)).isFalse()
     }
-}
 
-val sendtSoknadRowMapper = RowMapper { resultSet, _ ->
-    SendtSoknad(
-            resultSet.getString("RESSURS_ID"),
-            resultSet.getString("ALTINN_ID"),
-            resultSet.getTimestamp("SENDT").toLocalDateTime()
-    )
+    @Test
+    fun soknadErSendtReturnererFalseHvisEttersendelseOgEttersendelseIkkeErSendt() {
+        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT, ETTERSENDT) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30', '0')")
+
+        assertThat(sendtSoknadDao.soknadErSendt("ressursId", true)).isFalse()
+    }
+
+    @Test
+    fun soknadErSendtReturnererTrueHvisEttersendelseOgEttersendelseErSendt() {
+        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT, ETTERSENDT) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30', '1')")
+
+        assertThat(sendtSoknadDao.soknadErSendt("ressursId", true)).isTrue()
+    }
+
+    @Test
+    fun soknadErSendtReturnererTrueHvisIkkeEttersendelseOgEttersendelseLikevelErSendt() {
+        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT, ETTERSENDT) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30', '1')")
+
+        assertThat(sendtSoknadDao.soknadErSendt("ressursId", false)).isTrue()
+    }
 }
