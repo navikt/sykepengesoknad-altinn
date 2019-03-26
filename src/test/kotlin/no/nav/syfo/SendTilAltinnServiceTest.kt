@@ -1,6 +1,8 @@
 package no.nav.syfo
 
+import io.micrometer.core.instrument.Counter
 import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.Tags
 import no.nav.syfo.consumer.rest.aktor.AktorRestConsumer
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggException
@@ -12,6 +14,7 @@ import no.nav.syfo.repository.SendtSoknadDao
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers
 import org.mockito.BDDMockito.*
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -37,6 +40,8 @@ class SendTilAltinnServiceTest {
     private lateinit var sendtSoknadDao: SendtSoknadDao
     @Mock
     private lateinit var registry: MeterRegistry
+    @Mock
+    private lateinit var counter: Counter
 
     @InjectMocks
     private lateinit var sendTilAltinnService: SendTilAltinnService
@@ -51,6 +56,7 @@ class SendTilAltinnServiceTest {
         given(pdfRestController.getPDFArbeidstakere(any())).willReturn("".toByteArray())
         given(altinnConsumer.sendSykepengesoknadTilArbeidsgiver(any())).willReturn(123)
         given(sendtSoknadDao.soknadErSendt(ressursId)).willReturn(false)
+        given(registry.counter(ArgumentMatchers.anyString(), ArgumentMatchers.any(Tags::class.java))).willReturn(counter)
     }
 
     @Test
