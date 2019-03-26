@@ -1,5 +1,6 @@
 package no.nav.syfo
 
+import io.micrometer.core.instrument.MeterRegistry
 import no.nav.syfo.consumer.rest.aktor.AktorRestConsumer
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggException
@@ -34,6 +35,8 @@ class SendTilAltinnServiceTest {
     private lateinit var juridiskLoggConsumer: JuridiskLoggConsumer
     @Mock
     private lateinit var sendtSoknadDao: SendtSoknadDao
+    @Mock
+    private lateinit var registry: MeterRegistry
 
     @InjectMocks
     private lateinit var sendTilAltinnService: SendTilAltinnService
