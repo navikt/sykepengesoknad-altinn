@@ -6,5 +6,5 @@ data class SendtSoknad(
         val ressursId: String,
         val altinnId: String,
         val sendt: LocalDateTime,
-        val ettersendt: Boolean
+        val altinnIdEttersending: String? = null
 )

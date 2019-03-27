@@ -17,23 +17,20 @@ class SendtSoknadDao(internal val namedParameterJdbcTemplate: NamedParameterJdbc
     val log = log()
 
     fun lagreSendtSoknad(sendtSoknad: SendtSoknad) {
-        if (sendtSoknad.ettersendt) {
-            namedParameterJdbcTemplate.update("UPDATE SENDT_SOKNAD SET ALTINN_ID = :altinnId, SENDT = :sendt, ETTERSENDT = :ettersendt WHERE RESSURS_ID = :ressursId",
-                    MapSqlParameterSource()
-                            .addValue("altinnId", sendtSoknad.altinnId)
-                            .addValue("sendt", sendtSoknad.sendt)
-                            .addValue("ettersendt", 1)
-                            .addValue("ressursId", sendtSoknad.ressursId)
-            )
-        } else {
-            namedParameterJdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT, ETTERSENDT) VALUES (SENDT_SOKNAD_ID_SEQ.NEXTVAL, :ressursId, :altinnId, :sendt, :ettersendt)",
-                    MapSqlParameterSource()
-                            .addValue("ressursId", sendtSoknad.ressursId)
-                            .addValue("altinnId", sendtSoknad.altinnId)
-                            .addValue("sendt", sendtSoknad.sendt)
-                            .addValue("ettersendt", 0)
-            )
-        }
+        namedParameterJdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT) VALUES (SENDT_SOKNAD_ID_SEQ.NEXTVAL, :ressursId, :altinnId, :sendt)",
+                MapSqlParameterSource()
+                        .addValue("ressursId", sendtSoknad.ressursId)
+                        .addValue("altinnId", sendtSoknad.altinnId)
+                        .addValue("sendt", sendtSoknad.sendt)
+        )
+    }
+
+    fun lagreEttersendtSoknad(ressursId: String, altinnIdEttersending: String) {
+        namedParameterJdbcTemplate.update("UPDATE SENDT_SOKNAD SET ALTINN_ID_ETTERS = :altinnIdEttersending WHERE RESSURS_ID = :ressursId",
+                MapSqlParameterSource()
+                        .addValue("altinnIdEttersending", altinnIdEttersending)
+                        .addValue("ressursId", ressursId)
+        )
     }
 
     fun soknadErSendt(ressursId: String, erEttersending: Boolean): Boolean {
@@ -42,11 +39,11 @@ class SendtSoknadDao(internal val namedParameterJdbcTemplate: NamedParameterJdbc
                 MapSqlParameterSource("ressursId", ressursId),
                 sendtSoknadRowMapper).firstOrNull() ?: return false
 
-        if (erEttersending && !sendtSoknad.ettersendt) {
+        if (erEttersending && sendtSoknad.altinnIdEttersending == null) {
             return false
         }
 
-        if (!erEttersending && sendtSoknad.ettersendt) {
+        if (!erEttersending && sendtSoknad.altinnIdEttersending != null) {
             log.error("Forsøker å sende søknad med id {} som allerede har blitt ettersendt, avbryter..", sendtSoknad.ressursId)
         }
         return true
@@ -58,6 +55,6 @@ val sendtSoknadRowMapper = RowMapper { resultSet, _ ->
             resultSet.getString("RESSURS_ID"),
             resultSet.getString("ALTINN_ID"),
             resultSet.getTimestamp("SENDT").toLocalDateTime(),
-            resultSet.getInt("ETTERSENDT") != 0
+            resultSet.getString("ALTINN_ID_ETTERS")
     )
 }

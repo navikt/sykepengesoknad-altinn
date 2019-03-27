@@ -47,7 +47,11 @@ class SendTilAltinnService(
         val receiptId: Int?
         if (validationeventer.isEmpty()) {
             receiptId = altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
-            sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, Integer.toString(receiptId), now(), erEttersending))
+            if (erEttersending) {
+                sendtSoknadDao.lagreEttersendtSoknad(sykepengesoknad.id, Integer.toString(receiptId))
+            } else {
+                sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, Integer.toString(receiptId), now()))
+            }
             registry.counter("syfoaltinn.soknadSendtTilAltinn", Tags.of("type", "info")).increment()
         } else {
             val feil = validationeventer.joinToString("\n") { it.message }
