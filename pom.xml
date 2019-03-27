@@ -60,7 +60,7 @@
         <bom.version>2018.10.23.14.04</bom.version>
         <person.version>3.2.0</person.version>
         <aktoer.version>1.0</aktoer.version>
-        <sykepengesoknad.version>1</sykepengesoknad.version>
+        <sykepengesoknad.version>2</sykepengesoknad.version>
         <kafkautils.version>2</kafkautils.version>
         <serialisering.version>1</serialisering.version>
         <unleash.version>3.1.0</unleash.version>

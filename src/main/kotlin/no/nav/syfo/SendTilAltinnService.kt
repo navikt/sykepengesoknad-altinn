@@ -31,7 +31,7 @@ class SendTilAltinnService(
     val log = log()
 
     fun sendSykepengesoknadTilAltinn(sykepengesoknad: Sykepengesoknad) {
-        val erEttersending = soknadErEttersending(sykepengesoknad)
+        val erEttersending = sykepengesoknad.ettersending
         if (sendtSoknadDao.soknadErSendt(sykepengesoknad.id, erEttersending)) {
             log.warn("Forsøkte å sende søknad om sykepenger med id {} til Altinn som allerede er sendt", sykepengesoknad.id)
             return
@@ -64,12 +64,5 @@ class SendTilAltinnService(
         } catch (e: JuridiskLoggException) {
             log.warn("Ved innsending av sykepengesøknad: ${sykepengesoknad.id} feilet juridisk logging")
         }
-    }
-
-    private fun soknadErEttersending(sykepengesoknad: Sykepengesoknad): Boolean {
-        if (sykepengesoknad.sendtArbeidsgiver == sykepengesoknad.sendtNav) {
-            return false
-        }
-        return true
     }
 }
