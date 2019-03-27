@@ -48,7 +48,7 @@ class SendTilAltinnService(
         if (validationeventer.isEmpty()) {
             receiptId = altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
             sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, Integer.toString(receiptId), now(), erEttersending))
-            registry.counter("syfoaltinn.soknadSendtTilAltinn", Tags.of("type", "info"))
+            registry.counter("syfoaltinn.soknadSendtTilAltinn", Tags.of("type", "info")).increment()
         } else {
             val feil = validationeventer.joinToString("\n") { it.message }
             log.error("Validering feilet for sykepengesøknad med id ${sykepengesoknad.id} med følgende feil: $feil")
