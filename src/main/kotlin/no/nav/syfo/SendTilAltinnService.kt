@@ -31,7 +31,8 @@ class SendTilAltinnService(
     val log = log()
 
     fun sendSykepengesoknadTilAltinn(sykepengesoknad: Sykepengesoknad) {
-        if (sendtSoknadDao.soknadErSendt(sykepengesoknad.id)) {
+        val erEttersending = sykepengesoknad.ettersending
+        if (sendtSoknadDao.soknadErSendt(sykepengesoknad.id, erEttersending)) {
             log.warn("Forsøkte å sende søknad om sykepenger med id {} til Altinn som allerede er sendt", sykepengesoknad.id)
             return
         }
@@ -46,7 +47,11 @@ class SendTilAltinnService(
         val receiptId: Int?
         if (validationeventer.isEmpty()) {
             receiptId = altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
-            sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, Integer.toString(receiptId), now()))
+            if (erEttersending) {
+                sendtSoknadDao.lagreEttersendtSoknad(sykepengesoknad.id, Integer.toString(receiptId))
+            } else {
+                sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, Integer.toString(receiptId), now()))
+            }
             registry.counter("syfoaltinn.soknadSendtTilAltinn", Tags.of("type", "info")).increment()
         } else {
             val feil = validationeventer.joinToString("\n") { it.message }

@@ -55,7 +55,7 @@ class SendTilAltinnServiceTest {
         given(organisasjonConsumer.hentJuridiskOrgnummer(any())).willReturn("Juridisk Orgnummer")
         given(pdfRestController.getPDFArbeidstakere(any())).willReturn("".toByteArray())
         given(altinnConsumer.sendSykepengesoknadTilArbeidsgiver(any())).willReturn(123)
-        given(sendtSoknadDao.soknadErSendt(ressursId)).willReturn(false)
+        given(sendtSoknadDao.soknadErSendt(ressursId, false)).willReturn(false)
         given(registry.counter(ArgumentMatchers.anyString(), ArgumentMatchers.any(Tags::class.java))).willReturn(counter)
     }
 
@@ -64,7 +64,7 @@ class SendTilAltinnServiceTest {
         sendTilAltinnService.sendSykepengesoknadTilAltinn(mockSykepengesoknad)
 
         verify(juridiskLoggConsumer).lagreIJuridiskLogg(any(), anyInt())
-        verify(sendtSoknadDao).soknadErSendt(ressursId)
+        verify(sendtSoknadDao).soknadErSendt(ressursId, false)
         verify(sendtSoknadDao).lagreSendtSoknad(any())
     }
 
@@ -74,16 +74,16 @@ class SendTilAltinnServiceTest {
 
         sendTilAltinnService.sendSykepengesoknadTilAltinn(mockSykepengesoknad)
 
-        verify(sendtSoknadDao).soknadErSendt(ressursId)
+        verify(sendtSoknadDao).soknadErSendt(ressursId, false)
         verify(sendtSoknadDao).lagreSendtSoknad(any())
     }
 
     @Test
     fun senderIkkeTilAltinnHvisSoknadAlleredeErSendt() {
-        given(sendtSoknadDao.soknadErSendt(ressursId)).willReturn(true)
+        given(sendtSoknadDao.soknadErSendt(ressursId, false)).willReturn(true)
         sendTilAltinnService.sendSykepengesoknadTilAltinn(mockSykepengesoknad)
 
-        verify(sendtSoknadDao).soknadErSendt(ressursId)
+        verify(sendtSoknadDao).soknadErSendt(ressursId, false)
         verify(altinnConsumer, Mockito.never()).sendSykepengesoknadTilArbeidsgiver(any())
         verify(sendtSoknadDao, Mockito.never()).lagreSendtSoknad(any())
     }
