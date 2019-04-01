@@ -43,6 +43,7 @@ class KafkaErrorHandler(private val registry: MeterRegistry) : ContainerAwareErr
             )
         }
 
+        registry.counter("syfoaltinn.kafkalytter.stoppet", Tags.of("type", "feil", "help", "Kafkalytteren har stoppet som følge av feil.")).increment()
         STOPPING_ERROR_HANDLER.handle(thrownException, records, consumer, container)
     }
 
