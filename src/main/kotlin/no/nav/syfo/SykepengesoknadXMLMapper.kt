@@ -62,8 +62,7 @@ private val soknadsperiode2XMLKorrigertArbeidstid = { soknadsperiode: Soknadsper
                         ?: throw RuntimeException("avtaltTimer er null - denne skal være satt"))
                 .withFaktiskeArbeidstimer(XMLFaktiskeArbeidstimer()
                         .withArbeidstimer(soknadsperiode.faktiskTimer)
-                        .withBeregnetArbeidsgrad(soknadsperiode.faktiskGrad
-                                ?: throw RuntimeException("faktiskGrad er null - denne skal være satt")))
+                        .withBeregnetArbeidsgrad(soknadsperiode.faktiskGrad))
 
         soknadsperiode.faktiskGrad != null -> XMLKorrigertArbeidstid()
                 .withArbeidstimerNormaluke(soknadsperiode.avtaltTimer
