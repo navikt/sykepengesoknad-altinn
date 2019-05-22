@@ -114,7 +114,7 @@ private val sykepengesoknad2XMLFravar = { sykepengesoknad: Sykepengesoknad ->
 
 private val fravar2XMLOppholdUtenforNorge = { fravar: List<Fravar>, soktUtenlandsopphold: Boolean? ->
     val periodeliste = listOrNull(fravar2XMLPeriode(fravar, Fravarstype.UTLANDSOPPHOLD))
-    if (periodeliste == null && soktUtenlandsopphold == null)
+    if (periodeliste == null)
         null
     else
         XMLOppholdUtenforNorge()
