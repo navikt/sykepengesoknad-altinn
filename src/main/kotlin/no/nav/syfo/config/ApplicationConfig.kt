@@ -1,6 +1,7 @@
 package no.nav.syfo.config
 
 import com.fasterxml.jackson.databind.SerializationFeature
+import no.nav.syfo.selftest.ApplicationState
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy
 import org.springframework.boot.web.client.RestTemplateBuilder
@@ -44,5 +45,10 @@ class ApplicationConfig {
     @Bean
     fun flywayMigrationStrategy(dataSourceTransactionManager: DataSourceTransactionManager): FlywayMigrationStrategy {
         return FlywayMigrationStrategy { it.migrate() }
+    }
+
+    @Bean
+    fun applicationState(): ApplicationState {
+        return ApplicationState()
     }
 }

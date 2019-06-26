@@ -11,6 +11,7 @@ import no.nav.syfo.kafka.interfaces.Soknad
 import no.nav.syfo.kafka.soknad.deserializer.MultiFunctionDeserializer
 import no.nav.syfo.kafka.soknad.serializer.FunctionSerializer
 import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
+import no.nav.syfo.selftest.ApplicationState
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
@@ -49,11 +50,12 @@ class KafkaConfig {
     fun kafkaListenerContainerFactory(
             consumerFactory: ConsumerFactory<String, Soknad>,
             meterRegistry: MeterRegistry,
+            applicationState: ApplicationState,
             recordFilterStrategy: RecordFilterStrategy<String, Soknad>
     ): ConcurrentKafkaListenerContainerFactory<String, Soknad> {
         val factory = ConcurrentKafkaListenerContainerFactory<String, Soknad>()
         factory.containerProperties.ackMode = AbstractMessageListenerContainer.AckMode.MANUAL_IMMEDIATE
-        factory.containerProperties.setErrorHandler(KafkaErrorHandler(meterRegistry))
+        factory.containerProperties.setErrorHandler(KafkaErrorHandler(meterRegistry, applicationState))
         factory.consumerFactory = consumerFactory
         factory.setRecordFilterStrategy(recordFilterStrategy)
         return factory
