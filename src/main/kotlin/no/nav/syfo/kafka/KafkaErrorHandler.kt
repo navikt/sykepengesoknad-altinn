@@ -29,8 +29,8 @@ class KafkaErrorHandler(private val registry: MeterRegistry, private val applica
         if (exceptionIsClass(thrownException, TopicAuthorizationException::class.java)) {
             log.error("Kafka infrastrukturfeil. TopicAuthorizationException ved lesing av topic")
             registry.counter("syfoaltinn.kafka.feil", Tags.of("type", "fatale")).increment()
-            log.error("Restarter appen pga TopicAuthorizationException ved lesing av topic")
-            applicationState.iAmDead()
+            log.error("Restarter consumer pga TopicAuthorizationException ved lesing av topic")
+            restartConsumer(thrownException, records, consumer, container)
             return
         }
 
@@ -42,13 +42,24 @@ class KafkaErrorHandler(private val registry: MeterRegistry, private val applica
             )
         }
 
-        try {
-            registry.counter("syfoaltinn.kafkalytter.stoppet", Tags.of("type", "feil", "help", "Kafkalytteren har stoppet som følge av feil.")).increment()
-            STOPPING_ERROR_HANDLER.handle(thrownException, records, consumer, container)
-        } finally {
-            log.error("Restarter appen pga kafka-feil")
-            applicationState.iAmDead()
-        }
+        registry.counter("syfoaltinn.kafkalytter.stoppet", Tags.of("type", "feil", "help", "Kafkalytteren har stoppet som følge av feil.")).increment()
+        log.error("Restarter kafka-consumer pga feil")
+        restartConsumer(thrownException, records, consumer, container)
+    }
+
+    private fun restartConsumer(thrownException: Exception, records: List<ConsumerRecord<*, *>>?, consumer: Consumer<*, *>?, container: MessageListenerContainer) {
+        Thread {
+            try {
+                Thread.sleep(10000)
+                log.info("Starter ny kafka-consumer")
+                container.start()
+            } catch (e: Exception) {
+                log.error("Noe gikk galt ved oppstart av kafka-consumer", e)
+                applicationState.iAmDead()
+            }
+        }.start()
+
+        STOPPING_ERROR_HANDLER.handle(thrownException, records, consumer, container)
     }
 
     private fun exceptionIsClass(throwable: Throwable?, klazz: Class<*>): Boolean {
