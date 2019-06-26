@@ -42,10 +42,13 @@ class KafkaErrorHandler(private val registry: MeterRegistry, private val applica
             )
         }
 
-        registry.counter("syfoaltinn.kafkalytter.stoppet", Tags.of("type", "feil", "help", "Kafkalytteren har stoppet som følge av feil.")).increment()
-        STOPPING_ERROR_HANDLER.handle(thrownException, records, consumer, container)
-        log.error("Restarter appen pga kafka-feil")
-        applicationState.iAmDead()
+        try {
+            registry.counter("syfoaltinn.kafkalytter.stoppet", Tags.of("type", "feil", "help", "Kafkalytteren har stoppet som følge av feil.")).increment()
+            STOPPING_ERROR_HANDLER.handle(thrownException, records, consumer, container)
+        } finally {
+            log.error("Restarter appen pga kafka-feil")
+            applicationState.iAmDead()
+        }
     }
 
     private fun exceptionIsClass(throwable: Throwable?, klazz: Class<*>): Boolean {
