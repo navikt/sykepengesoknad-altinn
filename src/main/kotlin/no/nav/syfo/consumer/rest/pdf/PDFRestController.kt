@@ -20,7 +20,7 @@ constructor(private val restTemplate: RestTemplate) {
 
         val pdfSoknad = PDFSoknad(sykepengesoknad)
 
-        val url = "http://pdf-gen.default/api/v1/genpdf/syfosoknader/${PDFTemplate.ARBEIDSTAKERE}"
+        val url = "http://syfopdfgen/api/v1/genpdf/syfosoknader/${PDFTemplate.ARBEIDSTAKERE}"
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
