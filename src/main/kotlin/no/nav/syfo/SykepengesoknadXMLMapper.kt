@@ -29,7 +29,7 @@ private val sykepengesoknad2XML = { sykepengesoknad: Sykepengesoknad,
             .withKorrigerer(sykepengesoknad.korrigerer)
             .withPeriode(XMLPeriode().withFom(sykepengesoknad.fom).withTom(sykepengesoknad.tom))
             .withSykmeldtesFnr(fnr)
-            .withArbeidsgiverForskuttererLoenn(sykepengesoknad.arbeidsgiverForskutterer?.name)
+            .withArbeidsgiverForskuttererLoenn(sykepengesoknad.arbeidsgiverForskutterer?.name ?: "IKKE_SPURT")
             .withIdentdato(sykepengesoknad.startSykeforlop)
             .withSykmeldingSkrevetDato(sykepengesoknad.sykmeldingSkrevet?.toLocalDate())
             .withArbeidGjenopptattDato(sykepengesoknad.arbeidGjenopptatt)
@@ -62,8 +62,7 @@ private val soknadsperiode2XMLKorrigertArbeidstid = { soknadsperiode: Soknadsper
                         ?: throw RuntimeException("avtaltTimer er null - denne skal være satt"))
                 .withFaktiskeArbeidstimer(XMLFaktiskeArbeidstimer()
                         .withArbeidstimer(soknadsperiode.faktiskTimer)
-                        .withBeregnetArbeidsgrad(soknadsperiode.faktiskGrad
-                                ?: throw RuntimeException("faktiskGrad er null - denne skal være satt")))
+                        .withBeregnetArbeidsgrad(soknadsperiode.faktiskGrad))
 
         soknadsperiode.faktiskGrad != null -> XMLKorrigertArbeidstid()
                 .withArbeidstimerNormaluke(soknadsperiode.avtaltTimer
@@ -78,7 +77,7 @@ private val andreInntektskilder2XMLAnnenInntektskildeListe = { andreInntektskild
     andreInntektskilder
             .map { inntektskilde ->
                 XMLAnnenInntektskilde()
-                        .withErSykmeldt(inntektskilde.sykmeldt)
+                        .withErSykmeldt(inntektskilde.sykmeldt ?: false)
                         .withType(when (inntektskilde.type) {
                             Inntektskildetype.ANDRE_ARBEIDSFORHOLD -> XMLAnnenInntektskildeType.ANDRE_ARBEIDSFORHOLD
                             Inntektskildetype.FRILANSER -> XMLAnnenInntektskildeType.FRILANSER
@@ -115,7 +114,7 @@ private val sykepengesoknad2XMLFravar = { sykepengesoknad: Sykepengesoknad ->
 
 private val fravar2XMLOppholdUtenforNorge = { fravar: List<Fravar>, soktUtenlandsopphold: Boolean? ->
     val periodeliste = listOrNull(fravar2XMLPeriode(fravar, Fravarstype.UTLANDSOPPHOLD))
-    if (periodeliste == null && soktUtenlandsopphold == null)
+    if (periodeliste == null)
         null
     else
         XMLOppholdUtenforNorge()

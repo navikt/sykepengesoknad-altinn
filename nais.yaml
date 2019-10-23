@@ -1,4 +1,5 @@
 name: syfoaltinn
+team: teamsykefravr
 image: "repo.adeo.no:5443/syfoaltinn"
 replicas:
   min: 1
@@ -22,10 +23,10 @@ prometheus:
 resources:
   limits:
     cpu: 1000m
-    memory: 512Mi
+    memory: 1024Mi
   requests:
     cpu: 500m
-    memory: 384Mi
+    memory: 512Mi
 fasitResources:
   exposed:
   used:
@@ -53,3 +54,10 @@ fasitResources:
     resourceType: restservice
   - alias: security-token-service-token
     resourceType: restservice
+  - alias: syfoaltinnDB
+    resourceType: datasource
+    propertyMap:
+      url: SPRING_DATASOURCE_URL
+      username: SPRING_DATASOURCE_USERNAME
+      password: SPRING_DATASOURCE_PASSWORD
+

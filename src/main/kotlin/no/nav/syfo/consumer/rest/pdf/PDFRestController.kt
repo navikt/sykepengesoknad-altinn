@@ -20,7 +20,7 @@ constructor(private val restTemplate: RestTemplate) {
 
         val pdfSoknad = PDFSoknad(sykepengesoknad)
 
-        val url = "http://pdf-gen.default/api/v1/genpdf/syfosoknader/${PDFTemplate.ARBEIDSTAKERE}"
+        val url = "http://syfopdfgen/api/v1/genpdf/syfosoknader/${PDFTemplate.ARBEIDSTAKERE}"
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
@@ -60,6 +60,9 @@ constructor(private val restTemplate: RestTemplate) {
         val fom = soknadsperiode.fom
         val tom = soknadsperiode.tom
         val grad = soknadsperiode.sykmeldingsgrad
+        val faktiskGrad = soknadsperiode.faktiskGrad
+        val avtaltTimer = soknadsperiode.avtaltTimer
+        val faktiskTimer = soknadsperiode.faktiskTimer
     }
 
 }

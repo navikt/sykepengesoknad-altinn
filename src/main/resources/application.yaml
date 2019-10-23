@@ -30,3 +30,9 @@ spring:
       max-poll-records: 1
       auto-offset-reset: latest # Som ny konsument / eller om vi mister offsettet vårt skal vi begynne på den siste meldingen
       enable-auto-commit: false # Vi commiter selv offset ved lesing av meldinger
+  datasource:
+    hikari:
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 4

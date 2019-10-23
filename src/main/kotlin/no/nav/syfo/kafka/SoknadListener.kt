@@ -23,18 +23,15 @@ constructor(private val internSoknadsbehandlingProducer: InternSoknadsbehandling
 
     @KafkaListener(topics = ["syfo-soknad-v2"], id = "soknadSendt", idIsGroup = false)
     fun listen(cr: ConsumerRecord<String, Soknad>, acknowledgment: Acknowledgment) {
-        log.info("Melding mottatt på topic: ${cr.topic()} med offset: ${cr.offset()}")
-
         try {
             MDC.put(CALL_ID, getLastHeaderByKeyAsString(cr.headers(), CALL_ID).orElse(randomUUID().toString()))
 
             val sykepengesoknadDTO = cr.value() as SykepengesoknadDTO
 
-            //TODO sjekk at søknaden faktisk skal sendes til arbeidsgiver, ikke bare NAV (sendtArbeidsgiver er satt)
             if (SoknadstypeDTO.ARBEIDSTAKERE == sykepengesoknadDTO.type
-                    && SoknadsstatusDTO.SENDT == sykepengesoknadDTO.status) {
+                    && SoknadsstatusDTO.SENDT == sykepengesoknadDTO.status
+                    && sykepengesoknadDTO.sendtArbeidsgiver != null) {
 
-                log.info("har plukket opp søknad: ${sykepengesoknadDTO.id}, legger på intern topic")
                 internSoknadsbehandlingProducer.leggPaInternTopic(sykepengesoknadDTO, now())
             }
 

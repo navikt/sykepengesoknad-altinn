@@ -121,7 +121,7 @@ class SoknadAltinnMapper(private val toggle: Toggle) {
     }
 
     private fun xmlVedlegg(binaryNamespace: String, xml: ByteArray): BinaryAttachmentV2 {
-        return opprettBinaertVedlegg(binaryNamespace, xml, SHOW_TO_ALL, "Sykepengesøknad maskinlesbar", "sykepengesoknad.xml")
+        return opprettBinaertVedlegg(binaryNamespace, xml, SHOW_TO_ALL, "Sykepengesøknad maskinlesbar", "sykepengesoeknad.xml")
     }
 
     private fun opprettBinaertVedlegg(binaryNamespace: String, bytes: ByteArray, restriction: UserTypeRestriction, name: String, fileName: String): BinaryAttachmentV2 {
