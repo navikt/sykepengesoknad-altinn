@@ -32,8 +32,7 @@ data class Sykepengesoknad(
         val fravar: List<Fravar> = arrayListOf(),
         val andreInntektskilder: List<Inntektskilde> = arrayListOf(),
         val sporsmal: List<Sporsmal> = arrayListOf(),
-        val avsendertype: Avsendertype? = null
-        val sporsmal: List<Sporsmal> = arrayListOf(),
+        val avsendertype: Avsendertype? = null,
         val ettersending: Boolean = false
 ) {
     lateinit var fnr: String

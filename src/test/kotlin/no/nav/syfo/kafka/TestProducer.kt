@@ -18,7 +18,7 @@ class TestProducer(private val kafkaTemplate: KafkaTemplate<String, Soknad>) {
         val syfoProducerRecord: SyfoProducerRecord<String, Soknad> = SyfoProducerRecord(
                 "privat-syfoaltinn-soknad-v1",
                 randomUUID().toString(),
-                SykepengesoknadDTO.builder().build(),
+                SykepengesoknadDTO(),
                 singletonMap<String, Any>(MELDINGSTYPE, "SYKEPENGESOKNAD"))
 
         kafkaTemplate.send(
