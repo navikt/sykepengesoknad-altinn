@@ -60,9 +60,7 @@
         <bom.version>2018.10.23.14.04</bom.version>
         <person.version>3.2.0</person.version>
         <aktoer.version>1.0</aktoer.version>
-        <sykepengesoknad.version>4</sykepengesoknad.version>
-        <kafkautils.version>2</kafkautils.version>
-        <serialisering.version>1</serialisering.version>
+        <syfokafka.version>73f2313563ece69d207aeb397e099a826c560009</syfokafka.version>
         <unleash.version>3.1.0</unleash.version>
         <ojdbc8.version>12.2.0.1</ojdbc8.version>
         <h2.version>1.4.196</h2.version>
@@ -192,17 +190,22 @@
         <dependency>
             <groupId>no.nav.syfo.kafka</groupId>
             <artifactId>kafkautils</artifactId>
-            <version>${kafkautils.version}</version>
+            <version>${syfokafka.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.syfo.kafka</groupId>
             <artifactId>serialisering</artifactId>
-            <version>${serialisering.version}</version>
+            <version>${syfokafka.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.syfo.kafka</groupId>
             <artifactId>sykepengesoknad</artifactId>
-            <version>${sykepengesoknad.version}</version>
+            <version>${syfokafka.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.syfo.kafka</groupId>
+            <artifactId>soknad</artifactId>
+            <version>${syfokafka.version}</version>
         </dependency>
 
         <dependency>

@@ -1,9 +1,9 @@
 package no.nav.syfo.consumer.rest.aktor
 
 import no.nav.syfo.CALL_ID
-import no.nav.syfo.log
 import no.nav.syfo.consumer.rest.token.TokenConsumer
-import no.nav.syfo.util.MDCOperations.getFromMDC
+import no.nav.syfo.log
+import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
-import java.util.HashMap
+import java.util.*
 
 class AktorResponse : HashMap<String, Aktor>()
 data class Aktor(val identer: List<Ident>? = null, val feilmelding: String? = null)
@@ -36,11 +36,20 @@ class AktorRestConsumer(private val tokenConsumer: TokenConsumer,
         return getIdent(aktorId, "NorskIdent")
     }
 
+    private fun callId(): String {
+        val callId = MDC.get(CALL_ID)
+        return if (callId.isNullOrEmpty()) {
+            UUID.randomUUID().toString()
+        } else {
+            callId
+        }
+    }
+
     private fun getIdent(sokeIdent: String, identgruppe: String): String {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_FORM_URLENCODED
         headers.set("Authorization", "Bearer " + tokenConsumer.token.access_token)
-        headers.set("Nav-Call-Id", getFromMDC(CALL_ID))
+        headers.set("Nav-Call-Id", callId())
         headers.set("Nav-Consumer-Id", username)
         headers.set("Nav-Personidenter", sokeIdent)
 

@@ -42,7 +42,7 @@ fun konverter(sykepengesoknadDTO: SykepengesoknadDTO): Sykepengesoknad {
             sporsmal = sykepengesoknadDTO.sporsmal
                     ?.map { konverter(it) }
                     .orEmpty(),
-            ettersending = sykepengesoknadDTO.isEttersending
+            ettersending = sykepengesoknadDTO.ettersending
     )
 }
 

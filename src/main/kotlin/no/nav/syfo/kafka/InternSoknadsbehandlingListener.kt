@@ -27,7 +27,7 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
     @KafkaListener(topics = ["privat-syfoaltinn-soknad-v1"], id = "syfoaltinnIntern", idIsGroup = false)
     fun listen(cr: ConsumerRecord<String, Soknad>, acknowledgment: Acknowledgment) {
         try {
-            MDC.put(CALL_ID, KafkaHeaderConstants.getLastHeaderByKeyAsString(cr.headers(), CALL_ID).orElse(UUID.randomUUID().toString()))
+            MDC.put(CALL_ID, getLastHeaderByKeyAsString(cr.headers(), CALL_ID) ?: UUID.randomUUID().toString())
             cr.headers().lastHeader(BEHANDLINGSTIDSPUNKT)
                     ?.value()
                     ?.let { String(it, UTF_8) }

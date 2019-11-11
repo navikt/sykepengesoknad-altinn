@@ -1,6 +1,5 @@
 package no.nav.syfo.kafka
 
-import no.nav.syfo.kafka.KafkaHeaderConstants.MELDINGSTYPE
 import no.nav.syfo.kafka.interfaces.Soknad
 import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
 import no.nav.syfo.log
