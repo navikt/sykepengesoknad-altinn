@@ -5,13 +5,13 @@ import no.nav.syfo.kafka.sykepengesoknad.dto.*
 
 fun konverter(sykepengesoknadDTO: SykepengesoknadDTO): Sykepengesoknad {
     return Sykepengesoknad(
-            id = sykepengesoknadDTO.id,
-            type = Soknadstype.valueOf(sykepengesoknadDTO.type.name),
-            status = Soknadsstatus.valueOf(sykepengesoknadDTO.status.name),
-            aktorId = sykepengesoknadDTO.aktorId,
+            id = sykepengesoknadDTO.id!!,
+            type = Soknadstype.valueOf(sykepengesoknadDTO.type!!.name),
+            status = Soknadsstatus.valueOf(sykepengesoknadDTO.status!!.name),
+            aktorId = sykepengesoknadDTO.aktorId!!,
             sykmeldingId = sykepengesoknadDTO.sykmeldingId,
-            arbeidsgiver = konverter(sykepengesoknadDTO.arbeidsgiver),
-            arbeidssituasjon = enumValueOrNull(sykepengesoknadDTO.arbeidssituasjon.name),
+            arbeidsgiver = konverter(sykepengesoknadDTO.arbeidsgiver!!),
+            arbeidssituasjon = enumValueOrNull(sykepengesoknadDTO.arbeidssituasjon!!.name),
             korrigertAv = sykepengesoknadDTO.korrigertAv,
             korrigerer = sykepengesoknadDTO.korrigerer,
             soktUtenlandsopphold = sykepengesoknadDTO.soktUtenlandsopphold,
@@ -42,7 +42,7 @@ fun konverter(sykepengesoknadDTO: SykepengesoknadDTO): Sykepengesoknad {
             sporsmal = sykepengesoknadDTO.sporsmal
                     ?.map { konverter(it) }
                     .orEmpty(),
-            ettersending = sykepengesoknadDTO.isEttersending
+            ettersending = sykepengesoknadDTO.ettersending
     )
 }
 
@@ -58,7 +58,7 @@ private fun konverter(sporsmalDTO: SporsmalDTO): Sporsmal {
             tag = sporsmalDTO.tag,
             sporsmalstekst = sporsmalDTO.sporsmalstekst,
             undertekst = sporsmalDTO.undertekst,
-            svartype = Svartype.valueOf(sporsmalDTO.svartype.name),
+            svartype = Svartype.valueOf(sporsmalDTO.svartype!!.name),
             min = sporsmalDTO.min,
             max = sporsmalDTO.max,
             kriterieForVisningAvUndersporsmal = enumValueOrNull(sporsmalDTO.kriteriumForVisningAvUndersporsmal?.name),
@@ -73,40 +73,40 @@ private fun konverter(sporsmalDTO: SporsmalDTO): Sporsmal {
 
 private fun konverter(soknadPeriodeDTO: SoknadsperiodeDTO): Soknadsperiode {
     return Soknadsperiode(
-            fom = soknadPeriodeDTO.fom,
-            tom = soknadPeriodeDTO.tom,
-            sykmeldingsgrad = soknadPeriodeDTO.sykmeldingsgrad,
+            fom = soknadPeriodeDTO.fom!!,
+            tom = soknadPeriodeDTO.tom!!,
+            sykmeldingsgrad = soknadPeriodeDTO.sykmeldingsgrad!!,
             faktiskGrad = soknadPeriodeDTO.faktiskGrad,
             avtaltTimer = soknadPeriodeDTO.avtaltTimer,
             faktiskTimer = soknadPeriodeDTO.faktiskTimer,
-            sykmeldingstype = enumValueOrNull(soknadPeriodeDTO.sykmeldingstype.name))
+            sykmeldingstype = enumValueOrNull(soknadPeriodeDTO.sykmeldingstype!!.name))
 }
 
 private fun konverter(arbeidsgiverDTO: ArbeidsgiverDTO): Arbeidsgiver {
     return Arbeidsgiver(
-            navn = arbeidsgiverDTO.navn,
-            orgnummer = arbeidsgiverDTO.orgnummer
+            navn = arbeidsgiverDTO.navn!!,
+            orgnummer = arbeidsgiverDTO.orgnummer!!
     )
 }
 
 private fun konverter(periodeDTO: PeriodeDTO): Periode {
     return Periode(
-            fom = periodeDTO.fom,
-            tom = periodeDTO.tom
+            fom = periodeDTO.fom!!,
+            tom = periodeDTO.tom!!
     )
 }
 
 private fun konverter(fravarDTO: FravarDTO): Fravar {
     return Fravar(
-            fom = fravarDTO.fom,
+            fom = fravarDTO.fom!!,
             tom = fravarDTO.tom,
-            type = Fravarstype.valueOf(fravarDTO.type.name)
+            type = Fravarstype.valueOf(fravarDTO.type!!.name)
     )
 }
 
 private fun konverter(inntektskildeDTO: InntektskildeDTO): Inntektskilde {
     return Inntektskilde(
-            type = Inntektskildetype.valueOf(inntektskildeDTO.type.name),
+            type = Inntektskildetype.valueOf(inntektskildeDTO.type!!.name),
             sykmeldt = inntektskildeDTO.sykmeldt
     )
 }

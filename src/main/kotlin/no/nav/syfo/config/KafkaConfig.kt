@@ -3,12 +3,14 @@ package no.nav.syfo.config
 import com.fasterxml.jackson.databind.DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.micrometer.core.instrument.MeterRegistry
 import no.nav.syfo.kafka.KafkaErrorHandler
-import no.nav.syfo.kafka.KafkaHeaderConstants.MELDINGSTYPE
-import no.nav.syfo.kafka.KafkaHeaderConstants.getLastHeaderByKeyAsString
+import no.nav.syfo.kafka.LegacyMultiFunctionDeserializer
+import no.nav.syfo.kafka.MELDINGSTYPE
+import no.nav.syfo.kafka.getLastHeaderByKeyAsString
 import no.nav.syfo.kafka.interfaces.Soknad
-import no.nav.syfo.kafka.soknad.deserializer.MultiFunctionDeserializer
+import no.nav.syfo.kafka.soknad.dto.SoknadDTO
 import no.nav.syfo.kafka.soknad.serializer.FunctionSerializer
 import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
 import no.nav.syfo.selftest.ApplicationState
@@ -24,9 +26,6 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.*
 import org.springframework.kafka.listener.AbstractMessageListenerContainer
 import org.springframework.kafka.listener.adapter.RecordFilterStrategy
-import java.util.Collections.singletonMap
-import java.util.function.BiFunction
-import java.util.function.Function
 
 
 @Configuration
@@ -34,24 +33,22 @@ import java.util.function.Function
 class KafkaConfig {
 
     private val objectMapper = ObjectMapper()
-            .registerModule(JavaTimeModule())
-            .configure(READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE, true)
+        .registerModule(JavaTimeModule())
+        .configure(READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE, true)
 
     @Bean
     fun recordFilterStrategy(): RecordFilterStrategy<String, Soknad> {
         return RecordFilterStrategy { consumerRecord ->
-            !getLastHeaderByKeyAsString(consumerRecord.headers(), MELDINGSTYPE)
-                    .filter(listOf("SYKEPENGESOKNAD")::contains)
-                    .isPresent
+            "SYKEPENGESOKNAD" != getLastHeaderByKeyAsString(consumerRecord.headers(), MELDINGSTYPE)
         }
     }
 
     @Bean
     fun kafkaListenerContainerFactory(
-            consumerFactory: ConsumerFactory<String, Soknad>,
-            meterRegistry: MeterRegistry,
-            applicationState: ApplicationState,
-            recordFilterStrategy: RecordFilterStrategy<String, Soknad>
+        consumerFactory: ConsumerFactory<String, Soknad>,
+        meterRegistry: MeterRegistry,
+        applicationState: ApplicationState,
+        recordFilterStrategy: RecordFilterStrategy<String, Soknad>
     ): ConcurrentKafkaListenerContainerFactory<String, Soknad> {
         val factory = ConcurrentKafkaListenerContainerFactory<String, Soknad>()
         factory.containerProperties.ackMode = AbstractMessageListenerContainer.AckMode.MANUAL_IMMEDIATE
@@ -66,14 +63,14 @@ class KafkaConfig {
     @Primary
     fun consumerFactory(properties: KafkaProperties): ConsumerFactory<String, Soknad> {
         return DefaultKafkaConsumerFactory(properties.buildConsumerProperties(),
-                StringDeserializer(),
-                MultiFunctionDeserializer(singletonMap("SYKEPENGESOKNAD",
-                        BiFunction { _, byteArray ->
-                            objectMapper.readValue(byteArray, SykepengesoknadDTO::class.java)
-                        }
-                ), Function {
-                    null
-                }))
+            StringDeserializer(),
+            LegacyMultiFunctionDeserializer<Soknad>(
+                mapOf(
+                    "SYKEPENGESOKNAD" to { _, bytes -> bytes?.let { objectMapper.readValue<SykepengesoknadDTO>(it) } as Soknad },
+                    "SOKNAD" to { _, bytes -> bytes?.let { objectMapper.readValue<SoknadDTO>(it) } as Soknad }
+                )
+            )
+        )
     }
 
     @Bean
@@ -86,8 +83,8 @@ class KafkaConfig {
     @Primary
     fun producerFactory(properties: KafkaProperties): ProducerFactory<String, Soknad> {
         return DefaultKafkaProducerFactory(properties.buildProducerProperties(),
-                StringSerializer(),
-                FunctionSerializer { soknad -> objectMapper.writeValueAsBytes(soknad) }
+            StringSerializer(),
+            FunctionSerializer { soknad -> objectMapper.writeValueAsBytes(soknad) }
         )
     }
 }

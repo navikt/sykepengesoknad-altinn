@@ -18,8 +18,8 @@ constructor(private val kafkaTemplate: KafkaTemplate<String, Soknad>) {
     fun leggPaInternTopic(sykepengesoknadDTO: SykepengesoknadDTO, behandlingstidspunkt: LocalDateTime) {
         try {
             kafkaTemplate.send(
-                    SyfoProducerRecord<String, Soknad>("privat-syfoaltinn-soknad-v1", sykepengesoknadDTO.id, sykepengesoknadDTO,
-                            mapOf(Pair(KafkaHeaderConstants.MELDINGSTYPE, "SYKEPENGESOKNAD"),
+                    SyfoProducerRecord<String, Soknad>("privat-syfoaltinn-soknad-v1", sykepengesoknadDTO.id!!, sykepengesoknadDTO,
+                            mapOf(Pair(MELDINGSTYPE, "SYKEPENGESOKNAD"),
                                     Pair(BEHANDLINGSTIDSPUNKT, behandlingstidspunkt.format(ISO_LOCAL_DATE_TIME))))).get()
         } catch (exception: Exception) {
             log.error("Det feiler når søknad ${sykepengesoknadDTO.id} skal legges på intern topic", exception)

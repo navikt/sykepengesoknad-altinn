@@ -46,6 +46,7 @@ constructor(private val restTemplate: RestTemplate) {
         val arbeidsgiver = sykepengesoknad.arbeidsgiver.navn
         val korrigerer = sykepengesoknad.korrigerer
         val soknadPerioder = sykepengesoknad.soknadsperioder.map { PDFPeriode(it) }
+        val avsendertype = sykepengesoknad.avsendertype
         val sporsmal = sykepengesoknad.sporsmal
                 .sortedWith(Comparator.comparingInt {
                     when (it.tag) {

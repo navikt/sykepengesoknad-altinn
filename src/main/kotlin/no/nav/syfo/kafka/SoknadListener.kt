@@ -1,7 +1,6 @@
 package no.nav.syfo.kafka
 
 import no.nav.syfo.CALL_ID
-import no.nav.syfo.kafka.KafkaHeaderConstants.getLastHeaderByKeyAsString
 import no.nav.syfo.kafka.interfaces.Soknad
 import no.nav.syfo.kafka.sykepengesoknad.dto.SoknadsstatusDTO
 import no.nav.syfo.kafka.sykepengesoknad.dto.SoknadstypeDTO
@@ -24,7 +23,7 @@ constructor(private val internSoknadsbehandlingProducer: InternSoknadsbehandling
     @KafkaListener(topics = ["syfo-soknad-v2"], id = "soknadSendt", idIsGroup = false)
     fun listen(cr: ConsumerRecord<String, Soknad>, acknowledgment: Acknowledgment) {
         try {
-            MDC.put(CALL_ID, getLastHeaderByKeyAsString(cr.headers(), CALL_ID).orElse(randomUUID().toString()))
+            MDC.put(CALL_ID, getLastHeaderByKeyAsString(cr.headers(), CALL_ID) ?: randomUUID().toString())
 
             val sykepengesoknadDTO = cr.value() as SykepengesoknadDTO
 

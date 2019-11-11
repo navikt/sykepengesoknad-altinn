@@ -1,6 +1,5 @@
 package no.nav.syfo.kafka
 
-import no.nav.syfo.kafka.KafkaHeaderConstants.MELDINGSTYPE
 import no.nav.syfo.kafka.interfaces.Soknad
 import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
 import no.nav.syfo.log
@@ -18,7 +17,7 @@ class TestProducer(private val kafkaTemplate: KafkaTemplate<String, Soknad>) {
         val syfoProducerRecord: SyfoProducerRecord<String, Soknad> = SyfoProducerRecord(
                 "privat-syfoaltinn-soknad-v1",
                 randomUUID().toString(),
-                SykepengesoknadDTO.builder().build(),
+                SykepengesoknadDTO(),
                 singletonMap<String, Any>(MELDINGSTYPE, "SYKEPENGESOKNAD"))
 
         kafkaTemplate.send(
