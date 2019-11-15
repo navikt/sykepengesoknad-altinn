@@ -29,13 +29,10 @@ class SendTilAltinnService(
         private val registry: MeterRegistry) {
 
     val log = log()
-    val soknadSomSkalReinnsendes = hentSoknaderSomSkalReinnsendes()
-
 
     fun sendSykepengesoknadTilAltinn(sykepengesoknad: Sykepengesoknad) {
         val erEttersending = sykepengesoknad.ettersending
-        val erIkkeReinnsending = erIkkeReinnsending(sykepengesoknad.id)
-        if (erIkkeReinnsending && sendtSoknadDao.soknadErSendt(sykepengesoknad.id, erEttersending)) {
+        if (sendtSoknadDao.soknadErSendt(sykepengesoknad.id, erEttersending)) {
             log.warn("Forsøkte å sende søknad om sykepenger med id {} til Altinn som allerede er sendt", sykepengesoknad.id)
             return
         }
@@ -50,16 +47,12 @@ class SendTilAltinnService(
         val receiptId: Int?
         if (validationeventer.isEmpty()) {
             receiptId = altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
-
-            if (erIkkeReinnsending) {
-                if (erEttersending) {
-                    sendtSoknadDao.lagreEttersendtSoknad(sykepengesoknad.id, receiptId.toString())
-                } else {
-                    sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, receiptId.toString(), now()))
-                }
-                registry.counter("syfoaltinn.soknadSendtTilAltinn", Tags.of("type", "info")).increment()
+            if (erEttersending) {
+                sendtSoknadDao.lagreEttersendtSoknad(sykepengesoknad.id, Integer.toString(receiptId))
+            } else {
+                sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, Integer.toString(receiptId), now()))
             }
-
+            registry.counter("syfoaltinn.soknadSendtTilAltinn", Tags.of("type", "info")).increment()
         } else {
             val feil = validationeventer.joinToString("\n") { it.message }
             log.error("Validering feilet for sykepengesøknad med id ${sykepengesoknad.id} med følgende feil: $feil")
@@ -71,20 +64,5 @@ class SendTilAltinnService(
         } catch (e: JuridiskLoggException) {
             log.warn("Ved innsending av sykepengesøknad: ${sykepengesoknad.id} feilet juridisk logging")
         }
-    }
-
-    private fun hentSoknaderSomSkalReinnsendes(): MutableSet<String> {
-        val resource = Application::class.java.getResourceAsStream("/Reinnsending.txt")
-        val alleSoknadIdSomSkalReinnsendes: MutableSet<String> = mutableSetOf()
-        resource.bufferedReader().lines().forEach { alleSoknadIdSomSkalReinnsendes.add(it) }
-        return alleSoknadIdSomSkalReinnsendes
-    }
-
-    private fun erIkkeReinnsending(soknadId: String): Boolean {
-        if(soknadSomSkalReinnsendes.contains(soknadId)) {
-            log.info("Skal reinnsende $soknadId")
-            return false
-        }
-        return true
     }
 }
