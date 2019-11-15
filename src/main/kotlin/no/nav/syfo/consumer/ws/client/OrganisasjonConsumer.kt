@@ -18,14 +18,8 @@ constructor(private val organisasjonV4: OrganisasjonV4) {
     val log = log()
 
     fun hentJuridiskOrgnummer(virksomhetsnummer: String): String? {
-
-        log.info("hentJuridiskOrgnummer kalles med: $virksomhetsnummer")
-
         val wsOrganisasjon = hentOrganisasjon(virksomhetsnummer)
-        val hentJuridiskOrgnummer = hentJuridiskOrgnummer(wsOrganisasjon)
-
-        log.info("hentJuridiskOrgnummer returnerer: $hentJuridiskOrgnummer")
-        return hentJuridiskOrgnummer
+        return hentJuridiskOrgnummer(wsOrganisasjon)
     }
 
     @Cacheable(cacheNames = ["organisasjon"])
