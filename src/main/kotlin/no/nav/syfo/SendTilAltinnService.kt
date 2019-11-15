@@ -30,7 +30,7 @@ class SendTilAltinnService(
 
     val log = log()
     val soknadSomSkalReinnsendes = hentSoknaderSomSkalReinnsendes()
-
+    var skalReinnsendeSoknader = true
 
     fun sendSykepengesoknadTilAltinn(sykepengesoknad: Sykepengesoknad) {
         val erEttersending = sykepengesoknad.ettersending
@@ -47,11 +47,11 @@ class SendTilAltinnService(
         val validationeventer: MutableList<ValidationEvent> = mutableListOf()
         sykepengesoknad.xml = sykepengesoknad2XMLByteArray(sykepengesoknad, validationeventer)
 
-        val receiptId: Int?
+        var receiptId: Int? = null
         if (validationeventer.isEmpty()) {
-            receiptId = altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
 
             if (erIkkeReinnsending) {
+                receiptId = altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
                 if (erEttersending) {
                     sendtSoknadDao.lagreEttersendtSoknad(sykepengesoknad.id, receiptId.toString())
                 } else {
@@ -59,7 +59,12 @@ class SendTilAltinnService(
                 }
                 registry.counter("syfoaltinn.soknadSendtTilAltinn", Tags.of("type", "info")).increment()
             } else {
-                log.info("Reinnsending av søknad ${sykepengesoknad.id}, legger ikke denne i basen")
+                if (skalReinnsendeSoknader) {
+                    receiptId = altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
+                    log.info("Reinnsending av søknad ${sykepengesoknad.id}, legger ikke denne i basen")
+                } else {
+                    log.info("Ignorerer søknad ${sykepengesoknad.id} for å unngå duplikater i Altinn")
+                }
             }
 
         } else {
@@ -69,7 +74,9 @@ class SendTilAltinnService(
         }
 
         try {
-            juridiskLoggConsumer.lagreIJuridiskLogg(sykepengesoknad, receiptId)
+            if (receiptId != null) {
+                juridiskLoggConsumer.lagreIJuridiskLogg(sykepengesoknad, receiptId)
+            }
         } catch (e: JuridiskLoggException) {
             log.warn("Ved innsending av sykepengesøknad: ${sykepengesoknad.id} feilet juridisk logging")
         }
@@ -83,6 +90,11 @@ class SendTilAltinnService(
     }
 
     private fun erIkkeReinnsending(soknadId: String): Boolean {
+        if ("c1b4d31e-b03f-4292-9be6-627c6ee65dad" == soknadId) {
+            skalReinnsendeSoknader = false
+        } else if ("dfa485a9-bdd6-498f-9870-c05571b42afc" == soknadId) {
+            skalReinnsendeSoknader = true
+        }
         if(soknadSomSkalReinnsendes.contains(soknadId)) {
             return false
         }
