@@ -58,8 +58,6 @@ class SendTilAltinnService(
                     sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, receiptId.toString(), now()))
                 }
                 registry.counter("syfoaltinn.soknadSendtTilAltinn", Tags.of("type", "info")).increment()
-            } else {
-                log.info("Reinnsending av søknad ${sykepengesoknad.id}, legger ikke denne i basen")
             }
 
         } else {
@@ -84,6 +82,7 @@ class SendTilAltinnService(
 
     private fun erIkkeReinnsending(soknadId: String): Boolean {
         if(soknadSomSkalReinnsendes.contains(soknadId)) {
+            log.info("Skal reinnsende $soknadId")
             return false
         }
         return true
