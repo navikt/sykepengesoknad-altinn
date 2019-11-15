@@ -11,7 +11,6 @@ import org.slf4j.MDC
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
-import java.time.LocalDateTime.now
 import java.util.UUID.randomUUID
 import javax.inject.Inject
 
@@ -30,7 +29,8 @@ constructor(private val internSoknadsbehandlingProducer: InternSoknadsbehandling
             if (SoknadstypeDTO.ARBEIDSTAKERE == sykepengesoknadDTO.type
                     && SoknadsstatusDTO.SENDT == sykepengesoknadDTO.status
                     && sykepengesoknadDTO.sendtArbeidsgiver != null) {
-                internSoknadsbehandlingProducer.leggPaInternTopic(sykepengesoknadDTO, now())
+                log.info("Kjører dryrun av reinnsending, søknad ${sykepengesoknadDTO.id} er plukket opp, men sendes ikke til altinn")
+                //internSoknadsbehandlingProducer.leggPaInternTopic(sykepengesoknadDTO, now())
             }
 
             acknowledgment.acknowledge()
