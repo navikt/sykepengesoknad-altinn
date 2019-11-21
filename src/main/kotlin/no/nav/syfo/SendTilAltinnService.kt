@@ -29,13 +29,10 @@ class SendTilAltinnService(
         private val registry: MeterRegistry) {
 
     val log = log()
-    val soknadSomSkalReinnsendes = hentSoknaderSomSkalReinnsendes()
-    var skalReinnsendeSoknader = true
 
     fun sendSykepengesoknadTilAltinn(sykepengesoknad: Sykepengesoknad) {
         val erEttersending = sykepengesoknad.ettersending
-        val erIkkeReinnsending = erIkkeReinnsending(sykepengesoknad.id)
-        if (erIkkeReinnsending && sendtSoknadDao.soknadErSendt(sykepengesoknad.id, erEttersending)) {
+        if (sendtSoknadDao.soknadErSendt(sykepengesoknad.id, erEttersending)) {
             log.warn("Forsøkte å sende søknad om sykepenger med id {} til Altinn som allerede er sendt", sykepengesoknad.id)
             return
         }
@@ -47,26 +44,15 @@ class SendTilAltinnService(
         val validationeventer: MutableList<ValidationEvent> = mutableListOf()
         sykepengesoknad.xml = sykepengesoknad2XMLByteArray(sykepengesoknad, validationeventer)
 
-        var receiptId: Int? = null
+        val receiptId: Int?
         if (validationeventer.isEmpty()) {
-
-            if (erIkkeReinnsending) {
-                receiptId = altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
-                if (erEttersending) {
-                    sendtSoknadDao.lagreEttersendtSoknad(sykepengesoknad.id, receiptId.toString())
-                } else {
-                    sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, receiptId.toString(), now()))
-                }
-                registry.counter("syfoaltinn.soknadSendtTilAltinn", Tags.of("type", "info")).increment()
+            receiptId = altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
+            if (erEttersending) {
+                sendtSoknadDao.lagreEttersendtSoknad(sykepengesoknad.id, Integer.toString(receiptId))
             } else {
-                if (skalReinnsendeSoknader) {
-                    receiptId = altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
-                    log.info("Reinnsending av søknad ${sykepengesoknad.id}, legger ikke denne i basen")
-                } else {
-                    log.info("Ignorerer søknad ${sykepengesoknad.id} for å unngå duplikater i Altinn")
-                }
+                sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, Integer.toString(receiptId), now()))
             }
-
+            registry.counter("syfoaltinn.soknadSendtTilAltinn", Tags.of("type", "info")).increment()
         } else {
             val feil = validationeventer.joinToString("\n") { it.message }
             log.error("Validering feilet for sykepengesøknad med id ${sykepengesoknad.id} med følgende feil: $feil")
@@ -74,30 +60,9 @@ class SendTilAltinnService(
         }
 
         try {
-            if (receiptId != null) {
-                juridiskLoggConsumer.lagreIJuridiskLogg(sykepengesoknad, receiptId)
-            }
+            juridiskLoggConsumer.lagreIJuridiskLogg(sykepengesoknad, receiptId)
         } catch (e: JuridiskLoggException) {
             log.warn("Ved innsending av sykepengesøknad: ${sykepengesoknad.id} feilet juridisk logging")
         }
-    }
-
-    private fun hentSoknaderSomSkalReinnsendes(): MutableSet<String> {
-        val resource = Application::class.java.getResourceAsStream("/Reinnsending.txt")
-        val alleSoknadIdSomSkalReinnsendes: MutableSet<String> = mutableSetOf()
-        resource.bufferedReader().lines().forEach { alleSoknadIdSomSkalReinnsendes.add(it) }
-        return alleSoknadIdSomSkalReinnsendes
-    }
-
-    private fun erIkkeReinnsending(soknadId: String): Boolean {
-        if ("c1b4d31e-b03f-4292-9be6-627c6ee65dad" == soknadId) {
-            skalReinnsendeSoknader = false
-        } else if ("dfa485a9-bdd6-498f-9870-c05571b42afc" == soknadId) {
-            skalReinnsendeSoknader = true
-        }
-        if(soknadSomSkalReinnsendes.contains(soknadId)) {
-            return false
-        }
-        return true
     }
 }
