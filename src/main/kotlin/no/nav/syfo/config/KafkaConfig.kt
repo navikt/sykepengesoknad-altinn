@@ -1,6 +1,7 @@
 package no.nav.syfo.config
 
 import com.fasterxml.jackson.databind.DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE
+import com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -35,6 +36,7 @@ class KafkaConfig {
     private val objectMapper = ObjectMapper()
         .registerModule(JavaTimeModule())
         .configure(READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE, true)
+        .configure(FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     @Bean
     fun recordFilterStrategy(): RecordFilterStrategy<String, Soknad> {
