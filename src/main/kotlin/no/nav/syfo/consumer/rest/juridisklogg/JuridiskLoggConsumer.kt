@@ -1,7 +1,7 @@
 package no.nav.syfo.consumer.rest.juridisklogg
 
-import no.nav.syfo.CALL_ID
 import no.nav.syfo.domain.soknad.Sykepengesoknad
+import no.nav.syfo.kafka.NAV_CALLID
 import no.nav.syfo.log
 import no.nav.syfo.util.MDCOperations
 import org.springframework.beans.factory.annotation.Value
@@ -26,7 +26,7 @@ class JuridiskLoggConsumer(private val basicAuthRestTemplate: RestTemplate,
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        headers.set("Nav-Call-Id", MDCOperations.getFromMDC(CALL_ID))
+        headers.set("Nav-Call-Id", MDCOperations.getFromMDC(NAV_CALLID))
         headers.set("Nav-Consumer-Id", username)
 
         val avsender = "${sykepengesoknad.aktorId} | ${sykepengesoknad.fnr}"
