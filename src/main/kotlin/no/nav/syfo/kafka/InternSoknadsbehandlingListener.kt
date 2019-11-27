@@ -1,7 +1,6 @@
 package no.nav.syfo.kafka
 
 import no.nav.syfo.BEHANDLINGSTIDSPUNKT
-import no.nav.syfo.CALL_ID
 import no.nav.syfo.SendTilAltinnService
 import no.nav.syfo.kafka.interfaces.Soknad
 import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
@@ -15,7 +14,6 @@ import java.nio.charset.StandardCharsets.UTF_8
 import java.time.LocalDateTime
 import java.time.LocalDateTime.now
 import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME
-import java.util.*
 import javax.inject.Inject
 
 @Component
@@ -27,7 +25,7 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
     @KafkaListener(topics = ["privat-syfoaltinn-soknad-v1"], id = "syfoaltinnIntern", idIsGroup = false)
     fun listen(cr: ConsumerRecord<String, Soknad>, acknowledgment: Acknowledgment) {
         try {
-            MDC.put(CALL_ID, getLastHeaderByKeyAsString(cr.headers(), CALL_ID) ?: UUID.randomUUID().toString())
+            MDC.put(NAV_CALLID, getSafeNavCallIdHeaderAsString(cr.headers()))
             cr.headers().lastHeader(BEHANDLINGSTIDSPUNKT)
                     ?.value()
                     ?.let { String(it, UTF_8) }
@@ -52,7 +50,7 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
             internSoknadsbehandlingProducer.leggPaInternTopic(sykepengesoknadDTO, now().plusMinutes(1))
             acknowledgment.acknowledge()
         } finally {
-            MDC.remove(CALL_ID)
+            MDC.remove(NAV_CALLID)
         }
     }
 }

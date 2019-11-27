@@ -1,6 +1,5 @@
 package no.nav.syfo.kafka
 
-import no.nav.syfo.CALL_ID
 import no.nav.syfo.kafka.interfaces.Soknad
 import no.nav.syfo.kafka.sykepengesoknad.dto.SoknadsstatusDTO
 import no.nav.syfo.kafka.sykepengesoknad.dto.SoknadstypeDTO
@@ -12,7 +11,6 @@ import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime.now
-import java.util.UUID.randomUUID
 import javax.inject.Inject
 
 @Component
@@ -23,7 +21,7 @@ constructor(private val internSoknadsbehandlingProducer: InternSoknadsbehandling
     @KafkaListener(topics = ["syfo-soknad-v2"], id = "soknadSendt", idIsGroup = false)
     fun listen(cr: ConsumerRecord<String, Soknad>, acknowledgment: Acknowledgment) {
         try {
-            MDC.put(CALL_ID, getLastHeaderByKeyAsString(cr.headers(), CALL_ID) ?: randomUUID().toString())
+            MDC.put(NAV_CALLID, getSafeNavCallIdHeaderAsString(cr.headers()))
 
             val sykepengesoknadDTO = cr.value() as SykepengesoknadDTO
 
@@ -39,7 +37,7 @@ constructor(private val internSoknadsbehandlingProducer: InternSoknadsbehandling
             log.error("Uventet feil ved mottak av søknad på topic: ${cr.topic()}", e)
             throw RuntimeException("Uventet feil ved mottak av søknad på topic: ${cr.topic()}")
         } finally {
-            MDC.remove(CALL_ID)
+            MDC.remove(NAV_CALLID)
         }
     }
 }
