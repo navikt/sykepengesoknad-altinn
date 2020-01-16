@@ -10,7 +10,7 @@ management:
 spring:
   main.banner-mode: 'off'
   kafka:
-    client-id: ${app.name}-${fasit.environment.name}
+    client-id: ${nais.app.name}-${fasit.environment.name}
     properties:
       security.protocol: SASL_SSL
       value.subject.name.strategy: io.confluent.kafka.serializers.subject.TopicRecordNameStrategy
@@ -26,7 +26,7 @@ spring:
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      group-id: ${app.name}-${fasit.environment.name}
+      group-id: ${nais.app.name}-${fasit.environment.name}
       max-poll-records: 1
       auto-offset-reset: latest # Som ny konsument / eller om vi mister offsettet vårt skal vi begynne på den siste meldingen
       enable-auto-commit: false # Vi commiter selv offset ved lesing av meldinger

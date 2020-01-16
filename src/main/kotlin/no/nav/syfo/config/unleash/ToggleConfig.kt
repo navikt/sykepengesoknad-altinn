@@ -14,9 +14,9 @@ import org.springframework.context.annotation.Profile
 class ToggleConfig {
     @Bean
     fun unleashConfig(
-            @Value("\${unleash-api.url}") unleashApi: String,
+            @Value("\${unleash.api.url}") unleashApi: String,
             @Value("\${fasit.environment.name}") environment: String,
-            @Value("\${app.name}") appName: String): UnleashConfig {
+            @Value("\${nais.app.name}") appName: String): UnleashConfig {
         return UnleashConfig.builder()
                 .appName(appName)
                 .instanceId(environment)
