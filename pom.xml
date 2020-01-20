@@ -76,9 +76,7 @@
         <mockito-all.version>2.15.0</mockito-all.version>
         <assertj-core.version>3.6.2</assertj-core.version>
         <cxf.version>3.2.0</cxf.version>
-        <altinn-correspondence-agency-external.version>1.2019.09.25-00.21-49b69f0625e0</altinn-correspondence-agency-external.version>
-        <digisyfo-sykepengesoeknadarbeidsgiver.version>0-SNAPSHOT</digisyfo-sykepengesoeknadarbeidsgiver.version>
-        <organisasjonv4-tjenestespesifikasjon.version>1.2020.01.09-12.44-3713b7c04e1c</organisasjonv4-tjenestespesifikasjon.version>
+        <tjenestespesifikasjoner.version>1.2020.01.20-08.22-e14d0cdce624</tjenestespesifikasjoner.version>
         <bom.version>2018.10.23.14.04</bom.version>
         <person.version>3.2.0</person.version>
         <aktoer.version>1.0</aktoer.version>
@@ -149,23 +147,33 @@
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>behandle-altinnmelding-v1-tjenestespesifikasjon</artifactId>
-            <version>1.2020.01.13-12.13-a8a32ba1c072</version>
+            <version>${tjenestespesifikasjoner.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>digisyfo-sykepengesoeknadarbeidsgiver</artifactId>
-            <version>${digisyfo-sykepengesoeknadarbeidsgiver.version}</version>
+            <artifactId>digisyfo-sykepengesoeknadArbeidsgiver</artifactId>
+            <version>${tjenestespesifikasjoner.version}</version>
         </dependency>
 
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>altinn-correspondence-agency-external</artifactId>
-            <version>${altinn-correspondence-agency-external.version}</version>
+            <version>${tjenestespesifikasjoner.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>organisasjonv4-tjenestespesifikasjon</artifactId>
-            <version>1.2019.09.25-00.21-49b69f0625e0</version>
+            <version>${tjenestespesifikasjoner.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
+            <artifactId>nav-fim-aktoer-v2-tjenestespesifikasjon</artifactId>
+            <version>${tjenestespesifikasjoner.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
+            <artifactId>person-v3-tjenestespesifikasjon</artifactId>
+            <version>${tjenestespesifikasjoner.version}</version>
         </dependency>
 
         <dependency>
@@ -188,18 +196,6 @@
             <artifactId>cxf-rt-ws-policy</artifactId>
             <version>${cxf.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>nav-fim-aktoer-v2-tjenestespesifikasjon</artifactId>
-            <version>1.2019.09.25-00.21-49b69f0625e0</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>person-v3-tjenestespesifikasjon</artifactId>
-            <version>1.2019.09.25-00.21-49b69f0625e0</version>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
