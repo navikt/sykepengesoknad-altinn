@@ -41,8 +41,6 @@ spec:
         mountPath: /secrets/syfoaltinn/credentials
       - kvPath: oracle/data/dev/config/syfoaltinn_q1
         mountPath: /secrets/syfoaltinn/config
-      - kvPath: kv/preprod/fss/syfoaltinn/default
-        mountPath: /var/run/secrets/nais.io/vault
   ingresses:
     - "https://syfoaltinn.nais.preprod.local"
   webproxy: false
