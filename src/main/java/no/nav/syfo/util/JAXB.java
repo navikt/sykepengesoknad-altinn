@@ -49,7 +49,7 @@ public class JAXB {
     }
 
     private static Schema sykmeldingArbeidsgiverSchema() throws IOException, SAXException {
-        ClassPathResource resource = new ClassPathResource("xsd/no/nav/melding/virksomhet/sykepengesoeknadArbeidsgiver/v1/sykepengesoeknadArbeidsgiver/sykepengesoeknadArbeidsgiver.xsd");
+        ClassPathResource resource = new ClassPathResource("/sykepengesoeknadarbeidsgiver.xsd");
         InputStream inputStream = resource.getInputStream();
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         return sf.newSchema(new StreamSource(inputStream));

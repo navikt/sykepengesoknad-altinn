@@ -13,7 +13,7 @@ import java.util.Objects.requireNonNull
 
 @Component
 class TokenConsumer(private val basicAuthRestTemplate: RestTemplate,
-                    @Value("\${security-token-service-token.url}") private val url: String) {
+                    @Value("\${security.token.service.token.url}") private val url: String) {
 
     val token: Token
         get() {

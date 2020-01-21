@@ -7,9 +7,9 @@ management:
 
 fasit.environment.name: local
 
-app.name: syfoaltinn
+nais.app.name: syfoaltinn
 
-unleash-api.url: http://unleash-api/api/
+unleash.api.url: http://unleash-api/api/
 
 toggle.config:
   ORGNUMMER_WHITELISTET:
@@ -32,7 +32,7 @@ servicegateway.url: "servicegateway.url"
 securitytokenservice.url: "sts.url"
 aktoerregister.api.v1.url: "aktor.url"
 lagrejuridisklogg.rest.url: "lagrejuridisk.url"
-security-token-service-token.url: "security-token-service-token.url"
+security.token.service.token.url: "security.token.service.token.url"
 
 javax.net.ssl:
   trustStore: truststore

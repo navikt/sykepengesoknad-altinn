@@ -1,0 +1,69 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: syfoaltinn
+  namespace: default
+  labels:
+    team: flex
+spec:
+  image: {{ image }}
+  replicas:
+    min: 1
+    max: 2
+    cpuTresholdPercentage: 90
+  port: 8080
+  liveness:
+    path: /internal/isAlive
+    initialDelay: 60
+    timeout: 1
+    periodSeconds: 10
+    failureThreshold: 3
+  readiness:
+    path: /internal/isReady
+    initialDelay: 60
+    timeout: 1
+  prometheus:
+    enabled: true
+    path: /internal/prometheus
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+  vault:
+    enabled: true
+    paths:
+      - kvPath: serviceuser/data/dev/srvsyfoaltinn
+        mountPath: /secrets/serviceuser
+      - kvPath: oracle/data/dev/creds/syfoaltinn_q1-user
+        mountPath: /secrets/syfoaltinn/credentials
+      - kvPath: oracle/data/dev/config/syfoaltinn_q1
+        mountPath: /secrets/syfoaltinn/config
+      - kvPath: kv/preprod/fss/syfoaltinn/default
+        mountPath: /var/run/secrets/nais.io/vault
+  ingresses:
+    - "https://syfoaltinn.nais.preprod.local"
+  webproxy: false
+  env:
+    - name: UNLEASH_API_URL
+      value: https://unleash.nais.adeo.no/api/
+    - name: SECURITYTOKENSERVICE_URL
+      value: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
+    - name: SECURITY_TOKEN_SERVICE_TOKEN_URL
+      value: https://security-token-service.nais.preprod.local/rest/v1/sts/token
+    - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+      value: b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443
+    - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
+      value: https://wasapp-q1.adeo.no/tpsws/ws/Person/v3
+    - name: AKTOERREGISTER_API_V1_URL
+      value: https://app-q1.adeo.no/aktoerregister/api/v1
+    - name: VIRKSOMHET_ORGANISASJON_V4_ENDPOINTURL
+      value: https://modapp-q1.adeo.no/ereg/ws/OrganisasjonService/v4
+    - name: LAGREJURIDISKLOGG_REST_URL
+      value: https://app-q1.adeo.no/juridisklogg/api/rest/logg
+    - name: EKSTERN_ALTINN_BEHANDLEALTINNMELDING_V1_ENDPOINTURL
+      value: https://pep-gw-q1.oera-q.local:9443/ekstern/altinn/BehandleAltinnMelding/v1
+    - name: FASIT_ENVIRONMENT_NAME
+      value: q1
