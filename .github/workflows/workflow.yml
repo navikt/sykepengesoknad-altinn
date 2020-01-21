@@ -30,7 +30,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       - name: Bygg og test
-        run: mvn clean install
+        run: |
+          mvn --settings maven-settings.xml clean install
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
       - name: Build and publish Docker image
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
