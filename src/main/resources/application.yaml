@@ -13,7 +13,6 @@ spring:
     client-id: ${nais.app.name}-${fasit.environment.name}
     properties:
       security.protocol: SASL_SSL
-      value.subject.name.strategy: io.confluent.kafka.serializers.subject.TopicRecordNameStrategy
       sasl:
         mechanism: PLAIN
         jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${srvsyfoaltinn.username}" password="${srvsyfoaltinn.password}";
