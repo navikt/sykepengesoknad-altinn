@@ -76,7 +76,7 @@
         <mockito-all.version>2.15.0</mockito-all.version>
         <assertj-core.version>3.6.2</assertj-core.version>
         <cxf.version>3.2.0</cxf.version>
-        <tjenestespesifikasjoner.version>1.2020.01.20-08.22-e14d0cdce624</tjenestespesifikasjoner.version>
+        <tjenestespesifikasjoner.version>1.2020.01.20-15.44-063ae9f84815</tjenestespesifikasjoner.version>
         <bom.version>2018.10.23.14.04</bom.version>
         <person.version>3.2.0</person.version>
         <aktoer.version>1.0</aktoer.version>
@@ -96,6 +96,12 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-reflect</artifactId>
             <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test-junit</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -151,10 +157,9 @@
         </dependency>
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
-            <artifactId>digisyfo-sykepengesoeknadArbeidsgiver</artifactId>
+            <artifactId>digisyfo-sykepengesoeknadarbeidsgiver</artifactId>
             <version>${tjenestespesifikasjoner.version}</version>
         </dependency>
-
         <dependency>
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>altinn-correspondence-agency-external</artifactId>
