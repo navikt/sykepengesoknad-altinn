@@ -11,6 +11,7 @@ import no.nav.syfo.kafka.interfaces.Soknad
 import no.nav.syfo.kafka.soknad.dto.SoknadDTO
 import no.nav.syfo.kafka.soknad.serializer.FunctionSerializer
 import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
+import no.nav.syfo.kafka.sykepengesoknadbehandlingsdager.dto.SykepengesoknadBehandlingsdagerDTO
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
 import org.junit.ClassRule
@@ -65,6 +66,20 @@ class KafkaTestConfig {
         return DefaultKafkaConsumerFactory(properties.buildConsumerProperties(),
                 StringDeserializer(),
                 LegacyMultiFunctionDeserializer<Sykepengesoknad>(
+                        mapOf(
+                                "SYKEPENGESOKNAD" to { _, bytes -> bytes!!.let { objectMapper.readValue(it) }  }
+
+                        )
+                )
+        )
+    }
+
+
+    @Bean
+    fun consumerFactorySykepengesoknadBehandlingsdagerDTO(properties: KafkaProperties): ConsumerFactory<String, SykepengesoknadBehandlingsdagerDTO> {
+        return DefaultKafkaConsumerFactory(properties.buildConsumerProperties(),
+                StringDeserializer(),
+                LegacyMultiFunctionDeserializer<SykepengesoknadBehandlingsdagerDTO>(
                         mapOf(
                                 "SYKEPENGESOKNAD" to { _, bytes -> bytes!!.let { objectMapper.readValue(it) }  }
 

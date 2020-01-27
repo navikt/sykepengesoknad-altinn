@@ -14,6 +14,7 @@ import no.nav.syfo.kafka.interfaces.Soknad
 import no.nav.syfo.kafka.soknad.dto.SoknadDTO
 import no.nav.syfo.kafka.soknad.serializer.FunctionSerializer
 import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
+import no.nav.syfo.kafka.sykepengesoknadbehandlingsdager.dto.SykepengesoknadBehandlingsdagerDTO
 import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
@@ -48,6 +49,19 @@ class KafkaConfig(private val properties: KafkaProperties) {
                     FunctionSerializer<Sykepengesoknad>(objectMapper::writeValueAsBytes)
             )
     )
+
+    object SykepengesoknadBehandlingsdagerDTODeserializer : Deserializer<SykepengesoknadBehandlingsdagerDTO> {
+        override fun close() {
+        }
+
+        override fun configure(configs: MutableMap<String, *>?, isKey: Boolean) {
+        }
+
+        override fun deserialize(topic: String?, data: ByteArray?): SykepengesoknadBehandlingsdagerDTO {
+            return objectMapper.readValue(data, SykepengesoknadBehandlingsdagerDTO::class.java)
+        }
+
+    }
 
     object SykepengesoknadDeserializer : Deserializer<Sykepengesoknad> {
         override fun close() {
@@ -91,6 +105,30 @@ class KafkaConfig(private val properties: KafkaProperties) {
                                 "SOKNAD" to { _, bytes -> bytes?.let { objectMapper.readValue(it, SoknadDTO::class.java) } as Soknad }
                         )
                 )
+        )
+    }
+
+    @Bean
+    fun kafkaListenerContainerFactoryBehandlingsdager(
+            consumerFactory: ConsumerFactory<String, SykepengesoknadBehandlingsdagerDTO>,
+            kafkaErrorHandler: KafkaErrorHandler
+    ): ConcurrentKafkaListenerContainerFactory<String, SykepengesoknadBehandlingsdagerDTO> =
+            ConcurrentKafkaListenerContainerFactory<String, SykepengesoknadBehandlingsdagerDTO>()
+                    .apply {
+                        containerProperties.ackMode = MANUAL_IMMEDIATE
+                        containerProperties.setErrorHandler(kafkaErrorHandler)
+                        this.consumerFactory = consumerFactory
+                    }
+
+    @Bean
+    @Profile(value = ["remote", "local-kafka"])
+    fun consumerFactoryBehandlingsdager(
+            properties: KafkaProperties): ConsumerFactory<String, SykepengesoknadBehandlingsdagerDTO> {
+
+        return DefaultKafkaConsumerFactory(
+                properties.buildConsumerProperties(),
+                StringDeserializer(),
+                SykepengesoknadBehandlingsdagerDTODeserializer
         )
     }
 

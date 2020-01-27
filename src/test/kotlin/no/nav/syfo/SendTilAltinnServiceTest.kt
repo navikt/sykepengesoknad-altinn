@@ -53,7 +53,7 @@ class SendTilAltinnServiceTest {
         given(aktorRestConsumer.getFnr(any())).willReturn("fnr")
         given(personConsumer.finnBrukerPersonnavnByFnr(any())).willReturn("Navn Navnesen")
         given(organisasjonConsumer.hentJuridiskOrgnummer(any())).willReturn("Juridisk Orgnummer")
-        given(pdfRestController.getPDFArbeidstakere(any())).willReturn("".toByteArray())
+        given(pdfRestController.getPDF(any())).willReturn("".toByteArray())
         given(altinnConsumer.sendSykepengesoknadTilArbeidsgiver(any())).willReturn(123)
         given(sendtSoknadDao.soknadErSendt(ressursId, false)).willReturn(false)
         given(registry.counter(ArgumentMatchers.anyString(), ArgumentMatchers.any(Tags::class.java))).willReturn(counter)

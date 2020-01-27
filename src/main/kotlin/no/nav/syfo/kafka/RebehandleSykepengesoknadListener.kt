@@ -35,7 +35,7 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
                     ?.apply {
                         log.info("Plukket opp søknad ${cr.key()} med senere behandlingstidspunkt, venter 10 sekunder og legger tilbake på kø...")
                         Thread.sleep(10000)
-                        rebehandleSykepengesoknadProducer.send(sykepengesoknad)
+                        rebehandleSykepengesoknadProducer.send(sykepengesoknad, this)
                         acknowledgment.acknowledge()
                         return
                     }
@@ -45,7 +45,7 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
             acknowledgment.acknowledge()
         } catch (e: Exception) {
             val sykepengesoknad: Sykepengesoknad = cr.value()
-            rebehandleSykepengesoknadProducer.send(sykepengesoknad)
+            rebehandleSykepengesoknadProducer.send(sykepengesoknad, now().plusMinutes(1))
             log.error("Uventet feil ved rebehandling av søknad ${sykepengesoknad.id}, legger søknaden tilbake på kø", e)
             acknowledgment.acknowledge()
         } finally {

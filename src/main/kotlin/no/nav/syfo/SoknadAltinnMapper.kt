@@ -14,7 +14,8 @@ import no.finn.unleash.UnleashContext
 import no.nav.syfo.config.unleash.FeatureToggle.ORGNUMMER_WHITELISTET
 import no.nav.syfo.config.unleash.Toggle
 import no.nav.syfo.config.unleash.strategy.UNLEASH_PROPERTY_NAME_ORGNUMMER
-import no.nav.syfo.domain.soknad.Avsendertype.*
+import no.nav.syfo.domain.soknad.Avsendertype.SYSTEM
+import no.nav.syfo.domain.soknad.Soknadstype
 import no.nav.syfo.domain.soknad.Sykepengesoknad
 import org.springframework.stereotype.Component
 import java.io.IOException
@@ -50,7 +51,12 @@ class SoknadAltinnMapper(private val toggle: Toggle) {
     }
 
     private fun opprettTittel(sykepengesoknad: Sykepengesoknad): String {
-        return "Søknad om sykepenger - ${periodeSomTekst(sykepengesoknad)} - ${sykepengesoknad.navn} (${sykepengesoknad.fnr})${if (sykepengesoknad.sendtNav != null) " - sendt til NAV" else ""}"
+        return if(sykepengesoknad.type == Soknadstype.BEHANDLINGSDAGER) {
+            "Søknad med enkeltstående behandlingsdager - ${periodeSomTekst(sykepengesoknad)} - ${sykepengesoknad.navn} (${sykepengesoknad.fnr})${if (sykepengesoknad.sendtNav != null) " - sendt til NAV" else ""}"
+        }
+        else {
+            "Søknad om sykepenger - ${periodeSomTekst(sykepengesoknad)} - ${sykepengesoknad.navn} (${sykepengesoknad.fnr})${if (sykepengesoknad.sendtNav != null) " - sendt til NAV" else ""}"
+        }
     }
 
     private fun opprettInnholdstekst(sykepengesoknad: Sykepengesoknad): String {

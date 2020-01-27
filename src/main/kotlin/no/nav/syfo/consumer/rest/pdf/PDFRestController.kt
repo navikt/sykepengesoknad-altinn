@@ -1,6 +1,7 @@
 package no.nav.syfo.consumer.rest.pdf
 
 import no.nav.syfo.domain.soknad.Soknadsperiode
+import no.nav.syfo.domain.soknad.Soknadstype
 import no.nav.syfo.domain.soknad.Sykepengesoknad
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -16,11 +17,15 @@ import javax.inject.Inject
 class PDFRestController @Inject
 constructor(private val restTemplate: RestTemplate) {
 
-    fun getPDFArbeidstakere(sykepengesoknad: Sykepengesoknad): ByteArray {
+    fun getPDF(sykepengesoknad: Sykepengesoknad): ByteArray {
 
         val pdfSoknad = PDFSoknad(sykepengesoknad)
 
-        val url = "http://syfopdfgen/api/v1/genpdf/syfosoknader/${PDFTemplate.ARBEIDSTAKERE}"
+        val url = when (sykepengesoknad.type) {
+            Soknadstype.ARBEIDSTAKERE -> "http://syfopdfgen/api/v1/genpdf/syfosoknader/${PDFTemplate.ARBEIDSTAKERE}"
+            Soknadstype.BEHANDLINGSDAGER -> "http://syfopdfgen/api/v1/genpdf/syfosoknader/${PDFTemplate.BEHANDLINGSDAGER}"
+            else -> throw RuntimeException("Har ikke implementert PDF-template for søknad av typen: ${sykepengesoknad.type}")
+        }
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
@@ -37,9 +42,10 @@ constructor(private val restTemplate: RestTemplate) {
     }
 
     private class PDFSoknad(sykepengesoknad: Sykepengesoknad) {
-        val soknadId = sykepengesoknad.id
+        val soknadsId = sykepengesoknad.id
         val fnr = sykepengesoknad.fnr
         val navn = sykepengesoknad.navn
+        val soknadstype = sykepengesoknad.type
         val innsendtDato = sykepengesoknad.sendtNav?.toLocalDate()
         val sendtArbeidsgiver = sykepengesoknad.sendtArbeidsgiver?.toLocalDate()
         val sykmeldingUtskrevet = sykepengesoknad.sykmeldingSkrevet?.toLocalDate()
@@ -64,6 +70,7 @@ constructor(private val restTemplate: RestTemplate) {
         val faktiskGrad = soknadsperiode.faktiskGrad
         val avtaltTimer = soknadsperiode.avtaltTimer
         val faktiskTimer = soknadsperiode.faktiskTimer
+        val sykmeldingstype = soknadsperiode.sykmeldingstype
     }
 
 }

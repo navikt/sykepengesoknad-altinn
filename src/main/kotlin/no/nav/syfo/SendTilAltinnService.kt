@@ -39,7 +39,7 @@ class SendTilAltinnService(
         sykepengesoknad.fnr = aktorRestConsumer.getFnr(sykepengesoknad.aktorId)
         sykepengesoknad.navn = personConsumer.finnBrukerPersonnavnByFnr(sykepengesoknad.fnr)
         sykepengesoknad.juridiskOrgnummerArbeidsgiver = organisasjonConsumer.hentJuridiskOrgnummer(sykepengesoknad.arbeidsgiver.orgnummer)
-        sykepengesoknad.pdf = pdfRestController.getPDFArbeidstakere(sykepengesoknad)
+        sykepengesoknad.pdf = pdfRestController.getPDF(sykepengesoknad)
 
         val validationeventer: MutableList<ValidationEvent> = mutableListOf()
         sykepengesoknad.xml = sykepengesoknad2XMLByteArray(sykepengesoknad, validationeventer)

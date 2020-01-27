@@ -18,17 +18,16 @@ private val sykepengesoknad2XMLArbeidsgiver = { sykepengesoknad: Sykepengesoknad
     XMLSykepengesoeknadArbeidsgiver()
             .withJuridiskOrganisasjonsnummer(sykepengesoknad.juridiskOrgnummerArbeidsgiver)
             .withVirksomhetsnummer(sykepengesoknad.arbeidsgiver.orgnummer)
-            .withSykepengesoeknad(sykepengesoknad2XML(sykepengesoknad, sykepengesoknad.fnr))
+            .withSykepengesoeknad(sykepengesoknad2XML(sykepengesoknad))
 }
 
-private val sykepengesoknad2XML = { sykepengesoknad: Sykepengesoknad,
-                                    fnr: String ->
+private val sykepengesoknad2XML = { sykepengesoknad: Sykepengesoknad ->
     XMLSykepengesoeknad()
             .withSykepengesoeknadId(sykepengesoknad.id)
             .withSykmeldingId(sykepengesoknad.sykmeldingId)
             .withKorrigerer(sykepengesoknad.korrigerer)
             .withPeriode(XMLPeriode().withFom(sykepengesoknad.fom).withTom(sykepengesoknad.tom))
-            .withSykmeldtesFnr(fnr)
+            .withSykmeldtesFnr(sykepengesoknad.fnr)
             .withArbeidsgiverForskuttererLoenn(sykepengesoknad.arbeidsgiverForskutterer?.name ?: "IKKE_SPURT")
             .withIdentdato(sykepengesoknad.startSykeforlop)
             .withSykmeldingSkrevetDato(sykepengesoknad.sykmeldingSkrevet?.toLocalDate())

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.kafka.konverter
 import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
+import no.nav.syfo.kafka.sykepengesoknadbehandlingsdager.dto.SykepengesoknadBehandlingsdagerDTO
 import org.mockito.Mockito
 
 private val objectMapper = ObjectMapper()
@@ -20,6 +21,19 @@ val mockSykepengesoknadDTO: SykepengesoknadDTO =
 val mockSykepengesoknad: Sykepengesoknad
     get() {
         val sykepengesoknad = konverter(mockSykepengesoknadDTO)
+        sykepengesoknad.fnr = "12345678910"
+        sykepengesoknad.navn = "Navn Navnesen"
+        sykepengesoknad.juridiskOrgnummerArbeidsgiver = "999999999"
+        sykepengesoknad.xml = sykepengesoknad2XMLByteArray(sykepengesoknad, mutableListOf())
+        return sykepengesoknad
+    }
+
+val mockSykepengesoknadBehandlingsdagerDTO: SykepengesoknadBehandlingsdagerDTO =
+        objectMapper.readValue(LocalApplication::class.java.getResource("/behandlingsdagersoknad.json"), SykepengesoknadBehandlingsdagerDTO::class.java)
+
+val mockSykepengesoknadBehandlingsdager: Sykepengesoknad
+    get() {
+        val sykepengesoknad = konverter(mockSykepengesoknadBehandlingsdagerDTO)
         sykepengesoknad.fnr = "12345678910"
         sykepengesoknad.navn = "Navn Navnesen"
         sykepengesoknad.juridiskOrgnummerArbeidsgiver = "999999999"

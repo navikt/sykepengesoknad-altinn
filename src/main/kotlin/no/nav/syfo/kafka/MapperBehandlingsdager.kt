@@ -2,48 +2,43 @@ package no.nav.syfo.kafka
 
 import no.nav.syfo.domain.soknad.*
 import no.nav.syfo.kafka.felles.*
-import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
+import no.nav.syfo.kafka.sykepengesoknadbehandlingsdager.dto.SykepengesoknadBehandlingsdagerDTO
 
-fun konverter(sykepengesoknadDTO: SykepengesoknadDTO): Sykepengesoknad {
+fun konverter(sykepengesoknadDTO: SykepengesoknadBehandlingsdagerDTO): Sykepengesoknad {
     return Sykepengesoknad(
-            id = sykepengesoknadDTO.id!!,
-            type = Soknadstype.valueOf(sykepengesoknadDTO.type!!.name),
-            status = Soknadsstatus.valueOf(sykepengesoknadDTO.status!!.name),
-            aktorId = sykepengesoknadDTO.aktorId!!,
-            sykmeldingId = sykepengesoknadDTO.sykmeldingId,
-            arbeidsgiver = konverter(sykepengesoknadDTO.arbeidsgiver!!),
-            arbeidssituasjon = enumValueOrNull(sykepengesoknadDTO.arbeidssituasjon!!.name),
-            korrigertAv = sykepengesoknadDTO.korrigertAv,
-            korrigerer = sykepengesoknadDTO.korrigerer,
-            soktUtenlandsopphold = sykepengesoknadDTO.soktUtenlandsopphold,
-            arbeidsgiverForskutterer = enumValueOrNull(sykepengesoknadDTO.arbeidsgiverForskutterer?.name),
-            fom = sykepengesoknadDTO.fom,
-            tom = sykepengesoknadDTO.tom,
-            startSykeforlop = sykepengesoknadDTO.startSyketilfelle,
-            arbeidGjenopptatt = sykepengesoknadDTO.arbeidGjenopptatt,
-            sykmeldingSkrevet = sykepengesoknadDTO.sykmeldingSkrevet,
-            opprettet = sykepengesoknadDTO.opprettet,
-            sendtNav = sykepengesoknadDTO.sendtNav,
-            sendtArbeidsgiver = sykepengesoknadDTO.sendtArbeidsgiver,
+            id = sykepengesoknadDTO.soknadFelles.id,
+            aktorId = sykepengesoknadDTO.soknadFelles.aktorId,
+            //TODO: ta i bruk fnr fra DTO
+            type = Soknadstype.BEHANDLINGSDAGER,
+            status = Soknadsstatus.valueOf(sykepengesoknadDTO.soknadFelles.status.name),
+            sykmeldingId = sykepengesoknadDTO.sykepengesoknadFelles.sykmeldingId,
+            arbeidsgiver = konverter(sykepengesoknadDTO.soknadFelles.arbeidsgiver),
+            arbeidssituasjon = enumValueOrNull(sykepengesoknadDTO.soknadFelles.arbeidssituasjon?.name),
+            korrigertAv = sykepengesoknadDTO.soknadFelles.korrigertAv,
+            korrigerer = sykepengesoknadDTO.soknadFelles.korrigerer,
+            arbeidsgiverForskutterer = enumValueOrNull(sykepengesoknadDTO.soknadFelles.arbeidsgiverForskutterer?.name),
+            fom = sykepengesoknadDTO.sykepengesoknadFelles.fom,
+            tom = sykepengesoknadDTO.sykepengesoknadFelles.tom,
+            startSykeforlop = sykepengesoknadDTO.sykepengesoknadFelles.startSyketilfelle,
+            sykmeldingSkrevet = sykepengesoknadDTO.sykepengesoknadFelles.sykmeldingSkrevet,
+            opprettet = sykepengesoknadDTO.soknadFelles.opprettet,
+            sendtNav = sykepengesoknadDTO.soknadFelles.sendtNav,
+            sendtArbeidsgiver = sykepengesoknadDTO.soknadFelles.sendtArbeidsgiver,
+            behandlingsdager = sykepengesoknadDTO.behandlingsdager,
             egenmeldinger = sykepengesoknadDTO.egenmeldinger
                     ?.map { konverter(it) }
                     .orEmpty(),
             papirsykmeldinger = sykepengesoknadDTO.papirsykmeldinger
                     ?.map { konverter(it) }
                     .orEmpty(),
-            fravar = sykepengesoknadDTO.fravar
-                    ?.map { konverter(it) }
-                    .orEmpty(),
             andreInntektskilder = sykepengesoknadDTO.andreInntektskilder
                     ?.map { konverter(it) }
                     .orEmpty(),
-            soknadsperioder = sykepengesoknadDTO.soknadsperioder
-                    ?.map { konverter(it) }
-                    .orEmpty(),
-            sporsmal = sykepengesoknadDTO.sporsmal
-                    ?.map { konverter(it) }
-                    .orEmpty(),
-            ettersending = sykepengesoknadDTO.ettersending
+            soknadsperioder = sykepengesoknadDTO.sykepengesoknadFelles.soknadsperioder
+                    .map { konverter(it) },
+            sporsmal = sykepengesoknadDTO.soknadFelles.sporsmal
+                    .map { konverter(it) },
+            ettersending = sykepengesoknadDTO.soknadFelles.ettersending
     )
 }
 
@@ -83,10 +78,10 @@ private fun konverter(soknadPeriodeDTO: SoknadsperiodeDTO): Soknadsperiode {
             sykmeldingstype = enumValueOrNull(soknadPeriodeDTO.sykmeldingstype!!.name))
 }
 
-private fun konverter(arbeidsgiverDTO: ArbeidsgiverDTO): Arbeidsgiver {
+private fun konverter(arbeidsgiverDTO: ArbeidsgiverDTO?): Arbeidsgiver {
     return Arbeidsgiver(
-            navn = arbeidsgiverDTO.navn!!,
-            orgnummer = arbeidsgiverDTO.orgnummer!!
+            navn = arbeidsgiverDTO?.navn ?: "",
+            orgnummer = arbeidsgiverDTO?.orgnummer ?: ""
     )
 }
 
@@ -94,14 +89,6 @@ private fun konverter(periodeDTO: PeriodeDTO): Periode {
     return Periode(
             fom = periodeDTO.fom!!,
             tom = periodeDTO.tom!!
-    )
-}
-
-private fun konverter(fravarDTO: FravarDTO): Fravar {
-    return Fravar(
-            fom = fravarDTO.fom!!,
-            tom = fravarDTO.tom,
-            type = Fravarstype.valueOf(fravarDTO.type!!.name)
     )
 }
 
