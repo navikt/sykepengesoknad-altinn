@@ -4,8 +4,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.kafka.LegacyMultiFunctionDeserializer
 import no.nav.syfo.kafka.interfaces.Soknad
+import no.nav.syfo.kafka.soknad.dto.SoknadDTO
 import no.nav.syfo.kafka.soknad.serializer.FunctionSerializer
 import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
 import org.apache.kafka.common.serialization.StringDeserializer
@@ -31,26 +34,42 @@ class KafkaTestConfig {
     }
 
     private val objectMapper = ObjectMapper()
-        .registerModule(JavaTimeModule())
-        .configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE, true)
+            .registerModule(JavaTimeModule())
+            .registerKotlinModule()
+            .configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE, true)
+
 
     @Bean
-    fun consumerFactory(properties: KafkaProperties): ConsumerFactory<String, Soknad> {
-        return DefaultKafkaConsumerFactory(properties.buildConsumerProperties(),
-            StringDeserializer(),
-
-            LegacyMultiFunctionDeserializer<Soknad>(
-                mapOf(
-                    "SYKEPENGESOKNAD" to { _, bytes -> bytes?.let { objectMapper.readValue<SykepengesoknadDTO>(it) } as Soknad })
-            )
+    fun producerFactory(properties: KafkaProperties): ProducerFactory<String, Sykepengesoknad> {
+        return DefaultKafkaProducerFactory(properties.buildProducerProperties(),
+                StringSerializer(),
+                FunctionSerializer { soknad -> objectMapper.writeValueAsBytes(soknad) }
         )
     }
 
     @Bean
-    fun producerFactory(properties: KafkaProperties): ProducerFactory<String, Soknad> {
-        return DefaultKafkaProducerFactory(properties.buildProducerProperties(),
-            StringSerializer(),
-            FunctionSerializer { soknad -> objectMapper.writeValueAsBytes(soknad) }
+    fun consumerFactory(properties: KafkaProperties): ConsumerFactory<String, Soknad> {
+        return DefaultKafkaConsumerFactory(properties.buildConsumerProperties(),
+                StringDeserializer(),
+                LegacyMultiFunctionDeserializer<Soknad>(
+                        mapOf(
+                                "SYKEPENGESOKNAD" to { _, bytes -> bytes?.let { objectMapper.readValue<SykepengesoknadDTO>(it) } as Soknad },
+                                "SOKNAD" to { _, bytes -> bytes?.let { objectMapper.readValue<SoknadDTO>(it) } as Soknad }
+                        )
+                )
+        )
+    }
+
+    @Bean
+    fun consumerFactorySykepengesoknad(properties: KafkaProperties): ConsumerFactory<String, Sykepengesoknad> {
+        return DefaultKafkaConsumerFactory(properties.buildConsumerProperties(),
+                StringDeserializer(),
+                LegacyMultiFunctionDeserializer<Sykepengesoknad>(
+                        mapOf(
+                                "SYKEPENGESOKNAD" to { _, bytes -> bytes!!.let { objectMapper.readValue(it) }  }
+
+                        )
+                )
         )
     }
 }

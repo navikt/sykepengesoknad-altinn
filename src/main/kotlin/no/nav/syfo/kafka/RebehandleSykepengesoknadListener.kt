@@ -2,8 +2,7 @@ package no.nav.syfo.kafka
 
 import no.nav.syfo.BEHANDLINGSTIDSPUNKT
 import no.nav.syfo.SendTilAltinnService
-import no.nav.syfo.kafka.interfaces.Soknad
-import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
+import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.log
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.MDC
@@ -17,16 +16,16 @@ import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME
 import javax.inject.Inject
 
 @Component
-class InternSoknadsbehandlingListener @Inject
+class RebehandleSykepengesoknadListener @Inject
 constructor(private val sendTilAltinnService: SendTilAltinnService,
             private val rebehandleSykepengesoknadProducer: RebehandleSykepengesoknadProducer) {
     val log = log()
 
-    @KafkaListener(topics = ["privat-syfoaltinn-soknad-v1"],id = "syfoaltinnIntern", idIsGroup = false, containerFactory = "kafkaListenerContainerFactory")
-    fun listen(cr: ConsumerRecord<String, Soknad>, acknowledgment: Acknowledgment) {
+    @KafkaListener(topics = ["privat-syfoaltinn-soknad-v2"], id = "syfoaltinnIntern-v2", idIsGroup = false, containerFactory = "kafkaListenerContainerFactoryRebehandling")
+    fun listen(cr: ConsumerRecord<String, Sykepengesoknad>, acknowledgment: Acknowledgment) {
         try {
             MDC.put(NAV_CALLID, getSafeNavCallIdHeaderAsString(cr.headers()))
-            val sykepengesoknad = konverter(cr.value() as SykepengesoknadDTO)
+            val sykepengesoknad: Sykepengesoknad = cr.value()
 
             cr.headers().lastHeader(BEHANDLINGSTIDSPUNKT)
                     ?.value()
@@ -34,9 +33,8 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
                     ?.let { LocalDateTime.parse(it, ISO_LOCAL_DATE_TIME) }
                     ?.takeIf { now().isBefore(it) }
                     ?.apply {
-                        log.info("Plukket opp søknad ${sykepengesoknad.id} med senere behandlingstidspunkt, venter 10 sekunder og legger tilbake på kø...")
+                        log.info("Plukket opp søknad ${cr.key()} med senere behandlingstidspunkt, venter 10 sekunder og legger tilbake på kø...")
                         Thread.sleep(10000)
-                        log.info("Legger søknad på NY rebehandling topic")
                         rebehandleSykepengesoknadProducer.send(sykepengesoknad)
                         acknowledgment.acknowledge()
                         return
@@ -46,9 +44,9 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
             log.info("Søknad ${sykepengesoknad.id} er sendt til Altinn")
             acknowledgment.acknowledge()
         } catch (e: Exception) {
-            val sykepengesoknad = konverter(cr.value() as SykepengesoknadDTO)
+            val sykepengesoknad: Sykepengesoknad = cr.value()
             rebehandleSykepengesoknadProducer.send(sykepengesoknad)
-            log.error("Uventet feil ved behandling av søknad ${sykepengesoknad.id}, legger søknaden på NY rebehandling topic", e)
+            log.error("Uventet feil ved rebehandling av søknad ${sykepengesoknad.id}, legger søknaden tilbake på kø", e)
             acknowledgment.acknowledge()
         } finally {
             MDC.remove(NAV_CALLID)

@@ -8,6 +8,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.junit4.SpringRunner
 import java.time.LocalDateTime
@@ -16,6 +17,7 @@ import javax.inject.Inject
 @RunWith(SpringRunner::class)
 @SpringBootTest(classes = [LocalApplication::class])
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@EmbeddedKafka
 class SendtSoknadDaoTest {
 
     @Inject
