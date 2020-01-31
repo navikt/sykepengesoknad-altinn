@@ -4,6 +4,7 @@ import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggException
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskRespose
 import no.nav.syfo.consumer.rest.juridisklogg.Logg
+import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.mockSykepengesoknad
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -28,7 +29,7 @@ class JuridiskLoggConsumerTest {
     @Mock
     private lateinit var basicAuthRestTemplate: RestTemplate
 
-    private lateinit var juridiskLoggConsumer:JuridiskLoggConsumer
+    private lateinit var juridiskLoggConsumer: JuridiskLoggConsumer
 
     @Before
     fun setup() {
@@ -44,7 +45,7 @@ class JuridiskLoggConsumerTest {
 
     @Test
     fun lagrerIJurdiskLogg() {
-        val ref = juridiskLoggConsumer.lagreIJuridiskLogg(mockSykepengesoknad, 123)
+        val ref = juridiskLoggConsumer.lagreIJuridiskLogg(mockSykepengesoknad.first, 123, mockSykepengesoknad.second)
         assertThat(ref).isEqualTo(123)
     }
 
@@ -57,7 +58,7 @@ class JuridiskLoggConsumerTest {
                 BDDMockito.eq(JuridiskRespose::class.java)
         )).willReturn(ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR))
 
-        juridiskLoggConsumer.lagreIJuridiskLogg(mockSykepengesoknad, 123)
+        juridiskLoggConsumer.lagreIJuridiskLogg(mockSykepengesoknad.first, 123, mockSykepengesoknad.second)
     }
 
     @Test(expected = JuridiskLoggException::class)
@@ -69,7 +70,7 @@ class JuridiskLoggConsumerTest {
                 BDDMockito.eq(JuridiskRespose::class.java)
         )).willThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST, "", "Payload må være base64-encodet".toByteArray(charset("UTF-8")), null))
 
-        juridiskLoggConsumer.lagreIJuridiskLogg(mockSykepengesoknad, 123)
+        juridiskLoggConsumer.lagreIJuridiskLogg(mockSykepengesoknad.first, 123, mockSykepengesoknad.second)
     }
 
     /* Denne testen vil brekke om innholdet i xml-utgaven av søknaden endrer seg. Da må en bumpe versjonen i metadata
@@ -80,7 +81,7 @@ class JuridiskLoggConsumerTest {
     fun sjekkInnholdIPayload() {
         val argumentCaptor = ArgumentCaptor.forClass(HttpEntity::class.java)
 
-        juridiskLoggConsumer.lagreIJuridiskLogg(mockSykepengesoknad, 123)
+        juridiskLoggConsumer.lagreIJuridiskLogg(mockSykepengesoknad.first, 123, mockSykepengesoknad.second)
 
         Mockito.verify(basicAuthRestTemplate).exchange(
                 BDDMockito.anyString(),

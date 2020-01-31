@@ -36,12 +36,6 @@ data class Sykepengesoknad(
         val avsendertype: Avsendertype? = null,
         val ettersending: Boolean = false
 ) {
-    lateinit var fnr: String
-    lateinit var navn: String
-    lateinit var pdf: ByteArray
-    lateinit var xml: ByteArray
-    var juridiskOrgnummerArbeidsgiver: String? = null
-
     fun alleSporsmalOgUndersporsmal(): List<Sporsmal> {
         return flatten(sporsmal)
                 .toList()

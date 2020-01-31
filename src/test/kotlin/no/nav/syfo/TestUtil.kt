@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature.READ_UNKNOWN_ENUM_V
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.kafka.konverter
 import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
@@ -18,14 +19,19 @@ private val objectMapper = ObjectMapper()
 val mockSykepengesoknadDTO: SykepengesoknadDTO =
         objectMapper.readValue(LocalApplication::class.java.getResource("/arbeidstakersoknad.json"), SykepengesoknadDTO::class.java)
 
-val mockSykepengesoknad: Sykepengesoknad
+val mockSykepengesoknad: Pair<Sykepengesoknad, AltinnInnsendelseEkstraData>
     get() {
         val sykepengesoknad = konverter(mockSykepengesoknadDTO)
-        sykepengesoknad.fnr = "12345678910"
-        sykepengesoknad.navn = "Navn Navnesen"
-        sykepengesoknad.juridiskOrgnummerArbeidsgiver = "999999999"
-        sykepengesoknad.xml = sykepengesoknad2XMLByteArray(sykepengesoknad, mutableListOf())
-        return sykepengesoknad
+        val fnr = "12345678910"
+        val navn = "Navn Navnesen"
+        val juridiskOrgnummerArbeidsgiver = "999999999"
+        val ekstra = AltinnInnsendelseEkstraData(
+                fnr = fnr,
+                navn = navn,
+                xml = sykepengesoknad2XMLByteArray(sykepengesoknad, mutableListOf(), fnr, juridiskOrgnummerArbeidsgiver),
+                pdf = ByteArray(0)
+        )
+        return Pair(sykepengesoknad, ekstra)
     }
 
 val mockSykepengesoknadBehandlingsdagerDTO: SykepengesoknadBehandlingsdagerDTO =
@@ -34,10 +40,6 @@ val mockSykepengesoknadBehandlingsdagerDTO: SykepengesoknadBehandlingsdagerDTO =
 val mockSykepengesoknadBehandlingsdager: Sykepengesoknad
     get() {
         val sykepengesoknad = konverter(mockSykepengesoknadBehandlingsdagerDTO)
-        sykepengesoknad.fnr = "12345678910"
-        sykepengesoknad.navn = "Navn Navnesen"
-        sykepengesoknad.juridiskOrgnummerArbeidsgiver = "999999999"
-        sykepengesoknad.xml = sykepengesoknad2XMLByteArray(sykepengesoknad, mutableListOf())
         return sykepengesoknad
     }
 

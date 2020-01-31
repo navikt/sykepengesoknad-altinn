@@ -1,5 +1,6 @@
 package no.nav.syfo.consumer.rest.pdf
 
+import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.soknad.Soknadsperiode
 import no.nav.syfo.domain.soknad.Soknadstype
 import no.nav.syfo.domain.soknad.Sykepengesoknad
@@ -17,9 +18,9 @@ import javax.inject.Inject
 class PDFRestController @Inject
 constructor(private val restTemplate: RestTemplate) {
 
-    fun getPDF(sykepengesoknad: Sykepengesoknad): ByteArray {
+    fun getPDF(sykepengesoknad: Sykepengesoknad, fnr: String, navn: String): ByteArray {
 
-        val pdfSoknad = PDFSoknad(sykepengesoknad)
+        val pdfSoknad = PDFSoknad(sykepengesoknad, fnr, navn)
 
         val url = when (sykepengesoknad.type) {
             Soknadstype.ARBEIDSTAKERE -> "http://syfopdfgen/api/v1/genpdf/syfosoknader/${PDFTemplate.ARBEIDSTAKERE}"
@@ -41,10 +42,8 @@ constructor(private val restTemplate: RestTemplate) {
         return result.body ?: throw RuntimeException("pdfgen returnerer null - dette er en feil")
     }
 
-    private class PDFSoknad(sykepengesoknad: Sykepengesoknad) {
+    private class PDFSoknad(sykepengesoknad: Sykepengesoknad, val fnr: String, val navn: String) {
         val soknadsId = sykepengesoknad.id
-        val fnr = sykepengesoknad.fnr
-        val navn = sykepengesoknad.navn
         val soknadstype = sykepengesoknad.type
         val innsendtDato = sykepengesoknad.sendtNav?.toLocalDate()
         val sendtArbeidsgiver = sykepengesoknad.sendtArbeidsgiver?.toLocalDate()

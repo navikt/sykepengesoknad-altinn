@@ -9,6 +9,7 @@ import no.nav.syfo.consumer.rest.pdf.PDFRestController
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
 import no.nav.syfo.consumer.ws.client.OrganisasjonConsumer
 import no.nav.syfo.consumer.ws.client.PersonConsumer
+import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.SendtSoknad
 import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.repository.SendtSoknadDao
@@ -36,21 +37,28 @@ class SendTilAltinnService(
             log.warn("Forsøkte å sende søknad om sykepenger med id {} til Altinn som allerede er sendt", sykepengesoknad.id)
             return
         }
-        sykepengesoknad.fnr = aktorRestConsumer.getFnr(sykepengesoknad.aktorId)
-        sykepengesoknad.navn = personConsumer.finnBrukerPersonnavnByFnr(sykepengesoknad.fnr)
-        sykepengesoknad.juridiskOrgnummerArbeidsgiver = organisasjonConsumer.hentJuridiskOrgnummer(sykepengesoknad.arbeidsgiver.orgnummer)
-        sykepengesoknad.pdf = pdfRestController.getPDF(sykepengesoknad)
-
+        val fnr = aktorRestConsumer.getFnr(sykepengesoknad.aktorId)
+        val navn = personConsumer.finnBrukerPersonnavnByFnr(fnr)
+        val pdf = pdfRestController.getPDF(sykepengesoknad, fnr, navn)
         val validationeventer: MutableList<ValidationEvent> = mutableListOf()
-        sykepengesoknad.xml = sykepengesoknad2XMLByteArray(sykepengesoknad, validationeventer)
+        val juridiskOrgnummerArbeidsgiver = organisasjonConsumer.hentJuridiskOrgnummer(sykepengesoknad.arbeidsgiver.orgnummer)
+        val xml = sykepengesoknad2XMLByteArray(sykepengesoknad, validationeventer, fnr, juridiskOrgnummerArbeidsgiver)
+
+
+        val ekstraData = AltinnInnsendelseEkstraData(
+                fnr = fnr,
+                navn = navn,
+                pdf = pdf,
+                xml = xml
+        )
 
         val receiptId: Int?
         if (validationeventer.isEmpty()) {
-            receiptId = altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad)
+            receiptId = altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad, ekstraData)
             if (erEttersending) {
-                sendtSoknadDao.lagreEttersendtSoknad(sykepengesoknad.id, Integer.toString(receiptId))
+                sendtSoknadDao.lagreEttersendtSoknad(sykepengesoknad.id, receiptId.toString())
             } else {
-                sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, Integer.toString(receiptId), now()))
+                sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, receiptId.toString(), now()))
             }
             registry.counter("syfoaltinn.soknadSendtTilAltinn", Tags.of("type", "info")).increment()
         } else {
@@ -60,7 +68,7 @@ class SendTilAltinnService(
         }
 
         try {
-            juridiskLoggConsumer.lagreIJuridiskLogg(sykepengesoknad, receiptId)
+            juridiskLoggConsumer.lagreIJuridiskLogg(sykepengesoknad, receiptId, ekstraData)
         } catch (e: JuridiskLoggException) {
             log.warn("Ved innsending av sykepengesøknad: ${sykepengesoknad.id} feilet juridisk logging")
         }

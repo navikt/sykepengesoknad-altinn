@@ -14,6 +14,7 @@ import no.finn.unleash.UnleashContext
 import no.nav.syfo.config.unleash.FeatureToggle.ORGNUMMER_WHITELISTET
 import no.nav.syfo.config.unleash.Toggle
 import no.nav.syfo.config.unleash.strategy.UNLEASH_PROPERTY_NAME_ORGNUMMER
+import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.soknad.Avsendertype.SYSTEM
 import no.nav.syfo.domain.soknad.Soknadstype
 import no.nav.syfo.domain.soknad.Sykepengesoknad
@@ -31,35 +32,35 @@ class SoknadAltinnMapper(private val toggle: Toggle) {
     private val SYKEPENGESOEKNAD_TJENESTEKODE = "4751" // OBS! VIKTIG! Denne må ikke endres, da kan feil personer få tilgang til sykepengesøknaden i Altinn!
     private val SYKEPENGESOEKNAD_TJENESTEVERSJON = "1"
 
-    fun sykepengesoeknadTilCorrespondence(sykepengesoknad: Sykepengesoknad): InsertCorrespondenceV2 {
+    fun sykepengesoeknadTilCorrespondence(sykepengesoknad: Sykepengesoknad, ekstraData: AltinnInnsendelseEkstraData): InsertCorrespondenceV2 {
         val namespace = "http://schemas.altinn.no/services/ServiceEngine/Correspondence/2010/10"
         val binaryNamespace = "http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10"
 
-        val tittel = opprettTittel(sykepengesoknad)
-        val sykepengesoeknadTekst = opprettInnholdstekst(sykepengesoknad)
+        val tittel = opprettTittel(sykepengesoknad, ekstraData)
+        val sykepengesoeknadTekst = opprettInnholdstekst(sykepengesoknad, ekstraData)
 
         return InsertCorrespondenceV2()
                 .withAllowForwarding(JAXBElement<Boolean>(QName(namespace, "AllowForwarding"), Boolean::class.java, false))
                 .withReportee(JAXBElement<String>(QName(namespace, "Reportee"), String::class.java,
                         getOrgnummerForSendingTilAltinn(sykepengesoknad.arbeidsgiver.orgnummer)))
                 .withMessageSender(JAXBElement<String>(QName(namespace, "MessageSender"), String::class.java,
-                        byggMessageSender(sykepengesoknad)))
+                        byggMessageSender(sykepengesoknad, ekstraData)))
                 .withServiceCode(JAXBElement<String>(QName(namespace, "ServiceCode"), String::class.java, SYKEPENGESOEKNAD_TJENESTEKODE))
                 .withServiceEdition(JAXBElement<String>(QName(namespace, "ServiceEdition"), String::class.java, SYKEPENGESOEKNAD_TJENESTEVERSJON))
                 .withNotifications(opprettNotifications(namespace))
-                .withContent(tilInnhold(sykepengesoknad, namespace, binaryNamespace, tittel, sykepengesoeknadTekst))
+                .withContent(tilInnhold(namespace, binaryNamespace, tittel, sykepengesoeknadTekst, ekstraData))
     }
 
-    private fun opprettTittel(sykepengesoknad: Sykepengesoknad): String {
+    private fun opprettTittel(sykepengesoknad: Sykepengesoknad, ekstraData: AltinnInnsendelseEkstraData): String {
         return if(sykepengesoknad.type == Soknadstype.BEHANDLINGSDAGER) {
-            "Søknad med enkeltstående behandlingsdager - ${periodeSomTekst(sykepengesoknad)} - ${sykepengesoknad.navn} (${sykepengesoknad.fnr})${if (sykepengesoknad.sendtNav != null) " - sendt til NAV" else ""}"
+            "Søknad med enkeltstående behandlingsdager - ${periodeSomTekst(sykepengesoknad)} - ${ekstraData.navn} (${ekstraData.fnr})${if (sykepengesoknad.sendtNav != null) " - sendt til NAV" else ""}"
         }
         else {
-            "Søknad om sykepenger - ${periodeSomTekst(sykepengesoknad)} - ${sykepengesoknad.navn} (${sykepengesoknad.fnr})${if (sykepengesoknad.sendtNav != null) " - sendt til NAV" else ""}"
+            "Søknad om sykepenger - ${periodeSomTekst(sykepengesoknad)} - ${ekstraData.navn} (${ekstraData.fnr})${if (sykepengesoknad.sendtNav != null) " - sendt til NAV" else ""}"
         }
     }
 
-    private fun opprettInnholdstekst(sykepengesoknad: Sykepengesoknad): String {
+    private fun opprettInnholdstekst(sykepengesoknad: Sykepengesoknad, ekstraData: AltinnInnsendelseEkstraData): String {
         try {
             return if (sykepengesoknad.sendtNav != null && sykepengesoknad.sendtArbeidsgiver != null) {
                 SoknadAltinnMapper::class.java.getResource("/sykepengesoknad-sendt-til-AG-og-NAV-tekst.html").readText()
@@ -73,12 +74,12 @@ class SoknadAltinnMapper(private val toggle: Toggle) {
         return ""
     }
 
-    private fun byggMessageSender(sykepengesoknad: Sykepengesoknad): String {
+    private fun byggMessageSender(sykepengesoknad: Sykepengesoknad, ekstraData: AltinnInnsendelseEkstraData): String {
         if (sykepengesoknad.avsendertype == SYSTEM) {
             return "Autogenerert på grunn av et registrert dødsfall"
         }
 
-        return sykepengesoknad.navn + " - " + sykepengesoknad.fnr
+        return ekstraData.navn + " - " + ekstraData.fnr
     }
 
     private fun opprettNotifications(namespace: String): JAXBElement<NotificationBEList> {
@@ -100,7 +101,7 @@ class SoknadAltinnMapper(private val toggle: Toggle) {
                 "Gå til " + smsLenkeAltinnPortal() + " for å se søknaden. Vennlig hilsen NAV."))
     }
 
-    private fun tilInnhold(sykepengesoknad: Sykepengesoknad, namespace: String, binaryNamespace: String, tittel: String, sykepengesoeknadTekst: String): JAXBElement<ExternalContentV2> {
+    private fun tilInnhold(namespace: String, binaryNamespace: String, tittel: String, sykepengesoeknadTekst: String, ekstraData: AltinnInnsendelseEkstraData): JAXBElement<ExternalContentV2> {
         return JAXBElement<ExternalContentV2>(QName(namespace, "Content"), ExternalContentV2::class.java, ExternalContentV2()
                 .withLanguageCode(JAXBElement<String>(QName(namespace, "LanguageCode"), String::class.java, "1044"))
                 .withMessageTitle(JAXBElement<String>(QName(namespace, "MessageTitle"), String::class.java, tittel))
@@ -112,8 +113,8 @@ class SoknadAltinnMapper(private val toggle: Toggle) {
                                         JAXBElement<BinaryAttachmentExternalBEV2List>(QName(namespace, "BinaryAttachments"), BinaryAttachmentExternalBEV2List::class.java,
                                                 BinaryAttachmentExternalBEV2List()
                                                         .withBinaryAttachmentV2(
-                                                                pdfVedlegg(binaryNamespace, sykepengesoknad.pdf),
-                                                                xmlVedlegg(binaryNamespace, sykepengesoknad.xml)
+                                                                pdfVedlegg(binaryNamespace, ekstraData.pdf),
+                                                                xmlVedlegg(binaryNamespace, ekstraData.xml)
                                                         )
                                         )
                                 )

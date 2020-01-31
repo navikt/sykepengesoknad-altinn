@@ -1,5 +1,6 @@
 package no.nav.syfo.consumer.rest.juridisklogg
 
+import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.kafka.NAV_CALLID
 import no.nav.syfo.log
@@ -22,16 +23,16 @@ class JuridiskLoggConsumer(private val basicAuthRestTemplate: RestTemplate,
 
     val log = log()
 
-    fun lagreIJuridiskLogg(sykepengesoknad: Sykepengesoknad, altinnKvitteringsId:Number): Number {
+    fun lagreIJuridiskLogg(sykepengesoknad: Sykepengesoknad, altinnKvitteringsId: Number, ekstraData: AltinnInnsendelseEkstraData): Number {
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
         headers.set("Nav-Call-Id", MDCOperations.getFromMDC(NAV_CALLID))
         headers.set("Nav-Consumer-Id", username)
 
-        val avsender = "${sykepengesoknad.aktorId} | ${sykepengesoknad.fnr}"
+        val avsender = "${sykepengesoknad.aktorId} | ${ekstraData.fnr}"
         val innholdMeta = "hash: V5;altinnKvittering: $altinnKvitteringsId"
-        val entry = sha512AsBase64String(innholdMeta, sykepengesoknad.xml)
+        val entry = sha512AsBase64String(innholdMeta, ekstraData.xml)
 
         val logg = Logg(
                 meldingsId = sykepengesoknad.id,

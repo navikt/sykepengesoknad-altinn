@@ -15,9 +15,9 @@ class TestProducer(private val kafkaTemplate: KafkaTemplate<String, Sykepengesok
     fun sendMelding() {
 
         val syfoProducerRecord: SyfoProducerRecord<String, Sykepengesoknad> = SyfoProducerRecord(
-                "privat-syfoaltinn-soknad-v1",
+                "privat-syfoaltinn-soknad-v2",
                 randomUUID().toString(),
-                mockSykepengesoknad,
+                mockSykepengesoknad.first,
                 singletonMap<String, Any>(MELDINGSTYPE, "SYKEPENGESOKNAD"))
 
         kafkaTemplate.send(

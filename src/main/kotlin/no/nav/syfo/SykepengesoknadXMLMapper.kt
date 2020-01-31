@@ -5,29 +5,29 @@ import no.nav.syfo.domain.soknad.*
 import no.nav.syfo.util.JAXB
 import javax.xml.bind.ValidationEvent
 
-val sykepengesoknad2XMLByteArray = { sykepengesoknad: Sykepengesoknad, validationeventer: MutableList<ValidationEvent> ->
+val sykepengesoknad2XMLByteArray = { sykepengesoknad: Sykepengesoknad, validationeventer: MutableList<ValidationEvent>, fnr: String, juridiskOrgnummerArbeidsgiver: String? ->
     JAXB.marshallSykepengesoeknadArbeidsgiver(
-            ObjectFactory().createSykepengesoeknadArbeidsgiver(sykepengesoknad2XMLArbeidsgiver(sykepengesoknad))
+            ObjectFactory().createSykepengesoeknadArbeidsgiver(sykepengesoknad2XMLArbeidsgiver(sykepengesoknad, fnr, juridiskOrgnummerArbeidsgiver))
     ) { event ->
         validationeventer.add(event)
         true
     }.toByteArray()
 }
 
-private val sykepengesoknad2XMLArbeidsgiver = { sykepengesoknad: Sykepengesoknad ->
+private val sykepengesoknad2XMLArbeidsgiver = { sykepengesoknad: Sykepengesoknad, fnr: String, juridiskOrgnummerArbeidsgiver: String? ->
     XMLSykepengesoeknadArbeidsgiver()
-            .withJuridiskOrganisasjonsnummer(sykepengesoknad.juridiskOrgnummerArbeidsgiver)
+            .withJuridiskOrganisasjonsnummer(juridiskOrgnummerArbeidsgiver)
             .withVirksomhetsnummer(sykepengesoknad.arbeidsgiver.orgnummer)
-            .withSykepengesoeknad(sykepengesoknad2XML(sykepengesoknad))
+            .withSykepengesoeknad(sykepengesoknad2XML(sykepengesoknad, fnr))
 }
 
-private val sykepengesoknad2XML = { sykepengesoknad: Sykepengesoknad ->
+private val sykepengesoknad2XML = { sykepengesoknad: Sykepengesoknad, fnr: String ->
     XMLSykepengesoeknad()
             .withSykepengesoeknadId(sykepengesoknad.id)
             .withSykmeldingId(sykepengesoknad.sykmeldingId)
             .withKorrigerer(sykepengesoknad.korrigerer)
             .withPeriode(XMLPeriode().withFom(sykepengesoknad.fom).withTom(sykepengesoknad.tom))
-            .withSykmeldtesFnr(sykepengesoknad.fnr)
+            .withSykmeldtesFnr(fnr)
             .withArbeidsgiverForskuttererLoenn(sykepengesoknad.arbeidsgiverForskutterer?.name ?: "IKKE_SPURT")
             .withIdentdato(sykepengesoknad.startSykeforlop)
             .withSykmeldingSkrevetDato(sykepengesoknad.sykmeldingSkrevet?.toLocalDate())

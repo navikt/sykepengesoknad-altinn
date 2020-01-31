@@ -53,26 +53,26 @@ class SendTilAltinnServiceTest {
         given(aktorRestConsumer.getFnr(any())).willReturn("fnr")
         given(personConsumer.finnBrukerPersonnavnByFnr(any())).willReturn("Navn Navnesen")
         given(organisasjonConsumer.hentJuridiskOrgnummer(any())).willReturn("Juridisk Orgnummer")
-        given(pdfRestController.getPDF(any())).willReturn("".toByteArray())
-        given(altinnConsumer.sendSykepengesoknadTilArbeidsgiver(any())).willReturn(123)
+        given(pdfRestController.getPDF(any(), any(), any())).willReturn("pdf".toByteArray())
+        given(altinnConsumer.sendSykepengesoknadTilArbeidsgiver(any(), any())).willReturn(123)
         given(sendtSoknadDao.soknadErSendt(ressursId, false)).willReturn(false)
         given(registry.counter(ArgumentMatchers.anyString(), ArgumentMatchers.any(Tags::class.java))).willReturn(counter)
     }
 
     @Test
     fun senderTilAltinnOgLoggerJuridisk() {
-        sendTilAltinnService.sendSykepengesoknadTilAltinn(mockSykepengesoknad)
+        sendTilAltinnService.sendSykepengesoknadTilAltinn(mockSykepengesoknad.first)
 
-        verify(juridiskLoggConsumer).lagreIJuridiskLogg(any(), anyInt())
+        verify(juridiskLoggConsumer).lagreIJuridiskLogg(any(), anyInt(), any())
         verify(sendtSoknadDao).soknadErSendt(ressursId, false)
         verify(sendtSoknadDao).lagreSendtSoknad(any())
     }
 
     @Test
     fun feilIJuridiskStopperIkkeInnsending() {
-        given(juridiskLoggConsumer.lagreIJuridiskLogg(any(), any())).willThrow(JuridiskLoggException())
+        given(juridiskLoggConsumer.lagreIJuridiskLogg(any(), any(), any())).willThrow(JuridiskLoggException())
 
-        sendTilAltinnService.sendSykepengesoknadTilAltinn(mockSykepengesoknad)
+        sendTilAltinnService.sendSykepengesoknadTilAltinn(mockSykepengesoknad.first)
 
         verify(sendtSoknadDao).soknadErSendt(ressursId, false)
         verify(sendtSoknadDao).lagreSendtSoknad(any())
@@ -81,10 +81,10 @@ class SendTilAltinnServiceTest {
     @Test
     fun senderIkkeTilAltinnHvisSoknadAlleredeErSendt() {
         given(sendtSoknadDao.soknadErSendt(ressursId, false)).willReturn(true)
-        sendTilAltinnService.sendSykepengesoknadTilAltinn(mockSykepengesoknad)
+        sendTilAltinnService.sendSykepengesoknadTilAltinn(mockSykepengesoknad.first)
 
         verify(sendtSoknadDao).soknadErSendt(ressursId, false)
-        verify(altinnConsumer, Mockito.never()).sendSykepengesoknadTilArbeidsgiver(any())
+        verify(altinnConsumer, Mockito.never()).sendSykepengesoknadTilArbeidsgiver(any(), any())
         verify(sendtSoknadDao, Mockito.never()).lagreSendtSoknad(any())
     }
 }

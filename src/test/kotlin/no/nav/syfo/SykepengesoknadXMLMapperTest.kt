@@ -12,7 +12,7 @@ class SykepengesoknadXMLMapperTest {
     @Test
     fun mapperSykepengesoknadTilXML() {
         val validationEventer: MutableList<ValidationEvent> = mutableListOf()
-        sykepengesoknad2XMLByteArray(mockSykepengesoknad, validationEventer)
+        sykepengesoknad2XMLByteArray(mockSykepengesoknad.first, validationEventer, "fnr", "orgnr")
 
         assertThat(validationEventer).isEmpty()
     }
@@ -20,7 +20,7 @@ class SykepengesoknadXMLMapperTest {
     @Test
     fun mapperBehandlingsdagerTilXML() {
         val validationEventer: MutableList<ValidationEvent> = mutableListOf()
-        sykepengesoknad2XMLByteArray(mockSykepengesoknadBehandlingsdager, validationEventer)
+        sykepengesoknad2XMLByteArray(mockSykepengesoknadBehandlingsdager, validationEventer, "fnr", "orgnr")
 
         assertThat(validationEventer).isEmpty()
     }
