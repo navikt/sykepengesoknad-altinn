@@ -34,7 +34,11 @@ class SendTilAltinnService(
     fun sendSykepengesoknadTilAltinn(sykepengesoknad: Sykepengesoknad) {
         val erEttersending = sykepengesoknad.ettersending
         if (sendtSoknadDao.soknadErSendt(sykepengesoknad.id, erEttersending)) {
-            log.warn("Forsøkte å sende søknad om sykepenger med id {} til Altinn som allerede er sendt", sykepengesoknad.id)
+            log.warn("Forsøkte å sende søknad om sykepenger med id ${sykepengesoknad.id} til Altinn som allerede er sendt")
+            return
+        }
+        else if (ettersendtTilNAV(sykepengesoknad)) {
+            log.info("Behandler ikke ettersending til NAV for ${sykepengesoknad.id}")
             return
         }
         val fnr = aktorRestConsumer.getFnr(sykepengesoknad.aktorId)
@@ -69,8 +73,12 @@ class SendTilAltinnService(
 
         try {
             juridiskLoggConsumer.lagreIJuridiskLogg(sykepengesoknad, receiptId, ekstraData)
+            log.info("Søknad ${sykepengesoknad.id} er sendt til Altinn")
         } catch (e: JuridiskLoggException) {
             log.warn("Ved innsending av sykepengesøknad: ${sykepengesoknad.id} feilet juridisk logging")
         }
     }
+
+    private fun ettersendtTilNAV(sykepengesoknad: Sykepengesoknad) = sykepengesoknad.sendtNav != null
+            && sykepengesoknad.sendtArbeidsgiver?.isBefore(sykepengesoknad.sendtNav) ?: false
 }

@@ -41,7 +41,6 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
                     }
 
             sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
-            log.info("Søknad ${sykepengesoknad.id} er sendt til Altinn")
             acknowledgment.acknowledge()
         } catch (e: Exception) {
             val sykepengesoknad: Sykepengesoknad = cr.value()

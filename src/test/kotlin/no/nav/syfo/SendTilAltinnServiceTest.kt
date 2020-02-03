@@ -20,6 +20,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
+import java.time.LocalDateTime
 
 @RunWith(MockitoJUnitRunner::class)
 class SendTilAltinnServiceTest {
@@ -86,5 +87,37 @@ class SendTilAltinnServiceTest {
         verify(sendtSoknadDao).soknadErSendt(ressursId, false)
         verify(altinnConsumer, Mockito.never()).sendSykepengesoknadTilArbeidsgiver(any(), any())
         verify(sendtSoknadDao, Mockito.never()).lagreSendtSoknad(any())
+    }
+
+    @Test
+    fun ettersendingTilNavBehandlesIkke() {
+        val soknad = mockSykepengesoknad.first.copy(
+                sendtArbeidsgiver = LocalDateTime.now().minusDays(1),
+                sendtNav = LocalDateTime.now(),
+                ettersending = true)
+        sendTilAltinnService.sendSykepengesoknadTilAltinn(soknad)
+
+        verify(altinnConsumer, Mockito.never()).sendSykepengesoknadTilArbeidsgiver(any(), any())
+    }
+
+    @Test
+    fun ettersendingTilArbeidsgiver_OK() {
+        val innsending1 = LocalDateTime.now().minusDays(1)
+        val soknad1 = mockSykepengesoknad.first.copy(
+                sendtArbeidsgiver = innsending1,
+                sendtNav = innsending1,
+                ettersending = false)
+        sendTilAltinnService.sendSykepengesoknadTilAltinn(soknad1)
+        verify(altinnConsumer, Mockito.times(1)).sendSykepengesoknadTilArbeidsgiver(any(), any())
+        verify(sendtSoknadDao, Mockito.times(1)).lagreSendtSoknad(any())
+
+        val innsending2 = LocalDateTime.now()
+        val soknad2 = mockSykepengesoknad.first.copy(
+                sendtArbeidsgiver = innsending2,
+                sendtNav = innsending1,
+                ettersending = true)
+        sendTilAltinnService.sendSykepengesoknadTilAltinn(soknad2)
+        verify(altinnConsumer, Mockito.times(2)).sendSykepengesoknadTilArbeidsgiver(any(), any())
+        verify(sendtSoknadDao, Mockito.times(1)).lagreEttersendtSoknad(any(), any())
     }
 }

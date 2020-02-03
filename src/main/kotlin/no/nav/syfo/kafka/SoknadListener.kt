@@ -32,7 +32,6 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
                     && sykepengesoknad.sendtArbeidsgiver != null) {
                 try {
                     sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
-                    log.info("Søknad ${sykepengesoknad.id} er sendt til Altinn")
                 } catch (e: Exception) {
                     log.error("Feiler ved sending av søknad ${sykepengesoknad.id}, legger til rebehandling", e)
                     rebehandleSykepengesoknadProducer.send(sykepengesoknad, now().plusMinutes(1))
