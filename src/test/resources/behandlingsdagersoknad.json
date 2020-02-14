@@ -35,7 +35,7 @@
         "undertekst": null,
         "min": null,
         "max": null,
-        "svartype": "IKKE_RELEVANT",
+        "svartype": "INFO_BEHANDLINGSDAGER",
         "kriterieForVisningAvUndersporsmal": null,
         "svar": [],
         "undersporsmal": [
@@ -44,118 +44,32 @@
             "tag": "ENKELTSTAENDE_BEHANDLINGSDAGER_UKE_0",
             "sporsmalstekst": "2020-01-17",
             "undertekst": null,
-            "min": null,
-            "max": null,
+            "min": "2020-01-17",
+            "max": "2020-01-17",
             "svartype": "RADIO_GRUPPE_UKEKALENDER",
             "kriterieForVisningAvUndersporsmal": null,
-            "svar": [],
-            "undersporsmal": [
+            "svar": [
               {
-                "id": "647265",
-                "tag": "ENKELTSTAENDE_BEHANDLINGSDAGER_DAG_NAR_0_0",
-                "sporsmalstekst": "2020-01-17",
-                "undertekst": null,
-                "min": null,
-                "max": null,
-                "svartype": "RADIO",
-                "kriterieForVisningAvUndersporsmal": null,
-                "svar": [
-                  {
-                    "verdi": "CHECKED"
-                  }
-                ],
-                "undersporsmal": []
-              },
-              {
-                "id": "647266",
-                "tag": "ENKELTSTAENDE_BEHANDLINGSDAGER_DAG_NAR_0_3",
-                "sporsmalstekst": "Ikke til behandling",
-                "undertekst": null,
-                "min": null,
-                "max": null,
-                "svartype": "RADIO",
-                "kriterieForVisningAvUndersporsmal": null,
-                "svar": [],
-                "undersporsmal": []
+                "verdi": "2020-01-17"
               }
-            ]
+            ],
+            "undersporsmal": []
           },
           {
             "id": "647267",
             "tag": "ENKELTSTAENDE_BEHANDLINGSDAGER_UKE_1",
             "sporsmalstekst": "2020-01-20 - 2020-01-23",
             "undertekst": null,
-            "min": null,
-            "max": null,
+            "min": "2020-01-20",
+            "max": "2020-01-23",
             "svartype": "RADIO_GRUPPE_UKEKALENDER",
             "kriterieForVisningAvUndersporsmal": null,
-            "svar": [],
-            "undersporsmal": [
+            "svar": [
               {
-                "id": "647268",
-                "tag": "ENKELTSTAENDE_BEHANDLINGSDAGER_DAG_NAR_1_0",
-                "sporsmalstekst": "2020-01-20",
-                "undertekst": null,
-                "min": null,
-                "max": null,
-                "svartype": "RADIO",
-                "kriterieForVisningAvUndersporsmal": null,
-                "svar": [],
-                "undersporsmal": []
-              },
-              {
-                "id": "647269",
-                "tag": "ENKELTSTAENDE_BEHANDLINGSDAGER_DAG_NAR_1_1",
-                "sporsmalstekst": "2020-01-21",
-                "undertekst": null,
-                "min": null,
-                "max": null,
-                "svartype": "RADIO",
-                "kriterieForVisningAvUndersporsmal": null,
-                "svar": [],
-                "undersporsmal": []
-              },
-              {
-                "id": "647270",
-                "tag": "ENKELTSTAENDE_BEHANDLINGSDAGER_DAG_NAR_1_2",
-                "sporsmalstekst": "2020-01-22",
-                "undertekst": null,
-                "min": null,
-                "max": null,
-                "svartype": "RADIO",
-                "kriterieForVisningAvUndersporsmal": null,
-                "svar": [],
-                "undersporsmal": []
-              },
-              {
-                "id": "647271",
-                "tag": "ENKELTSTAENDE_BEHANDLINGSDAGER_DAG_NAR_1_3",
-                "sporsmalstekst": "2020-01-23",
-                "undertekst": null,
-                "min": null,
-                "max": null,
-                "svartype": "RADIO",
-                "kriterieForVisningAvUndersporsmal": null,
-                "svar": [
-                  {
-                    "verdi": "CHECKED"
-                  }
-                ],
-                "undersporsmal": []
-              },
-              {
-                "id": 647272,
-                "tag": "ENKELTSTAENDE_BEHANDLINGSDAGER_DAG_NAR_1_4",
-                "sporsmalstekst": "Ikke til behandling",
-                "undertekst": null,
-                "min": null,
-                "max": null,
-                "svartype": "RADIO",
-                "kriterieForVisningAvUndersporsmal": null,
-                "svar": [],
-                "undersporsmal": []
+                "verdi": "2020-01-23"
               }
-            ]
+            ],
+            "undersporsmal": []
           },
           {
             "id": "647273",
