@@ -1,9 +1,9 @@
 package no.nav.syfo.consumer.rest.pdf
 
-import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.soknad.Soknadsperiode
 import no.nav.syfo.domain.soknad.Soknadstype
 import no.nav.syfo.domain.soknad.Sykepengesoknad
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -15,16 +15,18 @@ import java.util.*
 import javax.inject.Inject
 
 @Controller
-class PDFRestController @Inject
-constructor(private val restTemplate: RestTemplate) {
+class PDFRestController
+@Inject constructor(private val restTemplate: RestTemplate,
+                    @Value("\${pdfgen.url}") private val pdfgenUrl: String
+) {
 
     fun getPDF(sykepengesoknad: Sykepengesoknad, fnr: String, navn: String): ByteArray {
 
         val pdfSoknad = PDFSoknad(sykepengesoknad, fnr, navn)
 
         val url = when (sykepengesoknad.type) {
-            Soknadstype.ARBEIDSTAKERE -> "http://syfopdfgen/api/v1/genpdf/syfosoknader/${PDFTemplate.ARBEIDSTAKERE}"
-            Soknadstype.BEHANDLINGSDAGER -> "http://syfopdfgen/api/v1/genpdf/syfosoknader/${PDFTemplate.BEHANDLINGSDAGER}"
+            Soknadstype.ARBEIDSTAKERE -> "$pdfgenUrl/api/v1/genpdf/syfosoknader/${PDFTemplate.ARBEIDSTAKERE}"
+            Soknadstype.BEHANDLINGSDAGER -> "$pdfgenUrl/api/v1/genpdf/syfosoknader/${PDFTemplate.BEHANDLINGSDAGER}"
             else -> throw RuntimeException("Har ikke implementert PDF-template for søknad av typen: ${sykepengesoknad.type}")
         }
 

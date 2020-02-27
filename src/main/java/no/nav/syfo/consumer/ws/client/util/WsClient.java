@@ -16,7 +16,12 @@ import java.util.Objects;
 public class WsClient<T> {
 
     @SuppressWarnings("unchecked")
-    public T createPort(String serviceUrl, Class<?> portType, List<Handler> handlers, boolean inkluderWSAddressing, PhaseInterceptor<? extends Message>... interceptors) {
+    public T createPort(String serviceUrl,
+                        Class<?> portType,
+                        List<Handler> handlers,
+                        boolean inkluderWSAddressing,
+                        boolean wsStsEnabled,
+                        PhaseInterceptor<? extends Message>... interceptors) {
         JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
         jaxWsProxyFactoryBean.setServiceClass(portType);
         jaxWsProxyFactoryBean.setAddress(Objects.requireNonNull(serviceUrl));
@@ -24,10 +29,12 @@ public class WsClient<T> {
             jaxWsProxyFactoryBean.getFeatures().add(new WSAddressingFeature());
         }
         T port = (T) jaxWsProxyFactoryBean.create();
-        ((BindingProvider) port).getBinding().setHandlerChain(handlers);
-        Client client = ClientProxy.getClient(port);
-        Arrays.stream(interceptors).forEach(client.getOutInterceptors()::add);
-        STSClientConfig.configureRequestSamlToken(port);
+        if (wsStsEnabled) {
+            ((BindingProvider) port).getBinding().setHandlerChain(handlers);
+            Client client = ClientProxy.getClient(port);
+            Arrays.stream(interceptors).forEach(client.getOutInterceptors()::add);
+            STSClientConfig.configureRequestSamlToken(port);
+        }
         return port;
     }
 

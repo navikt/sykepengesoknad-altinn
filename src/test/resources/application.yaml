@@ -17,6 +17,8 @@ toggle.config:
     byOrgnummer:
       - orgnummer
 
+pdfgen.url: "http://pdf"
+
 altinnUser.username: "username"
 altinnUser.password: "password"
 ekstern.altinn.behandlealtinnmelding.v1.endpointurl: "ekstern.altinn.behandlealtinnmelding.v1.endpointurl"

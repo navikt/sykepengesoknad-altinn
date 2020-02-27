@@ -47,6 +47,8 @@ spec:
     - "https://syfoaltinn.nais.adeo.no"
   webproxy: false
   env:
+    - name: PDFGEN_URL
+      value: http://syfopdfgen
     - name: UNLEASH_API_URL
       value: https://unleash.nais.adeo.no/api/
     - name: SECURITYTOKENSERVICE_URL
