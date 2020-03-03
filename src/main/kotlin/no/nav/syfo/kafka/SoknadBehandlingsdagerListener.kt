@@ -35,6 +35,8 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
                     log.error("Feiler ved sending av behandlingsdager søknad ${sykepengesoknad.id}, legger til rebehandling", e)
                     rebehandleSykepengesoknadProducer.send(sykepengesoknad, now().plusMinutes(1))
                 }
+            } else {
+                log.info("Ignorerer søknad ${sykepengesoknad.id} med status ${sykepengesoknad.status} og type ${sykepengesoknad.type}")
             }
 
             acknowledgment.acknowledge()
