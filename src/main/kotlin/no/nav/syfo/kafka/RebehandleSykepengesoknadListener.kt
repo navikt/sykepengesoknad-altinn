@@ -44,7 +44,7 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
             acknowledgment.acknowledge()
         } catch (e: Exception) {
             val sykepengesoknad: Sykepengesoknad = cr.value()
-            if (sykepengesoknad.sykmeldingId == "a66d14cc-5c3a-41be-ab1f-657bc81f4874") {
+            if (sykepengesoknad.sykmeldingId == "276c64c9-4356-4c38-bf49-eda4748cf961") {
                 log.info("Ignorerer feilsituasjon for sykmelding id ${sykepengesoknad.sykmeldingId}")
             } else {
                 rebehandleSykepengesoknadProducer.send(sykepengesoknad, now().plusMinutes(1))
