@@ -44,8 +44,12 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
             acknowledgment.acknowledge()
         } catch (e: Exception) {
             val sykepengesoknad: Sykepengesoknad = cr.value()
-            rebehandleSykepengesoknadProducer.send(sykepengesoknad, now().plusMinutes(1))
-            log.error("Uventet feil ved rebehandling av søknad ${sykepengesoknad.id}, legger søknaden tilbake på kø", e)
+            if (sykepengesoknad.sykmeldingId == "a66d14cc-5c3a-41be-ab1f-657bc81f4874") {
+                log.info("Ignorerer feilsituasjon for sykmelding id ${sykepengesoknad.sykmeldingId}")
+            } else {
+                rebehandleSykepengesoknadProducer.send(sykepengesoknad, now().plusMinutes(1))
+                log.error("Uventet feil ved rebehandling av søknad ${sykepengesoknad.id}, legger søknaden tilbake på kø", e)
+            }
             acknowledgment.acknowledge()
         } finally {
             MDC.remove(NAV_CALLID)
