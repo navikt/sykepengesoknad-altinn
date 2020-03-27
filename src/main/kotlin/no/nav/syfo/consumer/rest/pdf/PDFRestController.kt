@@ -62,6 +62,7 @@ class PDFRestController
                         else -> 0
                     }
                 })
+        val egenmeldtSykmelding = null
     }
 
     private class PDFPeriode(soknadsperiode: Soknadsperiode) {

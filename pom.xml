@@ -80,7 +80,7 @@
         <bom.version>2018.10.23.14.04</bom.version>
         <person.version>3.2.0</person.version>
         <aktoer.version>1.0</aktoer.version>
-        <syfokafka.version>2020.02.04-10.01-60fc5c9f</syfokafka.version>
+        <syfokafka.version>2020.03.16-14.54-cc70c527</syfokafka.version>
         <unleash.version>3.1.0</unleash.version>
         <ojdbc8.version>19.3.0.0</ojdbc8.version>
         <h2.version>1.4.196</h2.version>
