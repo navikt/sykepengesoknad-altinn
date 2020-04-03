@@ -25,6 +25,7 @@ fun konverter(sykepengesoknadDTO: SykepengesoknadDTO): Sykepengesoknad {
             opprettet = sykepengesoknadDTO.opprettet,
             sendtNav = sykepengesoknadDTO.sendtNav,
             sendtArbeidsgiver = sykepengesoknadDTO.sendtArbeidsgiver,
+            behandlingsdager = sykepengesoknadDTO.behandlingsdager ?: emptyList(),
             egenmeldinger = sykepengesoknadDTO.egenmeldinger
                     ?.map { konverter(it) }
                     .orEmpty(),
