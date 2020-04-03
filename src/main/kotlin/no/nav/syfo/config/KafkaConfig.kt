@@ -100,11 +100,11 @@ class KafkaConfig(private val properties: KafkaProperties) {
                 properties.buildConsumerProperties(),
                 StringDeserializer(),
                 LegacyMultiFunctionDeserializer<Soknad>(
-                        mapOf(
+                        deserializeMap = mapOf(
                                 "SYKEPENGESOKNAD" to { _, bytes -> bytes?.let { objectMapper.readValue(it, SykepengesoknadDTO::class.java) } as Soknad },
                                 "SOKNAD" to { _, bytes -> bytes?.let { objectMapper.readValue(it, SoknadDTO::class.java) } as Soknad }
-                        )
-                )
+                        ),
+                        deserializeDefault = { bytes -> bytes?.let { objectMapper.readValue(it, SykepengesoknadDTO::class.java) }!! })
         )
     }
 
