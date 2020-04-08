@@ -2,13 +2,11 @@ package no.nav.syfo.kafka
 
 import no.nav.syfo.SendTilAltinnService
 import no.nav.syfo.kafka.felles.ArbeidssituasjonDTO.ARBEIDSTAKER
-import no.nav.syfo.kafka.felles.SoknadsstatusDTO
 import no.nav.syfo.kafka.felles.SoknadsstatusDTO.SENDT
 import no.nav.syfo.kafka.felles.SoknadstypeDTO.BEHANDLINGSDAGER
 import no.nav.syfo.kafka.felles.SoknadstypeDTO.ARBEIDSTAKERE
+import no.nav.syfo.kafka.felles.SykepengesoknadDTO
 
-import no.nav.syfo.kafka.interfaces.Soknad
-import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
 import no.nav.syfo.log
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.MDC
@@ -25,11 +23,11 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
     val log = log()
 
     @KafkaListener(topics = ["syfo-soknad-v2", "syfo-soknad-v3"], id = "soknadSendt", idIsGroup = false, containerFactory = "kafkaListenerContainerFactory")
-    fun listen(cr: ConsumerRecord<String, Soknad>, acknowledgment: Acknowledgment) {
+    fun listen(cr: ConsumerRecord<String, SykepengesoknadDTO>, acknowledgment: Acknowledgment) {
         try {
             MDC.put(NAV_CALLID, getSafeNavCallIdHeaderAsString(cr.headers()))
 
-            val sykepengesoknadDTO = cr.value() as SykepengesoknadDTO
+            val sykepengesoknadDTO = cr.value()
 
             if ((sykepengesoknadDTO.type == ARBEIDSTAKERE
                             || (sykepengesoknadDTO.type == BEHANDLINGSDAGER && sykepengesoknadDTO.arbeidssituasjon == ARBEIDSTAKER))

@@ -2,7 +2,7 @@ package no.nav.syfo.kafka
 
 import no.nav.syfo.domain.soknad.*
 import no.nav.syfo.kafka.felles.*
-import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
+import no.nav.syfo.kafka.felles.SykepengesoknadDTO
 
 fun konverter(sykepengesoknadDTO: SykepengesoknadDTO): Sykepengesoknad {
     return Sykepengesoknad(

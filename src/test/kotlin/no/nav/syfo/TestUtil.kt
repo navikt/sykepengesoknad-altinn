@@ -6,9 +6,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.soknad.Sykepengesoknad
+import no.nav.syfo.kafka.felles.SykepengesoknadDTO
 import no.nav.syfo.kafka.konverter
-import no.nav.syfo.kafka.sykepengesoknad.dto.SykepengesoknadDTO
-import no.nav.syfo.kafka.sykepengesoknadbehandlingsdager.dto.SykepengesoknadBehandlingsdagerDTO
 import org.mockito.Mockito
 
 private val objectMapper = ObjectMapper()
@@ -34,8 +33,8 @@ val mockSykepengesoknad: Pair<Sykepengesoknad, AltinnInnsendelseEkstraData>
         return Pair(sykepengesoknad, ekstra)
     }
 
-val mockSykepengesoknadBehandlingsdagerDTO: SykepengesoknadBehandlingsdagerDTO =
-        objectMapper.readValue(LocalApplication::class.java.getResource("/behandlingsdagersoknad.json"), SykepengesoknadBehandlingsdagerDTO::class.java)
+val mockSykepengesoknadBehandlingsdagerDTO: SykepengesoknadDTO =
+        objectMapper.readValue(LocalApplication::class.java.getResource("/behandlingsdagersoknad.json"), SykepengesoknadDTO::class.java)
 
 val mockSykepengesoknadBehandlingsdager: Sykepengesoknad
     get() {
