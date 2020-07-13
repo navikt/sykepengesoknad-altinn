@@ -45,6 +45,7 @@ class PDFRestController
     }
 
     private class PDFSoknad(sykepengesoknad: Sykepengesoknad, val fnr: String, val navn: String) {
+        val tilNav = false
         val soknadsId = sykepengesoknad.id
         val soknadstype = sykepengesoknad.type
         val innsendtDato = sykepengesoknad.sendtNav?.toLocalDate()
