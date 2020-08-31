@@ -55,6 +55,7 @@ class PDFRestController
         val soknadPerioder = sykepengesoknad.soknadsperioder.map { PDFPeriode(it) }
         val avsendertype = sykepengesoknad.avsendertype
         val sporsmal = sykepengesoknad.sporsmal
+                .filter{ it.tag !in listOf("ANDRE_INNTEKTSKILDER", "ARBEID_UTENFOR_NORGE") }
                 .sortedWith(Comparator.comparingInt {
                     when (it.tag) {
                         "BEKREFT_OPPLYSNINGER", "ANSVARSERKLARING" -> 1
