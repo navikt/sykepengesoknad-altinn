@@ -1,6 +1,5 @@
 package no.nav.syfo.domain.pdf
 
-import no.nav.syfo.domain.pdf.PDFSoknad
 import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.domain.soknad.Sporsmal
 import no.nav.syfo.domain.soknad.Soknadstype

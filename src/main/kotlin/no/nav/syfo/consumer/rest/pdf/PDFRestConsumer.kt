@@ -1,8 +1,8 @@
 package no.nav.syfo.consumer.rest.pdf
 
-import no.nav.syfo.domain.soknad.Soknadsperiode
 import no.nav.syfo.domain.soknad.Soknadstype
 import no.nav.syfo.domain.soknad.Sykepengesoknad
+import no.nav.syfo.domain.pdf.PDFSoknad
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus.OK
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.web.client.RestTemplate
-import java.util.*
 import javax.inject.Inject
 
 @Controller
