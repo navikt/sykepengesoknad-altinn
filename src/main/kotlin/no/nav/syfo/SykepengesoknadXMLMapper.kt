@@ -37,7 +37,7 @@ private val sykepengesoknad2XML = { sykepengesoknad: Sykepengesoknad, fnr: Strin
             .withFravaer(sykepengesoknad2XMLFravar(sykepengesoknad))
             .withSykmeldingsperiodeListe(soknadsperioder2XMLSykmeldingsperiode(sykepengesoknad.soknadsperioder))
             .withUtdanning(fravar2XMLUtdanning(sykepengesoknad.fravar))
-            .withAnnenInntektskildeListe(listOrNull(andreInntektskilder2XMLAnnenInntektskildeListe(sykepengesoknad.andreInntektskilder)))
+            .withAnnenInntektskildeListe(emptyList())
             .withSendtTilArbeidsgiverDato(sykepengesoknad.sendtArbeidsgiver?.toLocalDate())
             .withSendtTilNAVDato(sykepengesoknad.sendtNav?.toLocalDate())
 }

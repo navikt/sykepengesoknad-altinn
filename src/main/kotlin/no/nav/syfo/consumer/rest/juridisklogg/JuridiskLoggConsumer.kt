@@ -31,7 +31,7 @@ class JuridiskLoggConsumer(private val basicAuthRestTemplate: RestTemplate,
         headers.set("Nav-Consumer-Id", username)
 
         val avsender = "${sykepengesoknad.aktorId} | ${ekstraData.fnr}"
-        val innholdMeta = "hash: V5;altinnKvittering: $altinnKvitteringsId"
+        val innholdMeta = "hash: V6;altinnKvittering: $altinnKvitteringsId"
         val entry = sha512AsBase64String(innholdMeta, ekstraData.xml)
 
         val logg = Logg(

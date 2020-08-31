@@ -89,8 +89,9 @@ class JuridiskLoggConsumerTest {
                 argumentCaptor.capture(),
                 BDDMockito.eq(JuridiskRespose::class.java))
 
-        assertThat((argumentCaptor.value.body as Logg).meldingsInnhold).isEqualTo("" +
-                "aGFzaDogVjU7YWx0aW5uS3ZpdHRlcmluZzogMTIzOnpBD++/ve+/vUASEu+/ve+/vWRS77+9TShB77+977+977+977+977+" +
-                "9XjXRr++/ve+/vUTvv70u77+9NAtoa++/vUnvv71j77+977+9Vu+/vWg6bO+/vQgx77+9M++/ve+/ve+/vSHvv73LoAF2Yn3vv719")
+        assertThat((argumentCaptor.value.body as Logg).meldingsInnhold).isEqualTo(
+                "aGFzaDogVjY7YWx0aW5uS3ZpdHRlcmluZzogMTIzOl9WM3nvv717AigyB++/vQ3vv73vv71AS0zvv73vv71c77+9EG0H77+977" +
+                "+9Lu+/ve+/vSjvv70DNO+/ve+/vV3vv71E77+9UBLvv71nM++/vSDvv70k77+9PO+/ve+/vXPvv73Mvu+/ve+/vW7vv71dfQ=="
+        )
     }
 }
