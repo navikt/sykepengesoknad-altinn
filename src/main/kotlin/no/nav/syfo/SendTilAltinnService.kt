@@ -75,7 +75,7 @@ class SendTilAltinnService(
             juridiskLoggConsumer.lagreIJuridiskLogg(sykepengesoknad, receiptId, ekstraData)
             log.info("Søknad ${sykepengesoknad.id} er sendt til Altinn")
         } catch (e: JuridiskLoggException) {
-            log.warn("Ved innsending av sykepengesøknad: ${sykepengesoknad.id} feilet juridisk logging")
+            log.warn("Ved innsending av sykepengesøknad: ${sykepengesoknad.id} feilet juridisk logging", e)
         }
     }
 

@@ -15,6 +15,8 @@ import java.nio.charset.StandardCharsets.UTF_8
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.*
+import org.springframework.retry.annotation.Backoff
+import org.springframework.retry.annotation.Retryable
 
 @Component
 class JuridiskLoggConsumer(private val basicAuthRestTemplate: RestTemplate,
@@ -23,6 +25,7 @@ class JuridiskLoggConsumer(private val basicAuthRestTemplate: RestTemplate,
 
     val log = log()
 
+    @Retryable(backoff = Backoff(delay = 5000))
     fun lagreIJuridiskLogg(sykepengesoknad: Sykepengesoknad, altinnKvitteringsId: Number, ekstraData: AltinnInnsendelseEkstraData): Number {
 
         val headers = HttpHeaders()

@@ -9,12 +9,15 @@ import no.nav.tjeneste.virksomhet.person.v3.informasjon.Personnavn
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonnavnBolkRequest
 import org.springframework.stereotype.Component
 import javax.inject.Inject
+import org.springframework.retry.annotation.Backoff
+import org.springframework.retry.annotation.Retryable
 
 @Component
 class PersonConsumer @Inject
 constructor(private val personV3: PersonV3) {
     val log = log()
 
+    @Retryable(backoff = Backoff(delay = 5000))
     fun finnBrukerPersonnavnByFnr(fnr: String): String {
         return (personV3.hentPersonnavnBolk(HentPersonnavnBolkRequest()
                 .withAktoerListe(PersonIdent().withIdent(NorskIdent().withIdent(fnr))))
