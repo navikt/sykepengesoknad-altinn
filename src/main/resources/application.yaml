@@ -27,7 +27,7 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       group-id: ${nais.app.name}-${fasit.environment.name}
       max-poll-records: 1
-      auto-offset-reset: latest # Som ny konsument / eller om vi mister offsettet vårt skal vi begynne på den siste meldingen
+      auto-offset-reset: none
       enable-auto-commit: false # Vi commiter selv offset ved lesing av meldinger
   datasource:
     hikari:
