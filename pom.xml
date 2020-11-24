@@ -81,7 +81,6 @@
         <person.version>3.2.0</person.version>
         <aktoer.version>1.0</aktoer.version>
         <syfokafka.version>2020.05.26-10.39-3723902c</syfokafka.version>
-        <unleash.version>3.1.0</unleash.version>
         <ojdbc8.version>19.3.0.0</ojdbc8.version>
         <h2.version>1.4.196</h2.version>
     </properties>
@@ -226,11 +225,6 @@
             <version>${syfokafka.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>no.finn.unleash</groupId>
-            <artifactId>unleash-client-java</artifactId>
-            <version>${unleash.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.bitbucket.b_c</groupId>

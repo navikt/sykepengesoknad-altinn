@@ -14,6 +14,12 @@ import javax.sql.DataSource
 
 @Configuration
 class ApplicationConfig {
+
+    @Bean
+    fun isProd(@Value("\${fasit.environment.name:p}") fasitEnvironmentName: String): Boolean {
+        return "p" == fasitEnvironmentName
+    }
+
     @Bean
     fun restTemplate(): RestTemplate {
         val restTemplate = RestTemplate()

@@ -10,10 +10,6 @@ import no.altinn.schemas.services.serviceengine.notification._2009._10.Notificat
 import no.altinn.schemas.services.serviceengine.subscription._2009._10.AttachmentFunctionType
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentExternalBEV2List
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentV2
-import no.finn.unleash.UnleashContext
-import no.nav.syfo.config.unleash.FeatureToggle.ORGNUMMER_WHITELISTET
-import no.nav.syfo.config.unleash.Toggle
-import no.nav.syfo.config.unleash.strategy.UNLEASH_PROPERTY_NAME_ORGNUMMER
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.soknad.Avsendertype.SYSTEM
 import no.nav.syfo.domain.soknad.Soknadstype
@@ -25,7 +21,7 @@ import javax.xml.bind.JAXBElement
 import javax.xml.namespace.QName
 
 @Component
-class SoknadAltinnMapper(private val toggle: Toggle) {
+class SoknadAltinnMapper(private val isProd: Boolean) {
 
     val log = log()
 
@@ -143,11 +139,11 @@ class SoknadAltinnMapper(private val toggle: Toggle) {
     }
 
     fun getOrgnummerForSendingTilAltinn(orgnummer: String) =
-            if (toggle.isProd || toggle.isEnabled(ORGNUMMER_WHITELISTET, UnleashContext.builder()
-                            .addProperty(UNLEASH_PROPERTY_NAME_ORGNUMMER, orgnummer)
-                            .build()))
+            if (isProd) {
                 orgnummer
-            else "910067494" //dette er default orgnummer i test: 'GODVIK OG FLATÅSEN'
+            } else {
+                "910067494" //dette er default orgnummer i test: 'GODVIK OG FLATÅSEN'
+            }
 
     fun periodeSomTekst(sykepengesoknad: Sykepengesoknad): String {
         val dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")

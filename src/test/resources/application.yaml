@@ -9,7 +9,6 @@ fasit.environment.name: local
 
 nais.app.name: syfoaltinn
 
-unleash.api.url: http://unleash-api/api/
 
 toggle.config:
   ORGNUMMER_WHITELISTET:
