@@ -10,6 +10,7 @@ import no.altinn.schemas.services.serviceengine.notification._2009._10.Notificat
 import no.altinn.schemas.services.serviceengine.subscription._2009._10.AttachmentFunctionType
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentExternalBEV2List
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentV2
+import no.nav.syfo.config.EnvironmentToggles
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.soknad.Avsendertype.SYSTEM
 import no.nav.syfo.domain.soknad.Soknadstype
@@ -21,7 +22,7 @@ import javax.xml.bind.JAXBElement
 import javax.xml.namespace.QName
 
 @Component
-class SoknadAltinnMapper(private val isProd: Boolean) {
+class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
 
     val log = log()
 
@@ -139,7 +140,7 @@ class SoknadAltinnMapper(private val isProd: Boolean) {
     }
 
     fun getOrgnummerForSendingTilAltinn(orgnummer: String) =
-            if (isProd) {
+            if (toggle.isProd() || toggle.allowsOrgnummer(orgnummer)) {
                 orgnummer
             } else {
                 "910067494" //dette er default orgnummer i test: 'GODVIK OG FLATÅSEN'
