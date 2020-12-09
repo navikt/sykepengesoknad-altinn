@@ -9,6 +9,8 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus.OK
 import org.springframework.http.MediaType
+import org.springframework.retry.annotation.Backoff
+import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Controller
 import org.springframework.web.client.RestTemplate
 import javax.inject.Inject
@@ -19,6 +21,7 @@ class PDFRestController
                     @Value("\${pdfgen.url}") private val pdfgenUrl: String
 ) {
 
+    @Retryable(backoff = Backoff(delay = 5000))
     fun getPDF(sykepengesoknad: Sykepengesoknad, fnr: String, navn: String): ByteArray {
 
         val pdfSoknad = PDFSoknad(sykepengesoknad, fnr, navn)
