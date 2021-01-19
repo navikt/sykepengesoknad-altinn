@@ -47,7 +47,7 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
             if (sykepengesoknad.sykmeldingId == "190c6599-c823-47f9-b207-3cadeb89a8df") {
                 log.info("Ignorerer feilsituasjon for sykmelding id ${sykepengesoknad.sykmeldingId} og søknad id ${sykepengesoknad.id}")
             } else {
-                rebehandleSykepengesoknadProducer.send(sykepengesoknad, now().plusMinutes(1))
+                rebehandleSykepengesoknadProducer.send(sykepengesoknad, now().plusMinutes(30))
                 log.error("Uventet feil ved rebehandling av søknad ${sykepengesoknad.id}, legger søknaden tilbake på kø", e)
             }
             acknowledgment.acknowledge()
