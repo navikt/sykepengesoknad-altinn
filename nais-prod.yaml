@@ -56,7 +56,7 @@ spec:
     - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
       value: a01apvl00145.adeo.no:8443,a01apvl00146.adeo.no:8443,a01apvl00147.adeo.no:8443,a01apvl00148.adeo.no:8443,a01apvl00149.adeo.no:8443,a01apvl00150.adeo.no:8443
     - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
-      value: https://wasapp.adeo.no/tpsws/ws/Person/v3
+      value: https://app.adeo.no/tpsws-aura/ws/Person/v3
     - name: AKTOERREGISTER_API_V1_URL
       value: https://app.adeo.no/aktoerregister/api/v1
     - name: VIRKSOMHET_ORGANISASJON_V4_ENDPOINTURL
