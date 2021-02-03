@@ -14,7 +14,7 @@ class PersonConfig {
     @Bean
     fun personV3(@Value("\${virksomhet.Person.v3.endpointurl}") serviceUrl: String,
                  @Value("\${ws.sts.enabled:true}") wsStsEnabled: Boolean): PersonV3 {
-        return WsClient<PersonV3>().createPort(serviceUrl, PersonV3::class.java, listOf(LogErrorHandler()), true, wsStsEnabled)
+        return WsClient<PersonV3>().createPort(serviceUrl, PersonV3::class.java, listOf(LogErrorHandler()), false, wsStsEnabled)
     }
 
 }
