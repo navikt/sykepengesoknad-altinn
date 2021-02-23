@@ -48,7 +48,7 @@ spec:
   webproxy: false
   env:
     - name: PDFGEN_URL
-      value: http://syfopdfgen
+      value: https://flex-sykepengesoknad-pdfgen.dev.intern.nav.no
     - name: SECURITYTOKENSERVICE_URL
       value: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
     - name: SECURITY_TOKEN_SERVICE_TOKEN_URL
