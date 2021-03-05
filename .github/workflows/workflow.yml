@@ -7,6 +7,10 @@ jobs:
     name: Bygg, test og push Docker image
     runs-on: ubuntu-latest
     steps:
+      - name: Setup java
+        uses: actions/setup-java@v1
+        with:
+          java-version: '8'
       - name: Checkout code
         uses: actions/checkout@v1
       - name: Generer versjon og image navn
