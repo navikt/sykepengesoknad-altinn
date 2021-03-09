@@ -2,7 +2,7 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
   name: syfoaltinn
-  namespace: default
+  namespace: flex
   labels:
     team: flex
 spec:
@@ -43,8 +43,6 @@ spec:
         mountPath: /secrets/syfoaltinn/config
       - kvPath: kv/prod/fss/syfoaltinn/default
         mountPath: /var/run/secrets/nais.io/vault
-  ingresses:
-    - "https://syfoaltinn.nais.adeo.no"
   webproxy: false
   env:
     - name: PDFGEN_URL
