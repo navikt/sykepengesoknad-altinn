@@ -22,7 +22,7 @@ import org.springframework.kafka.core.ConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaTemplate
-import org.springframework.kafka.listener.AbstractMessageListenerContainer.AckMode.MANUAL_IMMEDIATE
+import org.springframework.kafka.listener.ContainerProperties
 
 
 @Configuration
@@ -52,8 +52,8 @@ class KafkaConfig(private val properties: KafkaProperties) {
     ): ConcurrentKafkaListenerContainerFactory<String, SykepengesoknadDTO> =
             ConcurrentKafkaListenerContainerFactory<String, SykepengesoknadDTO>()
                     .apply {
-                        containerProperties.ackMode = MANUAL_IMMEDIATE
-                        containerProperties.setErrorHandler(kafkaErrorHandler)
+                        containerProperties.ackMode = ContainerProperties.AckMode.MANUAL_IMMEDIATE
+                        setErrorHandler(kafkaErrorHandler)
                         this.consumerFactory = consumerFactory
                     }
 
@@ -76,8 +76,8 @@ class KafkaConfig(private val properties: KafkaProperties) {
     ): ConcurrentKafkaListenerContainerFactory<String, Sykepengesoknad> =
             ConcurrentKafkaListenerContainerFactory<String, Sykepengesoknad>()
                     .apply {
-                        containerProperties.ackMode = MANUAL_IMMEDIATE
-                        containerProperties.setErrorHandler(kafkaErrorHandler)
+                        containerProperties.ackMode = ContainerProperties.AckMode.MANUAL_IMMEDIATE
+                        setErrorHandler(kafkaErrorHandler)
                         this.consumerFactory = consumerFactory
                     }
 

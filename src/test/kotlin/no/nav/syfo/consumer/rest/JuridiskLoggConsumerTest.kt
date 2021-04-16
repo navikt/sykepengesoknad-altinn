@@ -4,18 +4,20 @@ import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggException
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskRespose
 import no.nav.syfo.consumer.rest.juridisklogg.Logg
-import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.mockSykepengesoknad
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentCaptor
 import org.mockito.BDDMockito
 import org.mockito.BDDMockito.*
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.junit.jupiter.MockitoSettings
+import org.mockito.quality.Strictness
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
@@ -23,7 +25,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 
-@RunWith(MockitoJUnitRunner::class)
+@ExtendWith(MockitoExtension::class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class JuridiskLoggConsumerTest {
 
     @Mock
@@ -31,7 +34,7 @@ class JuridiskLoggConsumerTest {
 
     private lateinit var juridiskLoggConsumer: JuridiskLoggConsumer
 
-    @Before
+    @BeforeEach
     fun setup() {
         given(basicAuthRestTemplate.exchange(
                 BDDMockito.anyString(),
@@ -49,28 +52,34 @@ class JuridiskLoggConsumerTest {
         assertThat(ref).isEqualTo(123)
     }
 
-    @Test(expected = JuridiskLoggException::class)
+    @Test
     fun responsForskjelligFra200KasterFeil() {
-        given(basicAuthRestTemplate.exchange(
-                BDDMockito.anyString(),
+        assertThrows(JuridiskLoggException::class.java) {
+            given(basicAuthRestTemplate.exchange(
+                anyString(),
                 any(HttpMethod::class.java),
                 any(HttpEntity::class.java),
-                BDDMockito.eq(JuridiskRespose::class.java)
-        )).willReturn(ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR))
+                eq(JuridiskRespose::class.java)
+            )).willReturn(ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR))
 
-        juridiskLoggConsumer.lagreIJuridiskLogg(mockSykepengesoknad.first, 123, mockSykepengesoknad.second)
+            juridiskLoggConsumer.lagreIJuridiskLogg(mockSykepengesoknad.first, 123, mockSykepengesoknad.second)
+        }
+
     }
 
-    @Test(expected = JuridiskLoggException::class)
+    @Test
     fun clientErrorLoggesOgKastesVidere() {
-        given(basicAuthRestTemplate.exchange(
-                BDDMockito.anyString(),
+        assertThrows(JuridiskLoggException::class.java) {
+            given(basicAuthRestTemplate.exchange(
+                anyString(),
                 any(HttpMethod::class.java),
                 any(HttpEntity::class.java),
-                BDDMockito.eq(JuridiskRespose::class.java)
-        )).willThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST, "", "Payload må være base64-encodet".toByteArray(charset("UTF-8")), null))
+                eq(JuridiskRespose::class.java)
+            )).willThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST, "", "Payload må være base64-encodet".toByteArray(charset("UTF-8")), null))
 
-        juridiskLoggConsumer.lagreIJuridiskLogg(mockSykepengesoknad.first, 123, mockSykepengesoknad.second)
+            juridiskLoggConsumer.lagreIJuridiskLogg(mockSykepengesoknad.first, 123, mockSykepengesoknad.second)
+        }
+
     }
 
     /* Denne testen vil brekke om innholdet i xml-utgaven av søknaden endrer seg. Da må en bumpe versjonen i metadata

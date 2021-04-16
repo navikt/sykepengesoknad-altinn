@@ -3,18 +3,16 @@ package no.nav.syfo.repository
 import no.nav.syfo.LocalApplication
 import no.nav.syfo.domain.SendtSoknad
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.annotation.DirtiesContext
-import org.springframework.test.context.junit4.SpringRunner
 import java.time.LocalDateTime
 import javax.inject.Inject
 
-@RunWith(SpringRunner::class)
+
 @SpringBootTest(classes = [LocalApplication::class])
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @EmbeddedKafka
@@ -26,7 +24,7 @@ class SendtSoknadDaoTest {
     @Inject
     private lateinit var sendtSoknadDao: SendtSoknadDao
 
-    @Before
+    @BeforeEach
     fun cleanup() {
         jdbcTemplate.update("DELETE FROM SENDT_SOKNAD")
     }

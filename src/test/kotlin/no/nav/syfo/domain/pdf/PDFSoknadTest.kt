@@ -6,7 +6,7 @@ import no.nav.syfo.domain.soknad.Soknadstype
 import no.nav.syfo.domain.soknad.Soknadsstatus
 import no.nav.syfo.domain.soknad.Arbeidsgiver
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class PDFSoknadTest {
 

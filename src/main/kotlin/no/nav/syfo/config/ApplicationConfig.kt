@@ -30,7 +30,7 @@ class ApplicationConfig {
     fun basicAuthRestTemplate(@Value("\${srvsyfoaltinn.username}") username: String,
                               @Value("\${srvsyfoaltinn.password}") password: String): RestTemplate {
         return RestTemplateBuilder()
-                .basicAuthorization(username, password)
+                .basicAuthentication(username, password)
                 .build()
     }
 

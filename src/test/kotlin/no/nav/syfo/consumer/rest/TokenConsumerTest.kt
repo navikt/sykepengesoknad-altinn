@@ -4,9 +4,8 @@ import no.nav.syfo.LocalApplication
 import no.nav.syfo.consumer.rest.token.Token
 import no.nav.syfo.consumer.rest.token.TokenConsumer
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
 import org.mockito.Mock
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,10 +16,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.annotation.DirtiesContext
-import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.web.client.RestTemplate
 
-@RunWith(SpringRunner::class)
 @SpringBootTest(classes = [LocalApplication::class])
 @DirtiesContext
 @EmbeddedKafka
@@ -33,7 +30,7 @@ class TokenConsumerTest {
 
     private val token = Token("token", "Bearer", 3600)
 
-    @Before
+    @BeforeEach
     fun setup() {
         tokenConsumer = TokenConsumer(
                 restTemplate,

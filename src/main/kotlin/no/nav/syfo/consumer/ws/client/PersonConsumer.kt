@@ -1,6 +1,6 @@
 package no.nav.syfo.consumer.ws.client
 
-import net.logstash.logback.encoder.org.apache.commons.lang.WordUtils.capitalizeFully
+import org.apache.commons.text.WordUtils.capitalizeFully
 import no.nav.syfo.log
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.NorskIdent
@@ -37,6 +37,6 @@ constructor(private val personV3: PersonV3) {
             personnavn.mellomnavn.isNullOrEmpty() -> personnavn.fornavn + " " + personnavn.etternavn
             else -> personnavn.fornavn + " " + personnavn.mellomnavn + " " + personnavn.etternavn
         }
-        return capitalizeFully(navn, charArrayOf(' ', '-'))
+        return capitalizeFully(navn, ' ', '-')
     }
 }

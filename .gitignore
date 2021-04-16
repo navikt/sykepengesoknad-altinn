@@ -28,3 +28,8 @@ target
 hs_err_pid*
 .DS_Store
 transaction-logs
+
+# Gradle files
+out/
+build/
+.gradle/

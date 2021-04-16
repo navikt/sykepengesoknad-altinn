@@ -2,11 +2,8 @@ package no.nav.syfo.kafka
 
 import no.nav.syfo.mockSykepengesoknadDTO
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
+import org.junit.jupiter.api.Test
 
-@RunWith(MockitoJUnitRunner::class)
 class MapperKtTest {
 
     @Test

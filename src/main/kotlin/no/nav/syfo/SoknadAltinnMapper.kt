@@ -34,7 +34,7 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
         val binaryNamespace = "http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10"
 
         val tittel = opprettTittel(sykepengesoknad, ekstraData)
-        val sykepengesoeknadTekst = opprettInnholdstekst(sykepengesoknad, ekstraData)
+        val sykepengesoeknadTekst = opprettInnholdstekst(sykepengesoknad)
 
         return InsertCorrespondenceV2()
                 .withAllowForwarding(JAXBElement<Boolean>(QName(namespace, "AllowForwarding"), Boolean::class.java, false))
@@ -57,7 +57,7 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
         }
     }
 
-    private fun opprettInnholdstekst(sykepengesoknad: Sykepengesoknad, ekstraData: AltinnInnsendelseEkstraData): String {
+    private fun opprettInnholdstekst(sykepengesoknad: Sykepengesoknad): String {
         try {
             return if (sykepengesoknad.sendtNav != null && sykepengesoknad.sendtArbeidsgiver != null) {
                 SoknadAltinnMapper::class.java.getResource("/sykepengesoknad-sendt-til-AG-og-NAV-tekst.html").readText()

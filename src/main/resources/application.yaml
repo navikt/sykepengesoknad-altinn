@@ -1,4 +1,4 @@
-logging.config: 'classpath:logback-spring.xml'
+logging.config: 'classpath:logback.xml'
 
 management:
   endpoints.web:
