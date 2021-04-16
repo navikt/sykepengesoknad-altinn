@@ -1,6 +1,6 @@
-package no.nav.syfo.kafka
+package no.nav.syfo
 
-import no.nav.syfo.mockSykepengesoknadDTO
+import no.nav.syfo.kafka.konverter
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

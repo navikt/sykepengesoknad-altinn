@@ -1,6 +1,6 @@
 package no.nav.syfo.consumer.rest
 
-import no.nav.syfo.LocalApplication
+import no.nav.syfo.Application
 import no.nav.syfo.consumer.rest.token.Token
 import no.nav.syfo.consumer.rest.token.TokenConsumer
 import org.assertj.core.api.Assertions.assertThat
@@ -18,7 +18,7 @@ import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.web.client.RestTemplate
 
-@SpringBootTest(classes = [LocalApplication::class])
+@SpringBootTest(classes = [Application::class])
 @DirtiesContext
 @EmbeddedKafka
 class TokenConsumerTest {

@@ -16,7 +16,7 @@ private val objectMapper = ObjectMapper()
     .configure(READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE, true)
 
 val mockSykepengesoknadDTO: SykepengesoknadDTO =
-    objectMapper.readValue(LocalApplication::class.java.getResource("/arbeidstakersoknad.json"), SykepengesoknadDTO::class.java)
+    objectMapper.readValue(Application::class.java.getResource("/arbeidstakersoknad.json"), SykepengesoknadDTO::class.java)
 
 val mockSykepengesoknad: Pair<Sykepengesoknad, AltinnInnsendelseEkstraData>
     get() {
@@ -34,7 +34,7 @@ val mockSykepengesoknad: Pair<Sykepengesoknad, AltinnInnsendelseEkstraData>
     }
 
 val mockSykepengesoknadBehandlingsdagerDTO: SykepengesoknadDTO =
-    objectMapper.readValue(LocalApplication::class.java.getResource("/behandlingsdagersoknad.json"), SykepengesoknadDTO::class.java)
+    objectMapper.readValue(Application::class.java.getResource("/behandlingsdagersoknad.json"), SykepengesoknadDTO::class.java)
 
 val mockSykepengesoknadBehandlingsdager: Sykepengesoknad
     get() {

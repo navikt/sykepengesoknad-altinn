@@ -1,6 +1,6 @@
 package no.nav.syfo.consumer.rest
 
-import no.nav.syfo.LocalApplication
+import no.nav.syfo.Application
 import no.nav.syfo.consumer.rest.aktor.Aktor
 import no.nav.syfo.consumer.rest.aktor.AktorResponse
 import no.nav.syfo.consumer.rest.aktor.AktorRestConsumer
@@ -23,7 +23,7 @@ import org.springframework.test.annotation.DirtiesContext
 import org.springframework.web.client.RestTemplate
 import javax.inject.Inject
 
-@SpringBootTest(classes = [LocalApplication::class])
+@SpringBootTest(classes = [Application::class])
 @DirtiesContext
 @EmbeddedKafka
 class AktorRestConsumerTest {
