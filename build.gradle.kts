@@ -43,8 +43,6 @@ val mockitoKotlinVersion = "2.2.0"
 val h2Version = "1.4.200"
 val ojdbc8Version = "19.3.0.0"
 val logstashLogbackEncoderVersion = "6.6"
-val mockitoCoreVersion = "3.7.7"
-val assertjVersion = "3.19.0"
 val tjenestespesifikasjonerVersion = "1.2020.01.20-15.44-063ae9f84815"
 val cxfVersion = "3.2.10"
 
@@ -61,7 +59,6 @@ dependencies {
     implementation("no.nav.syfo.kafka:kafkautils:$syfoKafkaVersion")
     implementation("no.nav.syfo.kafka:legacy-serialisering:$syfoKafkaVersion")
     implementation("no.nav.syfo.kafka:felles:$syfoKafkaVersion")
-    //   implementation("org.apache.httpcomponents:httpclient:4.5.13")
     implementation("org.apache.cxf:cxf-spring-boot-starter-jaxws:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-ws-security:$cxfVersion")
@@ -88,9 +85,9 @@ dependencies {
     implementation("no.nav.tjenestespesifikasjoner:person-v3-tjenestespesifikasjon:$tjenestespesifikasjonerVersion")
     testImplementation("org.springframework.kafka:spring-kafka-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.assertj:assertj-core:$assertjVersion")
+    testImplementation("org.assertj:assertj-core")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion")
-    testImplementation("org.mockito:mockito-core:$mockitoCoreVersion")
+    testImplementation("org.mockito:mockito-core")
 }
 
 tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
