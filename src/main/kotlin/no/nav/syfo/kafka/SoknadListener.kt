@@ -2,11 +2,10 @@ package no.nav.syfo.kafka
 
 import no.nav.syfo.SendTilAltinnService
 import no.nav.syfo.kafka.felles.ArbeidssituasjonDTO.ARBEIDSTAKER
-import no.nav.syfo.kafka.felles.SoknadsstatusDTO.SENDT
-import no.nav.syfo.kafka.felles.SoknadstypeDTO.BEHANDLINGSDAGER
+import no.nav.syfo.kafka.felles.SoknadsstatusDTO
 import no.nav.syfo.kafka.felles.SoknadstypeDTO.ARBEIDSTAKERE
+import no.nav.syfo.kafka.felles.SoknadstypeDTO.BEHANDLINGSDAGER
 import no.nav.syfo.kafka.felles.SykepengesoknadDTO
-
 import no.nav.syfo.log
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.MDC
@@ -18,8 +17,10 @@ import javax.inject.Inject
 
 @Component
 class SoknadListener @Inject
-constructor(private val sendTilAltinnService: SendTilAltinnService,
-            private val rebehandleSykepengesoknadProducer: RebehandleSykepengesoknadProducer) {
+constructor(
+    private val sendTilAltinnService: SendTilAltinnService,
+    private val rebehandleSykepengesoknadProducer: RebehandleSykepengesoknadProducer
+) {
     val log = log()
 
     @KafkaListener(topics = ["syfo-soknad-v2", "syfo-soknad-v3"], id = "soknadSendt", idIsGroup = false, containerFactory = "kafkaListenerContainerFactory")
@@ -29,10 +30,13 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
 
             val sykepengesoknadDTO = cr.value()
 
-            if ((sykepengesoknadDTO.type == ARBEIDSTAKERE
-                            || (sykepengesoknadDTO.type == BEHANDLINGSDAGER && sykepengesoknadDTO.arbeidssituasjon == ARBEIDSTAKER))
-                    && sykepengesoknadDTO.status == SENDT
-                    && sykepengesoknadDTO.sendtArbeidsgiver != null) {
+            if ((
+                sykepengesoknadDTO.type == ARBEIDSTAKERE ||
+                    (sykepengesoknadDTO.type == BEHANDLINGSDAGER && sykepengesoknadDTO.arbeidssituasjon == ARBEIDSTAKER)
+                ) &&
+                sykepengesoknadDTO.status == SoknadsstatusDTO.SENDT &&
+                sykepengesoknadDTO.sendtArbeidsgiver != null
+            ) {
                 val sykepengesoknad = konverter(sykepengesoknadDTO)
 
                 try {

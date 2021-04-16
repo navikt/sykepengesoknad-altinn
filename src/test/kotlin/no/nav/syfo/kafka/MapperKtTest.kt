@@ -14,4 +14,3 @@ class MapperKtTest {
         assertThat(sykepengesoknad.ettersending).isFalse()
     }
 }
-

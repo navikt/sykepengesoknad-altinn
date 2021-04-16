@@ -19,19 +19,21 @@ class ApplicationConfig {
     fun restTemplate(): RestTemplate {
         val restTemplate = RestTemplate()
         restTemplate.messageConverters.stream()
-                .filter { AbstractJackson2HttpMessageConverter::class.java.isInstance(it) }
-                .map { AbstractJackson2HttpMessageConverter::class.java.cast(it) }
-                .map { t: AbstractJackson2HttpMessageConverter? -> t?.objectMapper }
-                .forEach { objectMapper -> objectMapper?.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false) }
+            .filter { AbstractJackson2HttpMessageConverter::class.java.isInstance(it) }
+            .map { AbstractJackson2HttpMessageConverter::class.java.cast(it) }
+            .map { t: AbstractJackson2HttpMessageConverter? -> t?.objectMapper }
+            .forEach { objectMapper -> objectMapper?.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false) }
         return restTemplate
     }
 
     @Bean
-    fun basicAuthRestTemplate(@Value("\${srvsyfoaltinn.username}") username: String,
-                              @Value("\${srvsyfoaltinn.password}") password: String): RestTemplate {
+    fun basicAuthRestTemplate(
+        @Value("\${srvsyfoaltinn.username}") username: String,
+        @Value("\${srvsyfoaltinn.password}") password: String
+    ): RestTemplate {
         return RestTemplateBuilder()
-                .basicAuthentication(username, password)
-                .build()
+            .basicAuthentication(username, password)
+            .build()
     }
 
     @Bean

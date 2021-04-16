@@ -17,8 +17,10 @@ import javax.inject.Inject
 
 @Component
 class RebehandleSykepengesoknadListener @Inject
-constructor(private val sendTilAltinnService: SendTilAltinnService,
-            private val rebehandleSykepengesoknadProducer: RebehandleSykepengesoknadProducer) {
+constructor(
+    private val sendTilAltinnService: SendTilAltinnService,
+    private val rebehandleSykepengesoknadProducer: RebehandleSykepengesoknadProducer
+) {
     val log = log()
 
     @KafkaListener(topics = ["privat-syfoaltinn-soknad-v2"], id = "syfoaltinnIntern-v2", idIsGroup = false, containerFactory = "kafkaListenerContainerFactoryRebehandling")
@@ -28,17 +30,17 @@ constructor(private val sendTilAltinnService: SendTilAltinnService,
             val sykepengesoknad: Sykepengesoknad = cr.value()
 
             cr.headers().lastHeader(BEHANDLINGSTIDSPUNKT)
-                    ?.value()
-                    ?.let { String(it, UTF_8) }
-                    ?.let { LocalDateTime.parse(it, ISO_LOCAL_DATE_TIME) }
-                    ?.takeIf { now().isBefore(it) }
-                    ?.apply {
-                        log.info("Plukket opp søknad ${cr.key()} med senere behandlingstidspunkt, venter 10 sekunder og legger tilbake på kø...")
-                        Thread.sleep(10000)
-                        rebehandleSykepengesoknadProducer.send(sykepengesoknad, this)
-                        acknowledgment.acknowledge()
-                        return
-                    }
+                ?.value()
+                ?.let { String(it, UTF_8) }
+                ?.let { LocalDateTime.parse(it, ISO_LOCAL_DATE_TIME) }
+                ?.takeIf { now().isBefore(it) }
+                ?.apply {
+                    log.info("Plukket opp søknad ${cr.key()} med senere behandlingstidspunkt, venter 10 sekunder og legger tilbake på kø...")
+                    Thread.sleep(10000)
+                    rebehandleSykepengesoknadProducer.send(sykepengesoknad, this)
+                    acknowledgment.acknowledge()
+                    return
+                }
 
             sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
             acknowledgment.acknowledge()

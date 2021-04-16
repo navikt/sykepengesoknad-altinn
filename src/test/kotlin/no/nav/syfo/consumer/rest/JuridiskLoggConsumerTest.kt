@@ -36,12 +36,14 @@ class JuridiskLoggConsumerTest {
 
     @BeforeEach
     fun setup() {
-        given(basicAuthRestTemplate.exchange(
+        given(
+            basicAuthRestTemplate.exchange(
                 BDDMockito.anyString(),
                 any(HttpMethod::class.java),
                 any(HttpEntity::class.java),
                 BDDMockito.eq(JuridiskRespose::class.java)
-        )).willReturn(ResponseEntity(JuridiskRespose(123), HttpStatus.OK))
+            )
+        ).willReturn(ResponseEntity(JuridiskRespose(123), HttpStatus.OK))
 
         juridiskLoggConsumer = JuridiskLoggConsumer(basicAuthRestTemplate, "url", "username")
     }
@@ -55,31 +57,33 @@ class JuridiskLoggConsumerTest {
     @Test
     fun responsForskjelligFra200KasterFeil() {
         assertThrows(JuridiskLoggException::class.java) {
-            given(basicAuthRestTemplate.exchange(
-                anyString(),
-                any(HttpMethod::class.java),
-                any(HttpEntity::class.java),
-                eq(JuridiskRespose::class.java)
-            )).willReturn(ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR))
+            given(
+                basicAuthRestTemplate.exchange(
+                    anyString(),
+                    any(HttpMethod::class.java),
+                    any(HttpEntity::class.java),
+                    eq(JuridiskRespose::class.java)
+                )
+            ).willReturn(ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR))
 
             juridiskLoggConsumer.lagreIJuridiskLogg(mockSykepengesoknad.first, 123, mockSykepengesoknad.second)
         }
-
     }
 
     @Test
     fun clientErrorLoggesOgKastesVidere() {
         assertThrows(JuridiskLoggException::class.java) {
-            given(basicAuthRestTemplate.exchange(
-                anyString(),
-                any(HttpMethod::class.java),
-                any(HttpEntity::class.java),
-                eq(JuridiskRespose::class.java)
-            )).willThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST, "", "Payload må være base64-encodet".toByteArray(charset("UTF-8")), null))
+            given(
+                basicAuthRestTemplate.exchange(
+                    anyString(),
+                    any(HttpMethod::class.java),
+                    any(HttpEntity::class.java),
+                    eq(JuridiskRespose::class.java)
+                )
+            ).willThrow(HttpClientErrorException(HttpStatus.BAD_REQUEST, "", "Payload må være base64-encodet".toByteArray(charset("UTF-8")), null))
 
             juridiskLoggConsumer.lagreIJuridiskLogg(mockSykepengesoknad.first, 123, mockSykepengesoknad.second)
         }
-
     }
 
     /* Denne testen vil brekke om innholdet i xml-utgaven av søknaden endrer seg. Da må en bumpe versjonen i metadata
@@ -93,13 +97,14 @@ class JuridiskLoggConsumerTest {
         juridiskLoggConsumer.lagreIJuridiskLogg(mockSykepengesoknad.first, 123, mockSykepengesoknad.second)
 
         Mockito.verify(basicAuthRestTemplate).exchange(
-                BDDMockito.anyString(),
-                any(HttpMethod::class.java),
-                argumentCaptor.capture(),
-                BDDMockito.eq(JuridiskRespose::class.java))
+            BDDMockito.anyString(),
+            any(HttpMethod::class.java),
+            argumentCaptor.capture(),
+            BDDMockito.eq(JuridiskRespose::class.java)
+        )
 
         assertThat((argumentCaptor.value.body as Logg).meldingsInnhold).isEqualTo(
-                "aGFzaDogVjY7YWx0aW5uS3ZpdHRlcmluZzogMTIzOl9WM3nvv717AigyB++/vQ3vv73vv71AS0zvv73vv71c77+9EG0H77+977" +
+            "aGFzaDogVjY7YWx0aW5uS3ZpdHRlcmluZzogMTIzOl9WM3nvv717AigyB++/vQ3vv73vv71AS0zvv73vv71c77+9EG0H77+977" +
                 "+9Lu+/ve+/vSjvv70DNO+/ve+/vV3vv71E77+9UBLvv71nM++/vSDvv70k77+9PO+/ve+/vXPvv73Mvu+/ve+/vW7vv71dfQ=="
         )
     }

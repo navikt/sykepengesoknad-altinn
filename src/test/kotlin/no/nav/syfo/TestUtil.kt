@@ -11,12 +11,12 @@ import no.nav.syfo.kafka.konverter
 import org.mockito.Mockito
 
 private val objectMapper = ObjectMapper()
-        .registerModule(JavaTimeModule())
-        .registerKotlinModule()
-        .configure(READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE, true)
+    .registerModule(JavaTimeModule())
+    .registerKotlinModule()
+    .configure(READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE, true)
 
 val mockSykepengesoknadDTO: SykepengesoknadDTO =
-        objectMapper.readValue(LocalApplication::class.java.getResource("/arbeidstakersoknad.json"), SykepengesoknadDTO::class.java)
+    objectMapper.readValue(LocalApplication::class.java.getResource("/arbeidstakersoknad.json"), SykepengesoknadDTO::class.java)
 
 val mockSykepengesoknad: Pair<Sykepengesoknad, AltinnInnsendelseEkstraData>
     get() {
@@ -25,16 +25,16 @@ val mockSykepengesoknad: Pair<Sykepengesoknad, AltinnInnsendelseEkstraData>
         val navn = "Navn Navnesen"
         val juridiskOrgnummerArbeidsgiver = "999999999"
         val ekstra = AltinnInnsendelseEkstraData(
-                fnr = fnr,
-                navn = navn,
-                xml = sykepengesoknad2XMLByteArray(sykepengesoknad, mutableListOf(), fnr, juridiskOrgnummerArbeidsgiver),
-                pdf = ByteArray(0)
+            fnr = fnr,
+            navn = navn,
+            xml = sykepengesoknad2XMLByteArray(sykepengesoknad, mutableListOf(), fnr, juridiskOrgnummerArbeidsgiver),
+            pdf = ByteArray(0)
         )
         return Pair(sykepengesoknad, ekstra)
     }
 
 val mockSykepengesoknadBehandlingsdagerDTO: SykepengesoknadDTO =
-        objectMapper.readValue(LocalApplication::class.java.getResource("/behandlingsdagersoknad.json"), SykepengesoknadDTO::class.java)
+    objectMapper.readValue(LocalApplication::class.java.getResource("/behandlingsdagersoknad.json"), SykepengesoknadDTO::class.java)
 
 val mockSykepengesoknadBehandlingsdager: Sykepengesoknad
     get() {

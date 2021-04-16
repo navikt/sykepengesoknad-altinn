@@ -27,10 +27,12 @@ constructor(private val organisasjonV4: OrganisasjonV4) {
     @Cacheable(cacheNames = ["organisasjon"])
     fun hentOrganisasjon(orgnummer: String): WSOrganisasjon {
         try {
-            return organisasjonV4.hentOrganisasjon(WSHentOrganisasjonRequest()
+            return organisasjonV4.hentOrganisasjon(
+                WSHentOrganisasjonRequest()
                     .withOrgnummer(orgnummer)
                     .withInkluderHierarki(true)
-                    .withInkluderHistorikk(true)).organisasjon
+                    .withInkluderHistorikk(true)
+            ).organisasjon
         } catch (e: HentOrganisasjonOrganisasjonIkkeFunnet) {
             log.warn("Kunne ikke hente organisasjon for {}", orgnummer, e)
             throw RuntimeException("Kunne ikke hente organisasjon for $orgnummer")
@@ -41,7 +43,6 @@ constructor(private val organisasjonV4: OrganisasjonV4) {
             log.error("Feil ved henting av Organisasjon", e)
             throw RuntimeException("Kunne ikke hente organisasjon for $orgnummer")
         }
-
     }
 
     private fun hentJuridiskOrgnummer(wsOrganisasjon: WSOrganisasjon): String? {
@@ -57,12 +58,12 @@ constructor(private val organisasjonV4: OrganisasjonV4) {
 
     private fun finnJuridiskOrgnummer(wsOrganisasjon: WSOrganisasjon): String? {
         return wsOrganisasjon
-                .takeIf { it is WSVirksomhet }
-                .let { it as WSVirksomhet }
-                .let(this::finnJuridiskOrgnummer)
-                .map(WSInngaarIJuridiskEnhet::getJuridiskEnhet)
-                .map(WSJuridiskEnhet::getOrgnummer)
-                .firstOrNull()
+            .takeIf { it is WSVirksomhet }
+            .let { it as WSVirksomhet }
+            .let(this::finnJuridiskOrgnummer)
+            .map(WSInngaarIJuridiskEnhet::getJuridiskEnhet)
+            .map(WSJuridiskEnhet::getOrgnummer)
+            .firstOrNull()
     }
 
     private fun finnJuridiskOrgnummer(virksomhet: WSVirksomhet): List<WSInngaarIJuridiskEnhet> {
@@ -74,9 +75,9 @@ constructor(private val organisasjonV4: OrganisasjonV4) {
 
     private fun finnJuridiskOrgnummer(bestaarAvOrgledd: List<WSBestaarAvOrgledd>): List<WSInngaarIJuridiskEnhet> {
         return bestaarAvOrgledd
-                .map(WSBestaarAvOrgledd::getOrgLedd)
-                .map(this::finnJuridiskOrgnummer)
-                .flatten()
+            .map(WSBestaarAvOrgledd::getOrgLedd)
+            .map(this::finnJuridiskOrgnummer)
+            .flatten()
     }
 
     private fun finnJuridiskOrgnummer(orgledd: WSOrgledd): List<WSInngaarIJuridiskEnhet> {
@@ -88,10 +89,10 @@ constructor(private val organisasjonV4: OrganisasjonV4) {
 
     private fun filtrerGyldigeEnheter(inngaarIJuridiskEnhetListe: List<WSInngaarIJuridiskEnhet>): List<WSInngaarIJuridiskEnhet> {
         return inngaarIJuridiskEnhetListe
-                .filter { wsInngaarIJuridiskEnhet: WSInngaarIJuridiskEnhet ->
-                    wsInngaarIJuridiskEnhet.tomGyldighetsperiode == null
-                            || !convertToLocalDate(wsInngaarIJuridiskEnhet.tomGyldighetsperiode).isBefore(LocalDate.now())
-                }
+            .filter { wsInngaarIJuridiskEnhet: WSInngaarIJuridiskEnhet ->
+                wsInngaarIJuridiskEnhet.tomGyldighetsperiode == null ||
+                    !convertToLocalDate(wsInngaarIJuridiskEnhet.tomGyldighetsperiode).isBefore(LocalDate.now())
+            }
     }
 
     private fun convertToLocalDate(xmlGregorianCalendar: XMLGregorianCalendar): LocalDate {

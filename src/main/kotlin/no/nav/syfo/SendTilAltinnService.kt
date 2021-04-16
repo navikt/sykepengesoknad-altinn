@@ -5,7 +5,7 @@ import io.micrometer.core.instrument.Tags
 import no.nav.syfo.consumer.rest.aktor.AktorRestConsumer
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggException
-import no.nav.syfo.consumer.rest.pdf.PDFRestController
+import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
 import no.nav.syfo.consumer.ws.client.OrganisasjonConsumer
 import no.nav.syfo.consumer.ws.client.PersonConsumer
@@ -17,17 +17,17 @@ import org.springframework.stereotype.Service
 import java.time.LocalDateTime.now
 import javax.xml.bind.ValidationEvent
 
-
 @Service
 class SendTilAltinnService(
-        private val aktorRestConsumer: AktorRestConsumer,
-        private val personConsumer: PersonConsumer,
-        private val altinnConsumer: AltinnConsumer,
-        private val pdfRestController: PDFRestController,
-        private val organisasjonConsumer: OrganisasjonConsumer,
-        private val juridiskLoggConsumer: JuridiskLoggConsumer,
-        private val sendtSoknadDao: SendtSoknadDao,
-        private val registry: MeterRegistry) {
+    private val aktorRestConsumer: AktorRestConsumer,
+    private val personConsumer: PersonConsumer,
+    private val altinnConsumer: AltinnConsumer,
+    private val pdfRestConsumer: PDFRestConsumer,
+    private val organisasjonConsumer: OrganisasjonConsumer,
+    private val juridiskLoggConsumer: JuridiskLoggConsumer,
+    private val sendtSoknadDao: SendtSoknadDao,
+    private val registry: MeterRegistry
+) {
 
     val log = log()
 
@@ -36,24 +36,22 @@ class SendTilAltinnService(
         if (sendtSoknadDao.soknadErSendt(sykepengesoknad.id, erEttersending)) {
             log.warn("Forsøkte å sende søknad om sykepenger med id ${sykepengesoknad.id} til Altinn som allerede er sendt")
             return
-        }
-        else if (ettersendtTilNAV(sykepengesoknad)) {
+        } else if (ettersendtTilNAV(sykepengesoknad)) {
             log.info("Behandler ikke ettersending til NAV for ${sykepengesoknad.id}")
             return
         }
         val fnr = aktorRestConsumer.getFnr(sykepengesoknad.aktorId)
         val navn = personConsumer.finnBrukerPersonnavnByFnr(fnr)
-        val pdf = pdfRestController.getPDF(sykepengesoknad, fnr, navn)
+        val pdf = pdfRestConsumer.getPDF(sykepengesoknad, fnr, navn)
         val validationeventer: MutableList<ValidationEvent> = mutableListOf()
         val juridiskOrgnummerArbeidsgiver = organisasjonConsumer.hentJuridiskOrgnummer(sykepengesoknad.arbeidsgiver.orgnummer)
         val xml = sykepengesoknad2XMLByteArray(sykepengesoknad, validationeventer, fnr, juridiskOrgnummerArbeidsgiver)
 
-
         val ekstraData = AltinnInnsendelseEkstraData(
-                fnr = fnr,
-                navn = navn,
-                pdf = pdf,
-                xml = xml
+            fnr = fnr,
+            navn = navn,
+            pdf = pdf,
+            xml = xml
         )
 
         val receiptId: Int?
@@ -79,6 +77,6 @@ class SendTilAltinnService(
         }
     }
 
-    private fun ettersendtTilNAV(sykepengesoknad: Sykepengesoknad) = sykepengesoknad.sendtNav != null
-            && sykepengesoknad.sendtArbeidsgiver?.isBefore(sykepengesoknad.sendtNav) ?: false
+    private fun ettersendtTilNAV(sykepengesoknad: Sykepengesoknad) = sykepengesoknad.sendtNav != null &&
+        sykepengesoknad.sendtArbeidsgiver?.isBefore(sykepengesoknad.sendtNav) ?: false
 }

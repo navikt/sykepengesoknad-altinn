@@ -17,8 +17,11 @@ constructor(private val kafkaTemplate: KafkaTemplate<String, Sykepengesoknad>) {
     fun send(sykepengesoknad: Sykepengesoknad, behandlingstidspunkt: LocalDateTime) {
         try {
             kafkaTemplate.send(
-                    SyfoProducerRecord<String, Sykepengesoknad>("privat-syfoaltinn-soknad-v2", sykepengesoknad.id, sykepengesoknad,
-                            mapOf(Pair(BEHANDLINGSTIDSPUNKT, behandlingstidspunkt.format(ISO_LOCAL_DATE_TIME))))).get()
+                SyfoProducerRecord<String, Sykepengesoknad>(
+                    "privat-syfoaltinn-soknad-v2", sykepengesoknad.id, sykepengesoknad,
+                    mapOf(Pair(BEHANDLINGSTIDSPUNKT, behandlingstidspunkt.format(ISO_LOCAL_DATE_TIME)))
+                )
+            ).get()
         } catch (exception: Exception) {
             log.error("Det feiler når søknad ${sykepengesoknad.id} skal legges på rebehandle topic", exception)
             throw RuntimeException(exception)

@@ -1,8 +1,8 @@
 package no.nav.syfo.consumer.rest.pdf
 
+import no.nav.syfo.domain.pdf.PDFSoknad
 import no.nav.syfo.domain.soknad.Soknadstype
 import no.nav.syfo.domain.soknad.Sykepengesoknad
-import no.nav.syfo.domain.pdf.PDFSoknad
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -16,9 +16,10 @@ import org.springframework.web.client.RestTemplate
 import javax.inject.Inject
 
 @Controller
-class PDFRestController
-@Inject constructor(private val restTemplate: RestTemplate,
-                    @Value("\${pdfgen.url}") private val pdfgenUrl: String
+class PDFRestConsumer
+@Inject constructor(
+    private val restTemplate: RestTemplate,
+    @Value("\${pdfgen.url}") private val pdfgenUrl: String
 ) {
 
     @Retryable(backoff = Backoff(delay = 5000))

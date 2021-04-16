@@ -2,7 +2,6 @@ package no.nav.syfo
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-
 import javax.xml.bind.ValidationEvent
 
 class SykepengesoknadXMLMapperTest {
@@ -22,5 +21,4 @@ class SykepengesoknadXMLMapperTest {
 
         assertThat(validationEventer).isEmpty()
     }
-
 }

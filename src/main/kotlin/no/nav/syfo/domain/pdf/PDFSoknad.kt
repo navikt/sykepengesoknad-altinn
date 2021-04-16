@@ -14,14 +14,16 @@ class PDFSoknad(sykepengesoknad: Sykepengesoknad, val fnr: String, val navn: Str
     val soknadPerioder = sykepengesoknad.soknadsperioder.map { PDFPeriode(it) }
     val avsendertype = sykepengesoknad.avsendertype
     val sporsmal = sykepengesoknad.sporsmal
-        .filter{ it.tag !in listOf("ANDRE_INNTEKTSKILDER", "ARBEID_UTENFOR_NORGE") }
-        .sortedWith(Comparator.comparingInt {
-            when (it.tag) {
-                "BEKREFT_OPPLYSNINGER", "ANSVARSERKLARING" -> 1
-                "VAER_KLAR_OVER_AT" -> 2
-                else -> 0
+        .filter { it.tag !in listOf("ANDRE_INNTEKTSKILDER", "ARBEID_UTENFOR_NORGE") }
+        .sortedWith(
+            Comparator.comparingInt {
+                when (it.tag) {
+                    "BEKREFT_OPPLYSNINGER", "ANSVARSERKLARING" -> 1
+                    "VAER_KLAR_OVER_AT" -> 2
+                    else -> 0
+                }
             }
-        })
+        )
     val egenmeldtSykmelding = null
 }
 

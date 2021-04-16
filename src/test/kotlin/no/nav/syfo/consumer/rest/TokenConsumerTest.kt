@@ -33,8 +33,8 @@ class TokenConsumerTest {
     @BeforeEach
     fun setup() {
         tokenConsumer = TokenConsumer(
-                restTemplate,
-                url = "https://url.no"
+            restTemplate,
+            url = "https://url.no"
         )
     }
 
@@ -62,11 +62,13 @@ class TokenConsumerTest {
     }
 
     private fun mockTokenResponse(token: Token) {
-        BDDMockito.given(restTemplate.exchange(
+        BDDMockito.given(
+            restTemplate.exchange(
                 BDDMockito.anyString(),
                 BDDMockito.any(HttpMethod::class.java),
                 BDDMockito.any(HttpEntity::class.java),
                 BDDMockito.eq(Token::class.java)
-        )).willReturn(ResponseEntity(token, HttpStatus.OK))
+            )
+        ).willReturn(ResponseEntity(token, HttpStatus.OK))
     }
 }

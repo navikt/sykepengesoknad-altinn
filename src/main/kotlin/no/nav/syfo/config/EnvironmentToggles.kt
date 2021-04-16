@@ -14,7 +14,8 @@ class EnvironmentToggles(
     }
 }
 
-val allowedOrgnummer = setOf("910127128",
+val allowedOrgnummer = setOf(
+    "910127128",
     "910024426",
     "910105531",
     "910015907",
@@ -84,4 +85,5 @@ val allowedOrgnummer = setOf("910127128",
     "811294292",
     "811291102",
     "811291382",
-    "811291692")
+    "811291692"
+)

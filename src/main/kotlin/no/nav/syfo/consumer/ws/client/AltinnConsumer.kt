@@ -11,13 +11,14 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import javax.inject.Inject
 
-
 @Component
 class AltinnConsumer @Inject
-constructor(private val iCorrespondenceAgencyExternalBasic: ICorrespondenceAgencyExternalBasic,
-            private val soknadAltinnMapper: SoknadAltinnMapper,
-            @Value("\${altinnUser.username}") private val altinnUsername: String,
-            @Value("\${altinnUser.password}") private val altinnPassword: String) {
+constructor(
+    private val iCorrespondenceAgencyExternalBasic: ICorrespondenceAgencyExternalBasic,
+    private val soknadAltinnMapper: SoknadAltinnMapper,
+    @Value("\${altinnUser.username}") private val altinnUsername: String,
+    @Value("\${altinnUser.password}") private val altinnPassword: String
+) {
 
     val log = log()
 
@@ -25,11 +26,13 @@ constructor(private val iCorrespondenceAgencyExternalBasic: ICorrespondenceAgenc
 
     fun sendSykepengesoknadTilArbeidsgiver(sykepengesoknad: Sykepengesoknad, ekstraData: AltinnInnsendelseEkstraData): Int {
         try {
-            val receiptExternal = iCorrespondenceAgencyExternalBasic.insertCorrespondenceBasicV2(altinnUsername,
-                    altinnPassword,
-                    SYSTEM_USER_CODE,
-                    sykepengesoknad.id,
-                    soknadAltinnMapper.sykepengesoeknadTilCorrespondence(sykepengesoknad, ekstraData))
+            val receiptExternal = iCorrespondenceAgencyExternalBasic.insertCorrespondenceBasicV2(
+                altinnUsername,
+                altinnPassword,
+                SYSTEM_USER_CODE,
+                sykepengesoknad.id,
+                soknadAltinnMapper.sykepengesoeknadTilCorrespondence(sykepengesoknad, ekstraData)
+            )
             if (receiptExternal.receiptStatusCode != ReceiptStatusEnum.OK) {
                 log.error("Fikk uventet statuskode fra Altinn {}", receiptExternal.receiptStatusCode)
                 throw RuntimeException("feil")
@@ -43,5 +46,4 @@ constructor(private val iCorrespondenceAgencyExternalBasic: ICorrespondenceAgenc
             throw e
         }
     }
-
 }

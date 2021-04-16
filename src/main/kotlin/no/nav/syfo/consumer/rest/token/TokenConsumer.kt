@@ -15,8 +15,10 @@ import java.time.Instant
 import java.util.Objects.requireNonNull
 
 @Component
-class TokenConsumer(private val basicAuthRestTemplate: RestTemplate,
-                    @Value("\${security.token.service.token.url}") private val url: String) {
+class TokenConsumer(
+    private val basicAuthRestTemplate: RestTemplate,
+    @Value("\${security.token.service.token.url}") private val url: String
+) {
 
     private val log = log()
     private var cachedToken: Token? = null
@@ -43,9 +45,9 @@ class TokenConsumer(private val basicAuthRestTemplate: RestTemplate,
 
     private fun uriString(): String {
         return UriComponentsBuilder.fromHttpUrl(url)
-                .queryParam("grant_type", "client_credentials")
-                .queryParam("scope", "openid")
-                .toUriString()
+            .queryParam("grant_type", "client_credentials")
+            .queryParam("scope", "openid")
+            .toUriString()
     }
 
     private fun headers(): HttpEntity<Any> {
@@ -57,9 +59,9 @@ class TokenConsumer(private val basicAuthRestTemplate: RestTemplate,
 }
 
 data class Token(
-        val access_token: String,
-        val token_type: String,
-        val expires_in: Int
+    val access_token: String,
+    val token_type: String,
+    val expires_in: Int
 ) {
 
     val expirationTime: Instant = Instant.now().plusSeconds(expires_in - 10L)

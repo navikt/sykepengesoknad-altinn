@@ -17,27 +17,30 @@ class SendtSoknadDao(internal val namedParameterJdbcTemplate: NamedParameterJdbc
     val log = log()
 
     fun lagreSendtSoknad(sendtSoknad: SendtSoknad) {
-        namedParameterJdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT) VALUES (SENDT_SOKNAD_ID_SEQ.NEXTVAL, :ressursId, :altinnId, :sendt)",
-                MapSqlParameterSource()
-                        .addValue("ressursId", sendtSoknad.ressursId)
-                        .addValue("altinnId", sendtSoknad.altinnId)
-                        .addValue("sendt", sendtSoknad.sendt)
+        namedParameterJdbcTemplate.update(
+            "INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT) VALUES (SENDT_SOKNAD_ID_SEQ.NEXTVAL, :ressursId, :altinnId, :sendt)",
+            MapSqlParameterSource()
+                .addValue("ressursId", sendtSoknad.ressursId)
+                .addValue("altinnId", sendtSoknad.altinnId)
+                .addValue("sendt", sendtSoknad.sendt)
         )
     }
 
     fun lagreEttersendtSoknad(ressursId: String, altinnIdEttersending: String) {
-        namedParameterJdbcTemplate.update("UPDATE SENDT_SOKNAD SET ALTINN_ID_ETTERS = :altinnIdEttersending WHERE RESSURS_ID = :ressursId",
-                MapSqlParameterSource()
-                        .addValue("altinnIdEttersending", altinnIdEttersending)
-                        .addValue("ressursId", ressursId)
+        namedParameterJdbcTemplate.update(
+            "UPDATE SENDT_SOKNAD SET ALTINN_ID_ETTERS = :altinnIdEttersending WHERE RESSURS_ID = :ressursId",
+            MapSqlParameterSource()
+                .addValue("altinnIdEttersending", altinnIdEttersending)
+                .addValue("ressursId", ressursId)
         )
     }
 
     fun soknadErSendt(ressursId: String, erEttersending: Boolean): Boolean {
         val sendtSoknad = namedParameterJdbcTemplate.query(
-                "SELECT * FROM SENDT_SOKNAD WHERE RESSURS_ID = :ressursId",
-                MapSqlParameterSource("ressursId", ressursId),
-                sendtSoknadRowMapper).firstOrNull() ?: return false
+            "SELECT * FROM SENDT_SOKNAD WHERE RESSURS_ID = :ressursId",
+            MapSqlParameterSource("ressursId", ressursId),
+            sendtSoknadRowMapper
+        ).firstOrNull() ?: return false
 
         if (erEttersending && sendtSoknad.altinnIdEttersending == null) {
             return false
@@ -52,9 +55,9 @@ class SendtSoknadDao(internal val namedParameterJdbcTemplate: NamedParameterJdbc
 
 val sendtSoknadRowMapper = RowMapper { resultSet, _ ->
     SendtSoknad(
-            resultSet.getString("RESSURS_ID"),
-            resultSet.getString("ALTINN_ID"),
-            resultSet.getTimestamp("SENDT").toLocalDateTime(),
-            resultSet.getString("ALTINN_ID_ETTERS")
+        resultSet.getString("RESSURS_ID"),
+        resultSet.getString("ALTINN_ID"),
+        resultSet.getTimestamp("SENDT").toLocalDateTime(),
+        resultSet.getString("ALTINN_ID_ETTERS")
     )
 }

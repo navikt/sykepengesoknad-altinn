@@ -12,7 +12,6 @@ import org.springframework.test.annotation.DirtiesContext
 import java.time.LocalDateTime
 import javax.inject.Inject
 
-
 @SpringBootTest(classes = [LocalApplication::class])
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @EmbeddedKafka

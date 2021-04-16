@@ -20,8 +20,8 @@ class CallIdFilter : Filter {
     override fun doFilter(servletRequest: ServletRequest, servletResponse: ServletResponse, filterChain: FilterChain) {
         try {
             val callId = (servletRequest as? HttpServletRequest)?.getHeader(NAV_CALLID)
-                    ?: (servletRequest as? HttpServletRequest)?.getHeader("callId")
-                    ?: UUID.randomUUID().toString()
+                ?: (servletRequest as? HttpServletRequest)?.getHeader("callId")
+                ?: UUID.randomUUID().toString()
 
             MDC.put(NAV_CALLID, callId)
 

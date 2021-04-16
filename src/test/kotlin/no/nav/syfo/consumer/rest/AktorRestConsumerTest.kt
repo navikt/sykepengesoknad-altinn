@@ -96,7 +96,6 @@ class AktorRestConsumerTest {
 
             aktorConsumer.getAktorId("fnr")
         }
-
     }
 
     @Test
@@ -125,7 +124,6 @@ class AktorRestConsumerTest {
             ).willReturn(ResponseEntity(response, HttpStatus.OK))
 
             aktorConsumer.getAktorId("fnr")
-
         }
     }
 
@@ -149,6 +147,5 @@ class AktorRestConsumerTest {
 
             aktorConsumer.getAktorId("fnr")
         }
-
     }
 }
