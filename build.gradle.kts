@@ -38,7 +38,7 @@ repositories {
     }
 }
 
-val syfoKafkaVersion = "2021.03.10-10.47-188034bc"
+val syfoKafkaVersion = "2021.04.08-13.45-0da5bd8e"
 val mockitoKotlinVersion = "2.2.0"
 val h2Version = "1.4.200"
 val ojdbc8Version = "19.3.0.0"
@@ -90,7 +90,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.testcontainers:kafka:$testContainersVersion")
     testImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.assertj:assertj-core")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion")
     testImplementation("org.mockito:mockito-core")

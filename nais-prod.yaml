@@ -44,6 +44,8 @@ spec:
       - kvPath: kv/prod/fss/syfoaltinn/default
         mountPath: /var/run/secrets/nais.io/vault
   webproxy: false
+  kafka:
+    pool: nav-prod
   env:
     - name: PDFGEN_URL
       value: https://flex-sykepengesoknad-pdfgen.intern.nav.no

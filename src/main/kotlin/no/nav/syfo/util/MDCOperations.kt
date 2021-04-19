@@ -1,6 +1,6 @@
 package no.nav.syfo.util
 
-import no.nav.syfo.log
+import no.nav.syfo.logger
 import org.slf4j.MDC
 import java.security.SecureRandom
 
@@ -8,7 +8,7 @@ import java.security.SecureRandom
  * Utility-klasse for kommunikasjon med MDC.
  */
 object MDCOperations {
-    private val log = log()
+    private val log = logger()
 
     private val RANDOM = SecureRandom()
 

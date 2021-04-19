@@ -14,7 +14,7 @@ class PDFSoknadTest {
     fun filtrererBortAndreInntektskilder() {
         val sykepengesoknad = Sykepengesoknad(
             id = "abc",
-            aktorId = "123",
+            fnr = "123",
             type = Soknadstype.ARBEIDSTAKERE,
             status = Soknadsstatus.SENDT,
             arbeidsgiver = Arbeidsgiver("abc", "123"),
@@ -33,7 +33,7 @@ class PDFSoknadTest {
     fun filtrererBortArbeidUtland() {
         val sykepengesoknad = Sykepengesoknad(
             id = "abc",
-            aktorId = "123",
+            fnr = "123",
             type = Soknadstype.ARBEIDSTAKERE,
             status = Soknadsstatus.SENDT,
             arbeidsgiver = Arbeidsgiver("abc", "123"),

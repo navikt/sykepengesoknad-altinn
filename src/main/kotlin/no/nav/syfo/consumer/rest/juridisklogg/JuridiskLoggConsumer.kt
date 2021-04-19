@@ -3,7 +3,7 @@ package no.nav.syfo.consumer.rest.juridisklogg
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.kafka.NAV_CALLID
-import no.nav.syfo.log
+import no.nav.syfo.logger
 import no.nav.syfo.util.MDCOperations
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.*
@@ -25,7 +25,7 @@ class JuridiskLoggConsumer(
     @Value("\${srvsyfoaltinn.username}") private val username: String
 ) {
 
-    val log = log()
+    val log = logger()
 
     @Retryable(backoff = Backoff(delay = 5000))
     fun lagreIJuridiskLogg(sykepengesoknad: Sykepengesoknad, altinnKvitteringsId: Number, ekstraData: AltinnInnsendelseEkstraData): Number {
@@ -35,7 +35,7 @@ class JuridiskLoggConsumer(
         headers.set("Nav-Call-Id", MDCOperations.getFromMDC(NAV_CALLID))
         headers.set("Nav-Consumer-Id", username)
 
-        val avsender = "${sykepengesoknad.aktorId} | ${ekstraData.fnr}"
+        val avsender = sykepengesoknad.fnr
         val innholdMeta = "hash: V6;altinnKvittering: $altinnKvitteringsId"
         val entry = sha512AsBase64String(innholdMeta, ekstraData.xml)
 

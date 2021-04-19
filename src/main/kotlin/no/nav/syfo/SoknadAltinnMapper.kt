@@ -24,7 +24,7 @@ import javax.xml.namespace.QName
 @Component
 class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
 
-    val log = log()
+    val log = logger()
 
     private val SYKEPENGESOEKNAD_TJENESTEKODE = "4751" // OBS! VIKTIG! Denne må ikke endres, da kan feil personer få tilgang til sykepengesøknaden i Altinn!
     private val SYKEPENGESOEKNAD_TJENESTEVERSJON = "1"

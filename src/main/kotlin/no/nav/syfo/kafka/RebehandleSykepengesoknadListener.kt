@@ -3,7 +3,7 @@ package no.nav.syfo.kafka
 import no.nav.syfo.BEHANDLINGSTIDSPUNKT
 import no.nav.syfo.SendTilAltinnService
 import no.nav.syfo.domain.soknad.Sykepengesoknad
-import no.nav.syfo.log
+import no.nav.syfo.logger
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.MDC
 import org.springframework.kafka.annotation.KafkaListener
@@ -21,7 +21,7 @@ constructor(
     private val sendTilAltinnService: SendTilAltinnService,
     private val rebehandleSykepengesoknadProducer: RebehandleSykepengesoknadProducer
 ) {
-    val log = log()
+    val log = logger()
 
     @KafkaListener(topics = ["privat-syfoaltinn-soknad-v2"], id = "syfoaltinnIntern-v2", idIsGroup = false, containerFactory = "kafkaListenerContainerFactoryRebehandling")
     fun listen(cr: ConsumerRecord<String, Sykepengesoknad>, acknowledgment: Acknowledgment) {

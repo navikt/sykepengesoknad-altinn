@@ -1,6 +1,6 @@
 package no.nav.syfo.consumer.ws.client
 
-import no.nav.syfo.log
+import no.nav.syfo.logger
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.NorskIdent
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.PersonIdent
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @Component
 class PersonConsumer @Inject
 constructor(private val personV3: PersonV3) {
-    val log = log()
+    val log = logger()
 
     @Retryable(backoff = Backoff(delay = 5000))
     fun finnBrukerPersonnavnByFnr(fnr: String): String {

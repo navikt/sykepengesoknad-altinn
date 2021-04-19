@@ -6,7 +6,7 @@ import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondence
 import no.nav.syfo.SoknadAltinnMapper
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.soknad.Sykepengesoknad
-import no.nav.syfo.log
+import no.nav.syfo.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import javax.inject.Inject
@@ -20,7 +20,7 @@ constructor(
     @Value("\${altinnUser.password}") private val altinnPassword: String
 ) {
 
-    val log = log()
+    val log = logger()
 
     val SYSTEM_USER_CODE = "NAV_DIGISYFO"
 

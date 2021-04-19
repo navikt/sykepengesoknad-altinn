@@ -6,7 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.soknad.Sykepengesoknad
-import no.nav.syfo.kafka.felles.SykepengesoknadDTO
+import no.nav.syfo.kafka.felles.DeprecatedSykepengesoknadDTO
 import no.nav.syfo.kafka.konverter
 import org.mockito.Mockito
 
@@ -15,12 +15,12 @@ private val objectMapper = ObjectMapper()
     .registerKotlinModule()
     .configure(READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE, true)
 
-val mockSykepengesoknadDTO: SykepengesoknadDTO =
-    objectMapper.readValue(Application::class.java.getResource("/arbeidstakersoknad.json"), SykepengesoknadDTO::class.java)
+val mockSykepengesoknadDTO: DeprecatedSykepengesoknadDTO =
+    objectMapper.readValue(Application::class.java.getResource("/arbeidstakersoknad.json"), DeprecatedSykepengesoknadDTO::class.java)
 
 val mockSykepengesoknad: Pair<Sykepengesoknad, AltinnInnsendelseEkstraData>
     get() {
-        val sykepengesoknad = konverter(mockSykepengesoknadDTO)
+        val sykepengesoknad = konverter(mockSykepengesoknadDTO, "sdfs")
         val fnr = "12345678910"
         val navn = "Navn Navnesen"
         val juridiskOrgnummerArbeidsgiver = "999999999"
@@ -33,12 +33,12 @@ val mockSykepengesoknad: Pair<Sykepengesoknad, AltinnInnsendelseEkstraData>
         return Pair(sykepengesoknad, ekstra)
     }
 
-val mockSykepengesoknadBehandlingsdagerDTO: SykepengesoknadDTO =
-    objectMapper.readValue(Application::class.java.getResource("/behandlingsdagersoknad.json"), SykepengesoknadDTO::class.java)
+val mockSykepengesoknadBehandlingsdagerDTO: DeprecatedSykepengesoknadDTO =
+    objectMapper.readValue(Application::class.java.getResource("/behandlingsdagersoknad.json"), DeprecatedSykepengesoknadDTO::class.java)
 
 val mockSykepengesoknadBehandlingsdager: Sykepengesoknad
     get() {
-        val sykepengesoknad = konverter(mockSykepengesoknadBehandlingsdagerDTO)
+        val sykepengesoknad = konverter(mockSykepengesoknadBehandlingsdagerDTO, "sdfsd")
         return sykepengesoknad
     }
 

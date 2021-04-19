@@ -2,7 +2,7 @@ package no.nav.syfo.kafka
 
 import no.nav.syfo.BEHANDLINGSTIDSPUNKT
 import no.nav.syfo.domain.soknad.Sykepengesoknad
-import no.nav.syfo.log
+import no.nav.syfo.logger
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
@@ -12,7 +12,7 @@ import javax.inject.Inject
 @Component
 class RebehandleSykepengesoknadProducer @Inject
 constructor(private val kafkaTemplate: KafkaTemplate<String, Sykepengesoknad>) {
-    val log = log()
+    val log = logger()
 
     fun send(sykepengesoknad: Sykepengesoknad, behandlingstidspunkt: LocalDateTime) {
         try {

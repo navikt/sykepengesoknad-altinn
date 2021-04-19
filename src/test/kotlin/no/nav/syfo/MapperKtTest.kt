@@ -8,7 +8,7 @@ class MapperKtTest {
 
     @Test
     fun mapperDTOTilSykepengesoknad() {
-        val sykepengesoknad = konverter(mockSykepengesoknadDTO)
+        val sykepengesoknad = konverter(mockSykepengesoknadDTO, "sdfsdf")
 
         assertThat(sykepengesoknad.id).isEqualTo("d053fef8-6f2e-4d45-bc9f-ed6c5cd457dd")
         assertThat(sykepengesoknad.ettersending).isFalse()

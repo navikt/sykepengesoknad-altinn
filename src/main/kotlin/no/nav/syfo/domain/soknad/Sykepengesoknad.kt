@@ -8,7 +8,7 @@ import kotlin.streams.toList
 
 data class Sykepengesoknad(
     val id: String,
-    val aktorId: String,
+    val fnr: String,
     val sykmeldingId: String? = null,
     val type: Soknadstype,
     val status: Soknadsstatus,

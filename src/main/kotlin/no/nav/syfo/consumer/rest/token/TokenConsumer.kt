@@ -1,7 +1,7 @@
 package no.nav.syfo.consumer.rest.token
 
 import no.nav.syfo.consumer.rest.token.Token.Companion.shouldRenewToken
-import no.nav.syfo.log
+import no.nav.syfo.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -20,7 +20,7 @@ class TokenConsumer(
     @Value("\${security.token.service.token.url}") private val url: String
 ) {
 
-    private val log = log()
+    private val log = logger()
     private var cachedToken: Token? = null
     val token: Token
         get() {

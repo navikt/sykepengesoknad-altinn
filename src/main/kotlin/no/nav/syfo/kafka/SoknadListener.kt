@@ -1,12 +1,13 @@
 package no.nav.syfo.kafka
 
 import no.nav.syfo.SendTilAltinnService
+import no.nav.syfo.consumer.rest.aktor.AktorRestConsumer
 import no.nav.syfo.kafka.felles.ArbeidssituasjonDTO.ARBEIDSTAKER
+import no.nav.syfo.kafka.felles.DeprecatedSykepengesoknadDTO
 import no.nav.syfo.kafka.felles.SoknadsstatusDTO
 import no.nav.syfo.kafka.felles.SoknadstypeDTO.ARBEIDSTAKERE
 import no.nav.syfo.kafka.felles.SoknadstypeDTO.BEHANDLINGSDAGER
-import no.nav.syfo.kafka.felles.SykepengesoknadDTO
-import no.nav.syfo.log
+import no.nav.syfo.logger
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.slf4j.MDC
 import org.springframework.kafka.annotation.KafkaListener
@@ -19,12 +20,13 @@ import javax.inject.Inject
 class SoknadListener @Inject
 constructor(
     private val sendTilAltinnService: SendTilAltinnService,
-    private val rebehandleSykepengesoknadProducer: RebehandleSykepengesoknadProducer
+    private val rebehandleSykepengesoknadProducer: RebehandleSykepengesoknadProducer,
+    private val aktorRestConsumer: AktorRestConsumer,
 ) {
-    val log = log()
+    val log = logger()
 
     @KafkaListener(topics = ["syfo-soknad-v2", "syfo-soknad-v3"], id = "soknadSendt", idIsGroup = false, containerFactory = "kafkaListenerContainerFactory")
-    fun listen(cr: ConsumerRecord<String, SykepengesoknadDTO>, acknowledgment: Acknowledgment) {
+    fun listen(cr: ConsumerRecord<String, DeprecatedSykepengesoknadDTO>, acknowledgment: Acknowledgment) {
         try {
             MDC.put(NAV_CALLID, getSafeNavCallIdHeaderAsString(cr.headers()))
 
@@ -37,7 +39,8 @@ constructor(
                 sykepengesoknadDTO.status == SoknadsstatusDTO.SENDT &&
                 sykepengesoknadDTO.sendtArbeidsgiver != null
             ) {
-                val sykepengesoknad = konverter(sykepengesoknadDTO)
+                val fnr = sykepengesoknadDTO.fnr() ?: aktorRestConsumer.getFnr(sykepengesoknadDTO.aktorId!!)
+                val sykepengesoknad = konverter(sykepengesoknadDTO, fnr)
 
                 try {
                     sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)

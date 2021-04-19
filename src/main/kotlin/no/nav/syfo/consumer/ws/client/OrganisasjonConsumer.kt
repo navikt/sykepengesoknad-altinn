@@ -1,6 +1,6 @@
 package no.nav.syfo.consumer.ws.client
 
-import no.nav.syfo.log
+import no.nav.syfo.logger
 import no.nav.tjeneste.virksomhet.organisasjon.v4.HentOrganisasjonOrganisasjonIkkeFunnet
 import no.nav.tjeneste.virksomhet.organisasjon.v4.HentOrganisasjonUgyldigInput
 import no.nav.tjeneste.virksomhet.organisasjon.v4.OrganisasjonV4
@@ -15,7 +15,7 @@ import javax.xml.datatype.XMLGregorianCalendar
 @Component
 class OrganisasjonConsumer @Inject
 constructor(private val organisasjonV4: OrganisasjonV4) {
-    val log = log()
+    val log = logger()
 
     fun hentJuridiskOrgnummer(virksomhetsnummer: String): String? {
         val wsOrganisasjon = hentOrganisasjon(virksomhetsnummer)

@@ -4,12 +4,56 @@ import no.nav.syfo.domain.soknad.*
 import no.nav.syfo.kafka.felles.*
 import no.nav.syfo.kafka.felles.SykepengesoknadDTO
 
-fun konverter(sykepengesoknadDTO: SykepengesoknadDTO): Sykepengesoknad {
+fun SykepengesoknadDTO.konverter(): Sykepengesoknad {
+    return Sykepengesoknad(
+        id = this.id,
+        type = Soknadstype.valueOf(this.type.name),
+        status = Soknadsstatus.valueOf(this.status.name),
+        fnr = this.fnr,
+        sykmeldingId = this.sykmeldingId,
+        arbeidsgiver = konverter(this.arbeidsgiver!!),
+        arbeidssituasjon = enumValueOrNull(this.arbeidssituasjon!!.name),
+        korrigertAv = this.korrigertAv,
+        korrigerer = this.korrigerer,
+        soktUtenlandsopphold = this.soktUtenlandsopphold,
+        arbeidsgiverForskutterer = enumValueOrNull(this.arbeidsgiverForskutterer?.name),
+        fom = this.fom,
+        tom = this.tom,
+        startSykeforlop = this.startSyketilfelle,
+        arbeidGjenopptatt = this.arbeidGjenopptatt,
+        sykmeldingSkrevet = this.sykmeldingSkrevet,
+        opprettet = this.opprettet,
+        sendtNav = this.sendtNav,
+        sendtArbeidsgiver = this.sendtArbeidsgiver,
+        behandlingsdager = this.behandlingsdager ?: emptyList(),
+        egenmeldinger = this.egenmeldinger
+            ?.map { konverter(it) }
+            .orEmpty(),
+        papirsykmeldinger = this.papirsykmeldinger
+            ?.map { konverter(it) }
+            .orEmpty(),
+        fravar = this.fravar
+            ?.map { konverter(it) }
+            .orEmpty(),
+        andreInntektskilder = this.andreInntektskilder
+            ?.map { konverter(it) }
+            .orEmpty(),
+        soknadsperioder = this.soknadsperioder
+            ?.map { konverter(it) }
+            .orEmpty(),
+        sporsmal = this.sporsmal
+            ?.map { konverter(it) }
+            .orEmpty(),
+        ettersending = this.ettersending
+    )
+}
+
+fun konverter(sykepengesoknadDTO: DeprecatedSykepengesoknadDTO, fnr: String): Sykepengesoknad {
     return Sykepengesoknad(
         id = sykepengesoknadDTO.id!!,
         type = Soknadstype.valueOf(sykepengesoknadDTO.type!!.name),
         status = Soknadsstatus.valueOf(sykepengesoknadDTO.status!!.name),
-        aktorId = sykepengesoknadDTO.aktorId!!,
+        fnr = fnr,
         sykmeldingId = sykepengesoknadDTO.sykmeldingId,
         arbeidsgiver = konverter(sykepengesoknadDTO.arbeidsgiver!!),
         arbeidssituasjon = enumValueOrNull(sykepengesoknadDTO.arbeidssituasjon!!.name),

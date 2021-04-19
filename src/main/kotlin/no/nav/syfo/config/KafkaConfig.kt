@@ -7,7 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.kafka.KafkaErrorHandler
-import no.nav.syfo.kafka.felles.SykepengesoknadDTO
+import no.nav.syfo.kafka.felles.DeprecatedSykepengesoknadDTO
 import no.nav.syfo.kafka.soknad.deserializer.FunctionDeserializer
 import no.nav.syfo.kafka.soknad.serializer.FunctionSerializer
 import org.apache.kafka.common.serialization.StringDeserializer
@@ -45,10 +45,10 @@ class KafkaConfig(private val properties: KafkaProperties) {
 
     @Bean
     fun kafkaListenerContainerFactory(
-        consumerFactory: ConsumerFactory<String, SykepengesoknadDTO>,
+        consumerFactory: ConsumerFactory<String, DeprecatedSykepengesoknadDTO>,
         kafkaErrorHandler: KafkaErrorHandler
-    ): ConcurrentKafkaListenerContainerFactory<String, SykepengesoknadDTO> =
-        ConcurrentKafkaListenerContainerFactory<String, SykepengesoknadDTO>()
+    ): ConcurrentKafkaListenerContainerFactory<String, DeprecatedSykepengesoknadDTO> =
+        ConcurrentKafkaListenerContainerFactory<String, DeprecatedSykepengesoknadDTO>()
             .apply {
                 containerProperties.ackMode = ContainerProperties.AckMode.MANUAL_IMMEDIATE
                 setErrorHandler(kafkaErrorHandler)
@@ -57,12 +57,12 @@ class KafkaConfig(private val properties: KafkaProperties) {
 
     @Bean
     @Primary
-    fun consumerFactory(properties: KafkaProperties): ConsumerFactory<String, SykepengesoknadDTO> {
+    fun consumerFactory(properties: KafkaProperties): ConsumerFactory<String, DeprecatedSykepengesoknadDTO> {
 
         return DefaultKafkaConsumerFactory(
             properties.buildConsumerProperties(),
             StringDeserializer(),
-            FunctionDeserializer { bytes -> objectMapper.readValue(bytes, SykepengesoknadDTO::class.java) }
+            FunctionDeserializer { bytes -> objectMapper.readValue(bytes, DeprecatedSykepengesoknadDTO::class.java) }
         )
     }
 

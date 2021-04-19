@@ -29,8 +29,9 @@ class SendTilAltinnService(
     private val registry: MeterRegistry
 ) {
 
-    val log = log()
+    val log = logger()
 
+    @Synchronized
     fun sendSykepengesoknadTilAltinn(sykepengesoknad: Sykepengesoknad) {
         val erEttersending = sykepengesoknad.ettersending
         if (sendtSoknadDao.soknadErSendt(sykepengesoknad.id, erEttersending)) {
@@ -40,7 +41,7 @@ class SendTilAltinnService(
             log.info("Behandler ikke ettersending til NAV for ${sykepengesoknad.id}")
             return
         }
-        val fnr = aktorRestConsumer.getFnr(sykepengesoknad.aktorId)
+        val fnr = sykepengesoknad.fnr
         val navn = personConsumer.finnBrukerPersonnavnByFnr(fnr)
         val pdf = pdfRestConsumer.getPDF(sykepengesoknad, fnr, navn)
         val validationeventer: MutableList<ValidationEvent> = mutableListOf()

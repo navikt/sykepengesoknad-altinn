@@ -35,7 +35,7 @@ jobs:
           key: ${{ runner.os }}-gradle-cache-${{ hashFiles('build.gradle.kts') }}
           restore-keys: |
             ${{ runner.os }}-gradle-cache-
-      - uses: actions/cache@v2.1.4
+      - uses: actions/cache@v2.1.5
         with:
           path: ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}

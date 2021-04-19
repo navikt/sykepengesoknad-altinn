@@ -1,7 +1,7 @@
 package no.nav.syfo.repository
 
 import no.nav.syfo.domain.SendtSoknad
-import no.nav.syfo.log
+import no.nav.syfo.logger
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 @Repository
 class SendtSoknadDao(internal val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
 
-    val log = log()
+    val log = logger()
 
     fun lagreSendtSoknad(sendtSoknad: SendtSoknad) {
         namedParameterJdbcTemplate.update(

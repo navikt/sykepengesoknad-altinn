@@ -7,6 +7,10 @@ management:
     path-mapping.prometheus: '/prometheus'
   endpoint.prometheus.enabled: true
 
+aiven-kafka:
+  auto-offset-reset: latest #todo bytt til earliest
+  security-protocol: SSL
+
 spring:
   main.banner-mode: 'off'
   kafka:
