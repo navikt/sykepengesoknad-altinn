@@ -1,5 +1,6 @@
 package no.nav.syfo.consumer.rest
 
+import no.nav.syfo.AbstractContainerBaseTest
 import no.nav.syfo.Application
 import no.nav.syfo.consumer.rest.token.Token
 import no.nav.syfo.consumer.rest.token.TokenConsumer
@@ -14,14 +15,12 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.web.client.RestTemplate
 
 @SpringBootTest(classes = [Application::class])
 @DirtiesContext
-@EmbeddedKafka
-class TokenConsumerTest {
+class TokenConsumerTest : AbstractContainerBaseTest() {
     @Mock
     lateinit var restTemplate: RestTemplate
 

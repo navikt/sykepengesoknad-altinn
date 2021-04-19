@@ -1,6 +1,5 @@
 package no.nav.syfo.consumer.rest
 
-import no.nav.syfo.Application
 import no.nav.syfo.consumer.rest.aktor.Aktor
 import no.nav.syfo.consumer.rest.aktor.AktorResponse
 import no.nav.syfo.consumer.rest.aktor.AktorRestConsumer
@@ -12,39 +11,27 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.*
-import org.mockito.Mock
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.kafka.test.context.EmbeddedKafka
-import org.springframework.test.annotation.DirtiesContext
 import org.springframework.web.client.RestTemplate
-import javax.inject.Inject
 
-@SpringBootTest(classes = [Application::class])
-@DirtiesContext
-@EmbeddedKafka
 class AktorRestConsumerTest {
 
-    @Mock
-    lateinit var tokenConsumer: TokenConsumer
+    val tokenConsumer = mock(TokenConsumer::class.java)
 
-    @Mock
-    lateinit var restTemplate: RestTemplate
+    val restTemplate = mock(RestTemplate::class.java)
 
-    @Inject
-    private lateinit var aktorConsumer: AktorRestConsumer
+    private var aktorConsumer = AktorRestConsumer(
+        tokenConsumer = tokenConsumer,
+        username = "username",
+        url = "https://aktor.nav.no",
+        restTemplate = restTemplate
+    )
 
     @BeforeEach
     fun setup() {
-        aktorConsumer = AktorRestConsumer(
-            tokenConsumer = tokenConsumer,
-            username = "username",
-            url = "https://aktor.nav.no",
-            restTemplate = restTemplate
-        )
         given(tokenConsumer.token).willReturn(Token("token", "Bearer", 3600))
     }
 

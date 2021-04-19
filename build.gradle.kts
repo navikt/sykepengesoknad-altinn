@@ -45,6 +45,8 @@ val ojdbc8Version = "19.3.0.0"
 val logstashLogbackEncoderVersion = "6.6"
 val tjenestespesifikasjonerVersion = "1.2020.01.20-15.44-063ae9f84815"
 val cxfVersion = "3.2.10"
+val testContainersVersion = "1.15.3"
+val kluentVersion = "1.65"
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -83,7 +85,11 @@ dependencies {
     implementation("no.nav.tjenestespesifikasjoner:organisasjonv4-tjenestespesifikasjon:$tjenestespesifikasjonerVersion")
     implementation("no.nav.tjenestespesifikasjoner:nav-fim-aktoer-v2-tjenestespesifikasjon:$tjenestespesifikasjonerVersion")
     implementation("no.nav.tjenestespesifikasjoner:person-v3-tjenestespesifikasjon:$tjenestespesifikasjonerVersion")
-    testImplementation("org.springframework.kafka:spring-kafka-test")
+
+    testImplementation("org.amshove.kluent:kluent:$kluentVersion")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.testcontainers:kafka:$testContainersVersion")
+    testImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.assertj:assertj-core")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion")
