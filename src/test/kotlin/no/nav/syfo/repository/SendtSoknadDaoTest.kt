@@ -1,19 +1,16 @@
 package no.nav.syfo.repository
 
 import no.nav.syfo.AbstractContainerBaseTest
-import no.nav.syfo.Application
 import no.nav.syfo.domain.SendtSoknad
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
 import java.time.LocalDateTime
 import javax.inject.Inject
 
-@SpringBootTest(classes = [Application::class])
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@DirtiesContext
 class SendtSoknadDaoTest : AbstractContainerBaseTest() {
 
     @Inject

@@ -3,6 +3,7 @@
   "type": "ARBEIDSTAKERE",
   "status": "SENDT",
   "aktorId": "aktorId-745463060",
+  "fnr": "13068700000",
   "sykmeldingId": "14e78e84-50a5-45bb-9919-191c54f99691",
   "arbeidsgiver": {
     "navn": "ARBEIDSGIVER A/S",

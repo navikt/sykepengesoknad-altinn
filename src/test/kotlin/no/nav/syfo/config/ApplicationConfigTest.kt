@@ -1,11 +1,10 @@
 package no.nav.syfo.config
 
 import no.nav.syfo.AbstractContainerBaseTest
-import no.nav.syfo.Application
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.annotation.DirtiesContext
 
-@SpringBootTest(classes = [Application::class])
+@DirtiesContext
 class ApplicationConfigTest : AbstractContainerBaseTest() {
 
     @Test

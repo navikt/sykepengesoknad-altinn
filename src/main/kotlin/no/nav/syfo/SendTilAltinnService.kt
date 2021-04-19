@@ -2,7 +2,6 @@ package no.nav.syfo
 
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Tags
-import no.nav.syfo.consumer.rest.aktor.AktorRestConsumer
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggException
 import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
@@ -19,7 +18,6 @@ import javax.xml.bind.ValidationEvent
 
 @Service
 class SendTilAltinnService(
-    private val aktorRestConsumer: AktorRestConsumer,
     private val personConsumer: PersonConsumer,
     private val altinnConsumer: AltinnConsumer,
     private val pdfRestConsumer: PDFRestConsumer,

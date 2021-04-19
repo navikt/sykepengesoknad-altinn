@@ -1,5 +1,6 @@
 package no.nav.syfo
 
+import com.nhaarman.mockitokotlin2.*
 import io.micrometer.core.instrument.Counter
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Tags
@@ -15,7 +16,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers
-import org.mockito.BDDMockito.*
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -67,7 +67,7 @@ class SendTilAltinnServiceTest {
     fun senderTilAltinnOgLoggerJuridisk() {
         sendTilAltinnService.sendSykepengesoknadTilAltinn(mockSykepengesoknad.first)
 
-        verify(juridiskLoggConsumer).lagreIJuridiskLogg(any(), anyInt(), any())
+        verify(juridiskLoggConsumer).lagreIJuridiskLogg(any(), any(), any())
         verify(sendtSoknadDao).soknadErSendt(ressursId, false)
         verify(sendtSoknadDao).lagreSendtSoknad(any())
     }

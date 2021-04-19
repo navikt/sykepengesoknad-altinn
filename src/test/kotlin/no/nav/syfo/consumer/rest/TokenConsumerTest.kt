@@ -1,7 +1,6 @@
 package no.nav.syfo.consumer.rest
 
 import no.nav.syfo.AbstractContainerBaseTest
-import no.nav.syfo.Application
 import no.nav.syfo.consumer.rest.token.Token
 import no.nav.syfo.consumer.rest.token.TokenConsumer
 import org.assertj.core.api.Assertions.assertThat
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
 import org.mockito.Mock
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
@@ -18,7 +16,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.web.client.RestTemplate
 
-@SpringBootTest(classes = [Application::class])
 @DirtiesContext
 class TokenConsumerTest : AbstractContainerBaseTest() {
     @Mock

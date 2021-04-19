@@ -1,9 +1,7 @@
 {
   "id": "fd5c2371-7ab9-4607-8f2d-2b8e0710c0ec",
   "aktorId": "1556025402895",
-  "fodselsnummer": {
-    "verdi": "16086801683"
-  },
+  "fnr": "13068700000",
   "status": "SENDT",
   "type": "BEHANDLINGSDAGER",
   "sendtNav": null,
