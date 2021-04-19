@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.*
 import io.micrometer.core.instrument.Counter
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Tags
-import no.nav.syfo.consumer.rest.aktor.AktorRestConsumer
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggException
 import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
@@ -29,8 +28,6 @@ import java.time.LocalDateTime
 class SendTilAltinnServiceTest {
 
     @Mock
-    private lateinit var aktorRestConsumer: AktorRestConsumer
-    @Mock
     private lateinit var altinnConsumer: AltinnConsumer
     @Mock
     private lateinit var personConsumer: PersonConsumer
@@ -54,7 +51,6 @@ class SendTilAltinnServiceTest {
 
     @BeforeEach
     fun setup() {
-        given(aktorRestConsumer.getFnr(any())).willReturn("fnr")
         given(personConsumer.finnBrukerPersonnavnByFnr(any())).willReturn("Navn Navnesen")
         given(organisasjonConsumer.hentJuridiskOrgnummer(any())).willReturn("Juridisk Orgnummer")
         given(pdfRestConsumer.getPDF(any(), any(), any())).willReturn("pdf".toByteArray())

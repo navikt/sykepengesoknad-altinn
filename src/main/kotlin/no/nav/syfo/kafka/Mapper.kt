@@ -48,50 +48,6 @@ fun SykepengesoknadDTO.konverter(): Sykepengesoknad {
     )
 }
 
-fun konverter(sykepengesoknadDTO: DeprecatedSykepengesoknadDTO, fnr: String): Sykepengesoknad {
-    return Sykepengesoknad(
-        id = sykepengesoknadDTO.id!!,
-        type = Soknadstype.valueOf(sykepengesoknadDTO.type!!.name),
-        status = Soknadsstatus.valueOf(sykepengesoknadDTO.status!!.name),
-        fnr = fnr,
-        sykmeldingId = sykepengesoknadDTO.sykmeldingId,
-        arbeidsgiver = konverter(sykepengesoknadDTO.arbeidsgiver!!),
-        arbeidssituasjon = enumValueOrNull(sykepengesoknadDTO.arbeidssituasjon!!.name),
-        korrigertAv = sykepengesoknadDTO.korrigertAv,
-        korrigerer = sykepengesoknadDTO.korrigerer,
-        soktUtenlandsopphold = sykepengesoknadDTO.soktUtenlandsopphold,
-        arbeidsgiverForskutterer = enumValueOrNull(sykepengesoknadDTO.arbeidsgiverForskutterer?.name),
-        fom = sykepengesoknadDTO.fom,
-        tom = sykepengesoknadDTO.tom,
-        startSykeforlop = sykepengesoknadDTO.startSyketilfelle,
-        arbeidGjenopptatt = sykepengesoknadDTO.arbeidGjenopptatt,
-        sykmeldingSkrevet = sykepengesoknadDTO.sykmeldingSkrevet,
-        opprettet = sykepengesoknadDTO.opprettet,
-        sendtNav = sykepengesoknadDTO.sendtNav,
-        sendtArbeidsgiver = sykepengesoknadDTO.sendtArbeidsgiver,
-        behandlingsdager = sykepengesoknadDTO.behandlingsdager ?: emptyList(),
-        egenmeldinger = sykepengesoknadDTO.egenmeldinger
-            ?.map { konverter(it) }
-            .orEmpty(),
-        papirsykmeldinger = sykepengesoknadDTO.papirsykmeldinger
-            ?.map { konverter(it) }
-            .orEmpty(),
-        fravar = sykepengesoknadDTO.fravar
-            ?.map { konverter(it) }
-            .orEmpty(),
-        andreInntektskilder = sykepengesoknadDTO.andreInntektskilder
-            ?.map { konverter(it) }
-            .orEmpty(),
-        soknadsperioder = sykepengesoknadDTO.soknadsperioder
-            ?.map { konverter(it) }
-            .orEmpty(),
-        sporsmal = sykepengesoknadDTO.sporsmal
-            ?.map { konverter(it) }
-            .orEmpty(),
-        ettersending = sykepengesoknadDTO.ettersending
-    )
-}
-
 private fun konverter(svarDTO: SvarDTO): Svar {
     return Svar(
         verdi = svarDTO.verdi
