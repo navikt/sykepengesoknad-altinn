@@ -1,19 +1,21 @@
 package no.nav.syfo.kafka
 
+import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.syfo.BEHANDLINGSTIDSPUNKT
 import no.nav.syfo.SendTilAltinnService
 import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.logger
+import no.nav.syfo.objectMapper
 import org.apache.kafka.clients.consumer.ConsumerRecord
-import org.slf4j.MDC
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
 import java.nio.charset.StandardCharsets.UTF_8
-import java.time.LocalDateTime
-import java.time.LocalDateTime.now
-import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME
+import java.time.Instant
+import java.time.ZoneOffset
 import javax.inject.Inject
+
+const val RETRY_TOPIC = "flex." + "syfoaltinn-retry"
 
 @Component
 class RebehandleSykepengesoknadListener @Inject
@@ -23,38 +25,41 @@ constructor(
 ) {
     val log = logger()
 
-    @KafkaListener(topics = ["privat-syfoaltinn-soknad-v2"], id = "syfoaltinnIntern-v2", idIsGroup = false, containerFactory = "kafkaListenerContainerFactoryRebehandling")
-    fun listen(cr: ConsumerRecord<String, Sykepengesoknad>, acknowledgment: Acknowledgment) {
+    @KafkaListener(
+        topics = [RETRY_TOPIC],
+        containerFactory = "aivenKafkaListenerContainerFactory"
+    )
+    fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
+        val sykepengesoknad = cr.value().tilSykepengesoknad()
+        val behandlingstidspunkt = cr.headers().lastHeader(BEHANDLINGSTIDSPUNKT)
+            ?.value()
+            ?.let { String(it, UTF_8) }
+            ?.let { Instant.ofEpochMilli(it.toLong()) }
+            ?: Instant.now()
+
         try {
-            MDC.put(NAV_CALLID, getSafeNavCallIdHeaderAsString(cr.headers()))
-            val sykepengesoknad: Sykepengesoknad = cr.value()
-
-            cr.headers().lastHeader(BEHANDLINGSTIDSPUNKT)
-                ?.value()
-                ?.let { String(it, UTF_8) }
-                ?.let { LocalDateTime.parse(it, ISO_LOCAL_DATE_TIME) }
-                ?.takeIf { now().isBefore(it) }
-                ?.apply {
-                    log.info("Plukket opp søknad ${cr.key()} med senere behandlingstidspunkt, venter 10 sekunder og legger tilbake på kø...")
-                    Thread.sleep(10000)
-                    rebehandleSykepengesoknadProducer.send(sykepengesoknad, this)
-                    acknowledgment.acknowledge()
-                    return
-                }
-
-            sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
-            acknowledgment.acknowledge()
-        } catch (e: Exception) {
-            val sykepengesoknad: Sykepengesoknad = cr.value()
-            if (sykepengesoknad.sykmeldingId == "190c6599-c823-47f9-b207-3cadeb89a8df") {
-                log.info("Ignorerer feilsituasjon for sykmelding id ${sykepengesoknad.sykmeldingId} og søknad id ${sykepengesoknad.id}")
+            val sovetid = behandlingstidspunkt.toEpochMilli() - Instant.now().toEpochMilli()
+            if (sovetid > 0) {
+                log.info(
+                    "Mottok rebehandling av søknad ${sykepengesoknad.id} med behandlingstidspunkt ${
+                    behandlingstidspunkt.atOffset(
+                        ZoneOffset.UTC
+                    )
+                    } sover i $sovetid millisekunder"
+                )
+                acknowledgment.nack(sovetid)
             } else {
-                rebehandleSykepengesoknadProducer.send(sykepengesoknad, now().plusMinutes(30))
-                log.error("Uventet feil ved rebehandling av søknad ${sykepengesoknad.id}, legger søknaden tilbake på kø", e)
+                sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
+                acknowledgment.acknowledge()
             }
+        } catch (e: Exception) {
+
+            rebehandleSykepengesoknadProducer.send(sykepengesoknad)
+            log.error("Uventet feil ved rebehandling av søknad ${sykepengesoknad.id}, legger søknaden tilbake på kø", e)
+
             acknowledgment.acknowledge()
-        } finally {
-            MDC.remove(NAV_CALLID)
         }
     }
+
+    fun String.tilSykepengesoknad(): Sykepengesoknad = objectMapper.readValue(this)
 }

@@ -53,8 +53,6 @@ spec:
       value: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
     - name: SECURITY_TOKEN_SERVICE_TOKEN_URL
       value: https://security-token-service.nais.preprod.local/rest/v1/sts/token
-    - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
-      value: b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443
     - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
       value: https://app-q1.adeo.no/tpsws-aura/ws/Person/v3
     - name: AKTOERREGISTER_API_V1_URL

@@ -15,7 +15,6 @@ import org.springframework.kafka.event.ConsumerStoppedEvent
 import org.springframework.kafka.listener.KafkaMessageListenerContainer
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
-import java.time.LocalDateTime
 
 const val SYKEPENGESOKNAD_TOPIC = "flex." + "sykepengesoknad"
 
@@ -42,7 +41,7 @@ class AivenSykepengesoknadListener(
                 sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
             } catch (e: Exception) {
                 log.error("Feiler ved sending av søknad ${sykepengesoknadDTO.id}, legger til rebehandling", e)
-                rebehandleSykepengesoknadProducer.send(sykepengesoknad, LocalDateTime.now().plusMinutes(1))
+                rebehandleSykepengesoknadProducer.send(sykepengesoknad)
             }
         } else {
             log.info("Ignorerer søknad ${sykepengesoknadDTO.id} med status ${sykepengesoknadDTO.status} og type ${sykepengesoknadDTO.type}")

@@ -58,8 +58,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.hibernate.validator:hibernate-validator")
     implementation("org.springframework.kafka:spring-kafka")
-    implementation("no.nav.syfo.kafka:kafkautils:$syfoKafkaVersion")
-    implementation("no.nav.syfo.kafka:legacy-serialisering:$syfoKafkaVersion")
     implementation("no.nav.syfo.kafka:felles:$syfoKafkaVersion")
     implementation("org.apache.cxf:cxf-spring-boot-starter-jaxws:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")

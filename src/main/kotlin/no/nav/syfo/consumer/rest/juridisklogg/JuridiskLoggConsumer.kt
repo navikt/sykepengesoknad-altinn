@@ -2,9 +2,7 @@ package no.nav.syfo.consumer.rest.juridisklogg
 
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.soknad.Sykepengesoknad
-import no.nav.syfo.kafka.NAV_CALLID
 import no.nav.syfo.logger
-import no.nav.syfo.util.MDCOperations
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.*
 import org.springframework.retry.annotation.Backoff
@@ -32,7 +30,7 @@ class JuridiskLoggConsumer(
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        headers.set("Nav-Call-Id", MDCOperations.getFromMDC(NAV_CALLID))
+        headers.set("Nav-Call-Id", sykepengesoknad.id)
         headers.set("Nav-Consumer-Id", username)
 
         val avsender = sykepengesoknad.fnr

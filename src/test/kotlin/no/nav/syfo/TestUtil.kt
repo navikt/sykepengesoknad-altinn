@@ -36,5 +36,3 @@ val mockSykepengesoknadBehandlingsdager: Sykepengesoknad
     get() {
         return mockSykepengesoknadBehandlingsdagerDTO.konverter()
     }
-
-fun Any.serialisertTilString(): String = objectMapper.writeValueAsString(this)

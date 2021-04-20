@@ -40,19 +40,11 @@ javax.net.ssl:
   trustStorePassword: truststorepassword
 
 spring:
-  jackson.serialization.WRITE_DATES_AS_TIMESTAMPS: false
   datasource:
     url: 'jdbc:h2:mem:testdb;MODE=Oracle'
     driver-class-name: 'org.h2.Driver'
     username: 'sa'
     password:
-  kafka:
-    bootstrap-servers: "overskrives"
-    consumer:
-      group-id: syfoaltinn-local
-      max-poll-records: 1
-      auto-offset-reset: latest
-      enable-auto-commit: false
 
 KAFKA_TRUSTSTORE_PATH: ""
 KAFKA_CREDSTORE_PASSWORD: ""
@@ -61,3 +53,5 @@ KAFKA_KEYSTORE_PATH: ""
 aiven-kafka:
   auto-offset-reset: earliest
   security-protocol: PLAINTEXT
+
+rebehandling.delay.sekunder: 10
