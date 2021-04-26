@@ -8,7 +8,7 @@ management:
   endpoint.prometheus.enabled: true
 
 aiven-kafka:
-  auto-offset-reset: latest #todo bytt til earliest
+  auto-offset-reset: none
   security-protocol: SSL
 
 spring:
