@@ -32,6 +32,9 @@ spec:
     requests:
       cpu: 200m
       memory: 768Mi
+  azure:
+    application:
+      enabled: true
   vault:
     enabled: true
     paths:
