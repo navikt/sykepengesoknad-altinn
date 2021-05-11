@@ -1,6 +1,6 @@
 package no.nav.syfo.client.pdl
 
-import java.util.*
+import org.apache.commons.text.WordUtils
 
 data class GetPersonResponse(
     val data: ResponseData,
@@ -38,15 +38,12 @@ data class Navn(
     val etternavn: String
 )
 
-private val norskLocale = Locale("nb")
-
-private fun String.storForbokstav(): String {
-    return this.lowercase(norskLocale).replaceFirstChar { it.uppercase(norskLocale) }
-}
-
-fun Navn.format(): String =
-    if (mellomnavn != null) {
-        "${fornavn.storForbokstav()} ${mellomnavn.storForbokstav()} ${etternavn.storForbokstav()}"
+fun Navn.format(): String {
+    val navn = if (mellomnavn != null) {
+        "$fornavn $mellomnavn $etternavn"
     } else {
-        "${fornavn.storForbokstav()} ${etternavn.storForbokstav()}"
+        "$fornavn $etternavn"
     }
+
+    return WordUtils.capitalizeFully(navn, ' ', '-')
+}

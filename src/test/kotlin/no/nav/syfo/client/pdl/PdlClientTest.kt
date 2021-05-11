@@ -39,30 +39,30 @@ class PdlClientTest : AbstractContainerBaseTest() {
         pdlMockServer = createServer(pdlRestTemplate)
     }
 
+    fun harBearerToken(): RequestMatcher {
+        return RequestMatcher { request: ClientHttpRequest ->
+
+            val authHeader = request.headers.getFirst(AUTHORIZATION)
+                ?: throw AssertionError("Mangler $AUTHORIZATION header")
+
+            if (!authHeader.startsWith("Bearer ey")) {
+                throw AssertionError("$AUTHORIZATION ser ikke ut til å være bearertoken")
+            }
+        }
+    }
+
     @Test
-    fun `Vi tester happycase`() {
+    fun `Vi tester dobbelt fornavn`() {
         val getPersonResponse = GetPersonResponse(
             errors = emptyList(),
             data = ResponseData(
                 hentPerson = HentPerson(
                     listOf(
-                        Navn(fornavn = "ÅGE", etternavn = "ÅÆØÅ", mellomnavn = null)
+                        Navn(fornavn = "ÅGE ROGER", etternavn = "ÅÆØÅ", mellomnavn = null)
                     )
                 )
             )
         )
-
-        fun harBearerToken(): RequestMatcher {
-            return RequestMatcher { request: ClientHttpRequest ->
-
-                val authHeader = request.headers.getFirst(AUTHORIZATION)
-                    ?: throw AssertionError("Mangler $AUTHORIZATION header")
-
-                if (!authHeader.startsWith("Bearer ey")) {
-                    throw AssertionError("$AUTHORIZATION ser ikke ut til å være bearertoken")
-                }
-            }
-        }
 
         pdlMockServer.expect(
             once(),
@@ -79,7 +79,73 @@ class PdlClientTest : AbstractContainerBaseTest() {
 
         val responseData = pdlClient.hentFormattertNavn("12345")
 
-        responseData `should be equal to` "Åge Åæøå"
+        responseData `should be equal to` "Åge Roger Åæøå"
+
+        pdlMockServer.verify()
+    }
+
+    @Test
+    fun `Vi tester fornavn mellomnavn og etternavn`() {
+        val getPersonResponse = GetPersonResponse(
+            errors = emptyList(),
+            data = ResponseData(
+                hentPerson = HentPerson(
+                    listOf(
+                        Navn(fornavn = "ÅGE", etternavn = "ÅÆØÅ", mellomnavn = "ROGER")
+                    )
+                )
+            )
+        )
+
+        pdlMockServer.expect(
+            once(),
+            requestTo(URI("http://pdl-api.pdl/graphql"))
+        )
+            .andExpect(method(HttpMethod.POST))
+            .andExpect(header("TEMA", "SYK"))
+            .andExpect(harBearerToken())
+            .andRespond(
+                withStatus(HttpStatus.OK)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(getPersonResponse.serialisertTilString())
+            )
+
+        val responseData = pdlClient.hentFormattertNavn("12345")
+
+        responseData `should be equal to` "Åge Roger Åæøå"
+
+        pdlMockServer.verify()
+    }
+
+    @Test
+    fun `Tor-Henry blir riktig kapitalisert`() {
+        val getPersonResponse = GetPersonResponse(
+            errors = emptyList(),
+            data = ResponseData(
+                hentPerson = HentPerson(
+                    listOf(
+                        Navn(fornavn = "TOR-HENRY", etternavn = "ROARSEN", mellomnavn = null)
+                    )
+                )
+            )
+        )
+
+        pdlMockServer.expect(
+            once(),
+            requestTo(URI("http://pdl-api.pdl/graphql"))
+        )
+            .andExpect(method(HttpMethod.POST))
+            .andExpect(header("TEMA", "SYK"))
+            .andExpect(harBearerToken())
+            .andRespond(
+                withStatus(HttpStatus.OK)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(getPersonResponse.serialisertTilString())
+            )
+
+        val responseData = pdlClient.hentFormattertNavn("12345")
+
+        responseData `should be equal to` "Tor-Henry Roarsen"
 
         pdlMockServer.verify()
     }
