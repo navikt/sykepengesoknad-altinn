@@ -6,7 +6,6 @@ import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
 import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
 import no.nav.syfo.consumer.ws.client.OrganisasjonConsumer
-import no.nav.syfo.consumer.ws.client.PersonConsumer
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.kafka.SYKEPENGESOKNAD_TOPIC
@@ -32,9 +31,6 @@ class RebehandlingIntegrationTest : AbstractContainerBaseTest() {
     private lateinit var sendtSoknadDao: SendtSoknadDao
 
     @MockBean
-    private lateinit var personConsumer: PersonConsumer
-
-    @MockBean
     private lateinit var pdlClient: PdlClient
 
     @MockBean
@@ -54,7 +50,6 @@ class RebehandlingIntegrationTest : AbstractContainerBaseTest() {
         val id = UUID.randomUUID().toString()
         val enkelSoknad = mockSykepengesoknadDTO.copy(id = id)
 
-        whenever(personConsumer.finnBrukerPersonnavnByFnr(enkelSoknad.fnr)).thenReturn("Ole Gunnar")
         whenever(pdlClient.hentFormattertNavn(enkelSoknad.fnr)).thenReturn("Ole Gunnar")
         whenever(pdfRestConsumer.getPDF(any(), any(), any())).thenThrow(RuntimeException("OOOPS")).thenReturn("pdf".toByteArray())
 

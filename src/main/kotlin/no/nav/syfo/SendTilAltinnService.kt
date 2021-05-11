@@ -8,7 +8,6 @@ import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggException
 import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
 import no.nav.syfo.consumer.ws.client.OrganisasjonConsumer
-import no.nav.syfo.consumer.ws.client.PersonConsumer
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.SendtSoknad
 import no.nav.syfo.domain.soknad.Sykepengesoknad
@@ -19,7 +18,6 @@ import javax.xml.bind.ValidationEvent
 
 @Service
 class SendTilAltinnService(
-    private val personConsumer: PersonConsumer,
     private val altinnConsumer: AltinnConsumer,
     private val pdfRestConsumer: PDFRestConsumer,
     private val organisasjonConsumer: OrganisasjonConsumer,
@@ -42,15 +40,8 @@ class SendTilAltinnService(
             return
         }
         val fnr = sykepengesoknad.fnr
-        val navn = personConsumer.finnBrukerPersonnavnByFnr(fnr)
-        try {
-            val pdlNavn = pdlClient.hentFormattertNavn(fnr)
-            if (pdlNavn != navn) {
-                log.warn("PDL navn er ikke likt person v3 navn for søknad ${sykepengesoknad.id}")
-            }
-        } catch (e: Exception) {
-            log.error("Feil ved henting fra pdl", e)
-        }
+        val navn = pdlClient.hentFormattertNavn(fnr)
+
         val pdf = pdfRestConsumer.getPDF(sykepengesoknad, fnr, navn)
         val validationeventer: MutableList<ValidationEvent> = mutableListOf()
         val juridiskOrgnummerArbeidsgiver =

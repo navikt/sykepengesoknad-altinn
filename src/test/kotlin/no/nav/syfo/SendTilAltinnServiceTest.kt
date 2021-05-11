@@ -10,7 +10,6 @@ import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggException
 import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
 import no.nav.syfo.consumer.ws.client.OrganisasjonConsumer
-import no.nav.syfo.consumer.ws.client.PersonConsumer
 import no.nav.syfo.repository.SendtSoknadDao
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -30,8 +29,6 @@ class SendTilAltinnServiceTest {
 
     @Mock
     private lateinit var altinnConsumer: AltinnConsumer
-    @Mock
-    private lateinit var personConsumer: PersonConsumer
     @Mock
     private lateinit var pdlClient: PdlClient
     @Mock
@@ -54,7 +51,6 @@ class SendTilAltinnServiceTest {
 
     @BeforeEach
     fun setup() {
-        given(personConsumer.finnBrukerPersonnavnByFnr(any())).willReturn("Navn Navnesen")
         given(pdlClient.hentFormattertNavn(any())).willReturn("Navn Navnesen")
         given(organisasjonConsumer.hentJuridiskOrgnummer(any())).willReturn("Juridisk Orgnummer")
         given(pdfRestConsumer.getPDF(any(), any(), any())).willReturn("pdf".toByteArray())

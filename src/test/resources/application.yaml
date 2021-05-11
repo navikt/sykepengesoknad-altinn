@@ -28,7 +28,6 @@ srvsyfoaltinn:
   username: "kek"
   password: "bur"
 
-virksomhet.Person.v3.endpointurl: "http://person"
 servicegateway.url: "servicegateway.url"
 securitytokenservice.url: "http://sts.url"
 aktoerregister.api.v1.url: "aktor.url"

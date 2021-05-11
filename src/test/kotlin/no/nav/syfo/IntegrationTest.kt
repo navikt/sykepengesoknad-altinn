@@ -6,7 +6,6 @@ import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
 import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
 import no.nav.syfo.consumer.ws.client.OrganisasjonConsumer
-import no.nav.syfo.consumer.ws.client.PersonConsumer
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.kafka.SYKEPENGESOKNAD_TOPIC
@@ -32,9 +31,6 @@ class IntegrationTest : AbstractContainerBaseTest() {
     private lateinit var sendtSoknadDao: SendtSoknadDao
 
     @MockBean
-    private lateinit var personConsumer: PersonConsumer
-
-    @MockBean
     private lateinit var pdlClient: PdlClient
 
     @MockBean
@@ -55,7 +51,6 @@ class IntegrationTest : AbstractContainerBaseTest() {
         val enkelSoknad = mockSykepengesoknadDTO.copy(id = id)
 
         whenever(pdlClient.hentFormattertNavn(enkelSoknad.fnr)).thenReturn("Ole Gunnar")
-        whenever(personConsumer.finnBrukerPersonnavnByFnr(enkelSoknad.fnr)).thenReturn("Ole Gunnar")
         whenever(pdfRestConsumer.getPDF(any(), any(), any())).thenReturn("pdf".toByteArray())
 
         aivenKafkaProducer.send(

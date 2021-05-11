@@ -56,8 +56,6 @@ spec:
       value: https://sts.adeo.no/SecurityTokenServiceProvider/
     - name: SECURITY_TOKEN_SERVICE_TOKEN_URL
       value: https://security-token-service.nais.adeo.no/rest/v1/sts/token
-    - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
-      value: https://app.adeo.no/tpsws-aura/ws/Person/v3
     - name: VIRKSOMHET_ORGANISASJON_V4_ENDPOINTURL
       value: https://modapp.adeo.no/ereg/ws/OrganisasjonService/v4
     - name: LAGREJURIDISKLOGG_REST_URL
