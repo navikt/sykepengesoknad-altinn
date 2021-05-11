@@ -38,6 +38,8 @@ repositories {
     }
 }
 
+ext["okhttp3.version"] = "4.9.0" // For at token support testen kjører (tror jeg)
+
 val syfoKafkaVersion = "2021.04.08-13.45-0da5bd8e"
 val mockitoKotlinVersion = "2.2.0"
 val h2Version = "1.4.200"
@@ -47,6 +49,7 @@ val tjenestespesifikasjonerVersion = "1.2020.01.20-15.44-063ae9f84815"
 val cxfVersion = "3.2.10"
 val testContainersVersion = "1.15.3"
 val kluentVersion = "1.65"
+val tokenSupportVersion = "1.3.7"
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -58,6 +61,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.hibernate.validator:hibernate-validator")
     implementation("org.springframework.kafka:spring-kafka")
+    implementation("org.apache.httpcomponents:httpclient")
     implementation("no.nav.syfo.kafka:felles:$syfoKafkaVersion")
     implementation("org.apache.cxf:cxf-spring-boot-starter-jaxws:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")
@@ -67,6 +71,8 @@ dependencies {
     implementation("javax.xml.soap:saaj-api:1.3.5")
     implementation("javax.xml.ws:jaxws-api:2.3.1")
     implementation("org.apache.commons:commons-text:1.9")
+    implementation("no.nav.security:token-client-spring:$tokenSupportVersion")
+    implementation("no.nav.security:token-validation-spring:$tokenSupportVersion")
 
     implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -84,6 +90,7 @@ dependencies {
     implementation("no.nav.tjenestespesifikasjoner:nav-fim-aktoer-v2-tjenestespesifikasjon:$tjenestespesifikasjonerVersion")
     implementation("no.nav.tjenestespesifikasjoner:person-v3-tjenestespesifikasjon:$tjenestespesifikasjonerVersion")
 
+    testImplementation("no.nav.security:token-validation-spring-test:$tokenSupportVersion")
     testImplementation("org.amshove.kluent:kluent:$kluentVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.testcontainers:kafka:$testContainersVersion")

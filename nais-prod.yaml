@@ -58,8 +58,6 @@ spec:
       value: https://security-token-service.nais.adeo.no/rest/v1/sts/token
     - name: VIRKSOMHET_PERSON_V3_ENDPOINTURL
       value: https://app.adeo.no/tpsws-aura/ws/Person/v3
-    - name: AKTOERREGISTER_API_V1_URL
-      value: https://app.adeo.no/aktoerregister/api/v1
     - name: VIRKSOMHET_ORGANISASJON_V4_ENDPOINTURL
       value: https://modapp.adeo.no/ereg/ws/OrganisasjonService/v4
     - name: LAGREJURIDISKLOGG_REST_URL
@@ -68,3 +66,5 @@ spec:
       value: https://pep-gw.oera.no:9443/ekstern/altinn/BehandleAltinnMelding/v1
     - name: FASIT_ENVIRONMENT_NAME
       value: p
+    - name: PDL_API_AAD_CLIENT_ID
+      value: prod-fss.pdl.pdl-api

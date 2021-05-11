@@ -2,6 +2,7 @@ package no.nav.syfo
 
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Tags
+import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggException
 import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
@@ -24,7 +25,8 @@ class SendTilAltinnService(
     private val organisasjonConsumer: OrganisasjonConsumer,
     private val juridiskLoggConsumer: JuridiskLoggConsumer,
     private val sendtSoknadDao: SendtSoknadDao,
-    private val registry: MeterRegistry
+    private val registry: MeterRegistry,
+    private val pdlClient: PdlClient,
 ) {
 
     val log = logger()
@@ -41,9 +43,18 @@ class SendTilAltinnService(
         }
         val fnr = sykepengesoknad.fnr
         val navn = personConsumer.finnBrukerPersonnavnByFnr(fnr)
+        try {
+            val pdlNavn = pdlClient.hentFormattertNavn(fnr)
+            if (pdlNavn != navn) {
+                log.warn("PDL navn er ikke likt person v3 navn for søknad ${sykepengesoknad.id}")
+            }
+        } catch (e: Exception) {
+            log.error("Feil ved henting fra pdl", e)
+        }
         val pdf = pdfRestConsumer.getPDF(sykepengesoknad, fnr, navn)
         val validationeventer: MutableList<ValidationEvent> = mutableListOf()
-        val juridiskOrgnummerArbeidsgiver = organisasjonConsumer.hentJuridiskOrgnummer(sykepengesoknad.arbeidsgiver.orgnummer)
+        val juridiskOrgnummerArbeidsgiver =
+            organisasjonConsumer.hentJuridiskOrgnummer(sykepengesoknad.arbeidsgiver.orgnummer)
         val xml = sykepengesoknad2XMLByteArray(sykepengesoknad, validationeventer, fnr, juridiskOrgnummerArbeidsgiver)
 
         val ekstraData = AltinnInnsendelseEkstraData(

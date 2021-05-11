@@ -1,6 +1,7 @@
 package no.nav.syfo
 
 import com.nhaarman.mockitokotlin2.*
+import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
 import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
@@ -34,6 +35,9 @@ class IntegrationTest : AbstractContainerBaseTest() {
     private lateinit var personConsumer: PersonConsumer
 
     @MockBean
+    private lateinit var pdlClient: PdlClient
+
+    @MockBean
     private lateinit var altinnConsumer: AltinnConsumer
 
     @MockBean
@@ -50,6 +54,7 @@ class IntegrationTest : AbstractContainerBaseTest() {
         val id = UUID.randomUUID().toString()
         val enkelSoknad = mockSykepengesoknadDTO.copy(id = id)
 
+        whenever(pdlClient.hentFormattertNavn(enkelSoknad.fnr)).thenReturn("Ole Gunnar")
         whenever(personConsumer.finnBrukerPersonnavnByFnr(enkelSoknad.fnr)).thenReturn("Ole Gunnar")
         whenever(pdfRestConsumer.getPDF(any(), any(), any())).thenReturn("pdf".toByteArray())
 
@@ -72,7 +77,7 @@ class IntegrationTest : AbstractContainerBaseTest() {
             )
         )
 
-        await().atMost(Duration.ofSeconds(5))
+        await().atMost(Duration.ofSeconds(10))
             .until {
                 sendtSoknadDao.soknadErSendt(id, false)
             }

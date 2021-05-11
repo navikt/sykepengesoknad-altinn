@@ -55,3 +55,17 @@ aiven-kafka:
   security-protocol: PLAINTEXT
 
 rebehandling.delay.sekunder: 10
+
+no.nav.security.jwt:
+  client:
+    registration:
+      pdl-api-client-credentials:
+        token-endpoint-url: http://localhost:${mock-oauth2-server.port}/azureator/token
+        grant-type: client_credentials
+        scope: pdl-api
+        authentication:
+          client-id: client-id
+          client-secret: secretzz
+          client-auth-method: client_secret_basic
+
+pdl.api.url: "http://pdl-api.pdl"

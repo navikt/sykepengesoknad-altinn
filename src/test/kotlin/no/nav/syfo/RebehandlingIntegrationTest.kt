@@ -1,6 +1,7 @@
 package no.nav.syfo
 
 import com.nhaarman.mockitokotlin2.*
+import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
 import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
@@ -34,6 +35,9 @@ class RebehandlingIntegrationTest : AbstractContainerBaseTest() {
     private lateinit var personConsumer: PersonConsumer
 
     @MockBean
+    private lateinit var pdlClient: PdlClient
+
+    @MockBean
     private lateinit var altinnConsumer: AltinnConsumer
 
     @MockBean
@@ -51,6 +55,7 @@ class RebehandlingIntegrationTest : AbstractContainerBaseTest() {
         val enkelSoknad = mockSykepengesoknadDTO.copy(id = id)
 
         whenever(personConsumer.finnBrukerPersonnavnByFnr(enkelSoknad.fnr)).thenReturn("Ole Gunnar")
+        whenever(pdlClient.hentFormattertNavn(enkelSoknad.fnr)).thenReturn("Ole Gunnar")
         whenever(pdfRestConsumer.getPDF(any(), any(), any())).thenThrow(RuntimeException("OOOPS")).thenReturn("pdf".toByteArray())
 
         aivenKafkaProducer.send(

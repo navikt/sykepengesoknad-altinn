@@ -11,11 +11,11 @@ import org.springframework.http.HttpStatus.OK
 import org.springframework.http.MediaType
 import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Retryable
-import org.springframework.stereotype.Controller
+import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 import javax.inject.Inject
 
-@Controller
+@Component
 class PDFRestConsumer
 @Inject constructor(
     private val restTemplate: RestTemplate,

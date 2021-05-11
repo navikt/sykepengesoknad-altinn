@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.*
 import io.micrometer.core.instrument.Counter
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Tags
+import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
 import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggException
 import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
@@ -32,6 +33,8 @@ class SendTilAltinnServiceTest {
     @Mock
     private lateinit var personConsumer: PersonConsumer
     @Mock
+    private lateinit var pdlClient: PdlClient
+    @Mock
     private lateinit var pdfRestConsumer: PDFRestConsumer
     @Mock
     private lateinit var organisasjonConsumer: OrganisasjonConsumer
@@ -52,6 +55,7 @@ class SendTilAltinnServiceTest {
     @BeforeEach
     fun setup() {
         given(personConsumer.finnBrukerPersonnavnByFnr(any())).willReturn("Navn Navnesen")
+        given(pdlClient.hentFormattertNavn(any())).willReturn("Navn Navnesen")
         given(organisasjonConsumer.hentJuridiskOrgnummer(any())).willReturn("Juridisk Orgnummer")
         given(pdfRestConsumer.getPDF(any(), any(), any())).willReturn("pdf".toByteArray())
         given(altinnConsumer.sendSykepengesoknadTilArbeidsgiver(any(), any())).willReturn(123)
