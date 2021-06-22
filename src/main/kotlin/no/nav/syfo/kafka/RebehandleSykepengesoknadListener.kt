@@ -53,7 +53,10 @@ constructor(
                 acknowledgment.acknowledge()
             }
         } catch (e: Exception) {
-
+            if (sykepengesoknad.id == "024f3815-3649-4b8b-b45e-695142272d8f" || sykepengesoknad.id == "024f3815-3649-4b8b-b45e-695142272d8f") {
+                log.info("Skipper ${sykepengesoknad.id} fra rebehandling siden den er veldig gammel")
+                acknowledgment.acknowledge()
+            }
             rebehandleSykepengesoknadProducer.send(sykepengesoknad)
             log.error("Uventet feil ved rebehandling av søknad ${sykepengesoknad.id}, legger søknaden tilbake på kø", e)
 
