@@ -53,7 +53,7 @@ constructor(
                 acknowledgment.acknowledge()
             }
         } catch (e: Exception) {
-            if (sykepengesoknad.id == "024f3815-3649-4b8b-b45e-695142272d8f" || sykepengesoknad.id == "024f3815-3649-4b8b-b45e-695142272d8f") {
+            if (sykepengesoknad.id == "0edcaa74-257f-4c13-81db-e21b8cb2e8c8") {
                 log.info("Skipper ${sykepengesoknad.id} fra rebehandling siden den er veldig gammel")
                 acknowledgment.acknowledge()
             }
