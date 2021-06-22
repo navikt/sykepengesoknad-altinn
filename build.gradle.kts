@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.4.5"
+    id("org.springframework.boot") version "2.4.7"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.5.0"
-    kotlin("plugin.spring") version "1.5.0"
+    kotlin("jvm") version "1.5.10"
+    kotlin("plugin.spring") version "1.5.10"
 }
 
 group = "no.nav.helse.flex"
@@ -48,7 +48,7 @@ val logstashLogbackEncoderVersion = "6.6"
 val tjenestespesifikasjonerVersion = "1.2020.01.20-15.44-063ae9f84815"
 val cxfVersion = "3.2.10"
 val testContainersVersion = "1.15.3"
-val kluentVersion = "1.65"
+val kluentVersion = "1.67"
 val tokenSupportVersion = "1.3.7"
 
 dependencies {
