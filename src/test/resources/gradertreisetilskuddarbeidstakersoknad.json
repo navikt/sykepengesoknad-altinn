@@ -1,0 +1,880 @@
+{
+  "id": "bb5c7a47-adbe-4cdf-a71b-11f342684564",
+  "type": "GRADERT_REISETILSKUDD",
+  "status": "SENDT",
+  "fnr": "01010112345",
+  "sykmeldingId": "fc780a6d-3eb0-4efb-aa9b-a8d6c17a8476",
+  "arbeidsgiver": {
+    "navn": "HÅRREISENDE FRISØR",
+    "orgnummer": "839942907"
+  },
+  "arbeidssituasjon": "ARBEIDSTAKER",
+  "korrigerer": null,
+  "korrigertAv": null,
+  "soktUtenlandsopphold": null,
+  "arbeidsgiverForskutterer": null,
+  "fom": "2021-08-30",
+  "tom": "2021-09-14",
+  "dodsdato": null,
+  "startSyketilfelle": "2021-08-30",
+  "arbeidGjenopptatt": "2021-09-14",
+  "sykmeldingSkrevet": "2021-08-30T11:56:08.204",
+  "opprettet": "2021-09-15T11:57:12.807764",
+  "sendtNav": "2021-09-15T12:02:44.300929",
+  "sendtArbeidsgiver": "2021-09-15T12:02:44.300929",
+  "egenmeldinger": [],
+  "fravarForSykmeldingen": [
+    {
+      "fom": "2021-08-16",
+      "tom": "2021-08-18"
+    }
+  ],
+  "papirsykmeldinger": [],
+  "fravar": [
+    {
+      "fom": "2021-09-06",
+      "tom": "2021-09-09",
+      "type": "FERIE"
+    },
+    {
+      "fom": "2021-09-06",
+      "tom": "2021-09-08",
+      "type": "UTLANDSOPPHOLD"
+    },
+    {
+      "fom": "2021-09-13",
+      "tom": null,
+      "type": "UTDANNING_FULLTID"
+    }
+  ],
+  "andreInntektskilder": [
+    {
+      "type": "SELVSTENDIG_NARINGSDRIVENDE",
+      "sykmeldt": true
+    }
+  ],
+  "soknadsperioder": [
+    {
+      "fom": "2021-08-30",
+      "tom": "2021-09-14",
+      "sykmeldingsgrad": 100,
+      "faktiskGrad": 99,
+      "avtaltTimer": 65,
+      "faktiskTimer": null,
+      "sykmeldingstype": "AKTIVITET_IKKE_MULIG",
+      "grad": 100
+    }
+  ],
+  "sporsmal": [
+    {
+      "id": "209",
+      "tag": "ANSVARSERKLARING",
+      "sporsmalstekst": "Jeg vet at jeg kan miste retten til reisetilskudd og sykepenger hvis opplysningene jeg gir ikke er riktige eller fullstendige. Jeg vet også at NAV kan holde igjen eller kreve tilbake penger, og at å gi feil opplysninger kan være straffbart.",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "CHECKBOX_PANEL",
+      "kriterieForVisningAvUndersporsmal": null,
+      "svar": [
+        {
+          "verdi": "CHECKED"
+        }
+      ],
+      "undersporsmal": []
+    },
+    {
+      "id": "210",
+      "tag": "FRAVAR_FOR_SYKMELDINGEN",
+      "sporsmalstekst": "Var du syk og borte fra jobb mellom 14. - 29. august 2021?",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "JA_NEI",
+      "kriterieForVisningAvUndersporsmal": "JA",
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": [
+        {
+          "id": "211",
+          "tag": "FRAVAR_FOR_SYKMELDINGEN_NAR",
+          "sporsmalstekst": "Hvilke dager var du syk og borte fra jobb? Du trenger bare oppgi dager før 30. august 2021.",
+          "undertekst": null,
+          "min": "2021-02-28",
+          "max": "2021-08-29",
+          "svartype": "PERIODER",
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [
+            {
+              "verdi": "{\"fom\":\"2021-08-16\",\"tom\":\"2021-08-18\"}"
+            }
+          ],
+          "undersporsmal": []
+        }
+      ]
+    },
+    {
+      "id": "212",
+      "tag": "TILBAKE_I_ARBEID",
+      "sporsmalstekst": "Var du tilbake i fullt arbeid hos HÅRREISENDE FRISØR i løpet av perioden 30. august - 14. september 2021?",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "JA_NEI",
+      "kriterieForVisningAvUndersporsmal": "JA",
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": [
+        {
+          "id": "213",
+          "tag": "TILBAKE_NAR",
+          "sporsmalstekst": "Når begynte du å jobbe igjen?",
+          "undertekst": null,
+          "min": "2021-08-30",
+          "max": "2021-09-14",
+          "svartype": "DATO",
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [
+            {
+              "verdi": "2021-09-14"
+            }
+          ],
+          "undersporsmal": []
+        }
+      ]
+    },
+    {
+      "id": "214",
+      "tag": "FERIE_V2",
+      "sporsmalstekst": "Hadde du ferie i tidsrommet 30. august - 13. september 2021?",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "JA_NEI",
+      "kriterieForVisningAvUndersporsmal": "JA",
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": [
+        {
+          "id": "215",
+          "tag": "FERIE_NAR_V2",
+          "sporsmalstekst": "Når tok du ut ferie?",
+          "undertekst": null,
+          "min": "2021-08-30",
+          "max": "2021-09-13",
+          "svartype": "PERIODER",
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [
+            {
+              "verdi": "{\"fom\":\"2021-09-06\",\"tom\":\"2021-09-09\"}"
+            }
+          ],
+          "undersporsmal": []
+        }
+      ]
+    },
+    {
+      "id": "216",
+      "tag": "PERMISJON_V2",
+      "sporsmalstekst": "Tok du permisjon mens du var sykmeldt 30. august - 13. september 2021?",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "JA_NEI",
+      "kriterieForVisningAvUndersporsmal": "JA",
+      "svar": [
+        {
+          "verdi": "NEI"
+        }
+      ],
+      "undersporsmal": [
+        {
+          "id": "217",
+          "tag": "PERMISJON_NAR_V2",
+          "sporsmalstekst": "Når tok du permisjon?",
+          "undertekst": null,
+          "min": "2021-08-30",
+          "max": "2021-09-13",
+          "svartype": "PERIODER",
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [],
+          "undersporsmal": []
+        }
+      ]
+    },
+    {
+      "id": "218",
+      "tag": "UTLAND_V2",
+      "sporsmalstekst": "Var du på reise utenfor EØS mens du var sykmeldt 30. august - 13. september 2021?",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "JA_NEI",
+      "kriterieForVisningAvUndersporsmal": "JA",
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": [
+        {
+          "id": "219",
+          "tag": "UTLAND_NAR_V2",
+          "sporsmalstekst": "Når var du utenfor EØS?",
+          "undertekst": null,
+          "min": "2021-08-30",
+          "max": "2021-09-13",
+          "svartype": "PERIODER",
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [
+            {
+              "verdi": "{\"fom\":\"2021-09-06\",\"tom\":\"2021-09-08\"}"
+            }
+          ],
+          "undersporsmal": []
+        }
+      ]
+    },
+    {
+      "id": "220",
+      "tag": "JOBBET_DU_100_PROSENT_0",
+      "sporsmalstekst": "I perioden 30. august - 13. september 2021 var du 100 % sykmeldt fra HÅRREISENDE FRISØR. Jobbet du noe i denne perioden?",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "JA_NEI",
+      "kriterieForVisningAvUndersporsmal": "JA",
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": [
+        {
+          "id": "221",
+          "tag": "HVOR_MANGE_TIMER_PER_UKE_0",
+          "sporsmalstekst": "Hvor mange timer i uken jobber du vanligvis når du er frisk? Varierer det, kan du oppgi gjennomsnittet.",
+          "undertekst": "timer per uke",
+          "min": "1",
+          "max": "150",
+          "svartype": "TALL",
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [
+            {
+              "verdi": "65"
+            }
+          ],
+          "undersporsmal": []
+        },
+        {
+          "id": "222",
+          "tag": "HVOR_MYE_HAR_DU_JOBBET_0",
+          "sporsmalstekst": "Hvor mye jobbet du totalt 30. august - 13. september 2021 hos HÅRREISENDE FRISØR?",
+          "undertekst": null,
+          "min": null,
+          "max": null,
+          "svartype": "RADIO_GRUPPE_TIMER_PROSENT",
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [],
+          "undersporsmal": [
+            {
+              "id": "223",
+              "tag": "HVOR_MYE_PROSENT_0",
+              "sporsmalstekst": "prosent",
+              "undertekst": null,
+              "min": null,
+              "max": null,
+              "svartype": "RADIO",
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [
+                {
+                  "verdi": "CHECKED"
+                }
+              ],
+              "undersporsmal": [
+                {
+                  "id": "224",
+                  "tag": "HVOR_MYE_PROSENT_VERDI_0",
+                  "sporsmalstekst": null,
+                  "undertekst": "prosent",
+                  "min": "1",
+                  "max": "99",
+                  "svartype": "TALL",
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [
+                    {
+                      "verdi": "99"
+                    }
+                  ],
+                  "undersporsmal": []
+                }
+              ]
+            },
+            {
+              "id": "225",
+              "tag": "HVOR_MYE_TIMER_0",
+              "sporsmalstekst": "timer",
+              "undertekst": null,
+              "min": null,
+              "max": null,
+              "svartype": "RADIO",
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [],
+              "undersporsmal": [
+                {
+                  "id": "226",
+                  "tag": "HVOR_MYE_TIMER_VERDI_0",
+                  "sporsmalstekst": null,
+                  "undertekst": "timer totalt",
+                  "min": "1",
+                  "max": "321",
+                  "svartype": "TALL",
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [],
+                  "undersporsmal": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "227",
+      "tag": "ARBEID_UTENFOR_NORGE",
+      "sporsmalstekst": "Har du arbeidet i utlandet i løpet av de siste 12 månedene?",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "JA_NEI",
+      "kriterieForVisningAvUndersporsmal": null,
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": []
+    },
+    {
+      "id": "228",
+      "tag": "ANDRE_INNTEKTSKILDER",
+      "sporsmalstekst": "Har du andre inntektskilder enn HÅRREISENDE FRISØR? Du trenger ikke oppgi penger fra NAV.",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "JA_NEI",
+      "kriterieForVisningAvUndersporsmal": "JA",
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": [
+        {
+          "id": "229",
+          "tag": "HVILKE_ANDRE_INNTEKTSKILDER",
+          "sporsmalstekst": "Hvilke andre inntektskilder har du?",
+          "undertekst": null,
+          "min": null,
+          "max": null,
+          "svartype": "CHECKBOX_GRUPPE",
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [],
+          "undersporsmal": [
+            {
+              "id": "230",
+              "tag": "INNTEKTSKILDE_ANDRE_ARBEIDSFORHOLD",
+              "sporsmalstekst": "andre arbeidsforhold",
+              "undertekst": null,
+              "min": null,
+              "max": null,
+              "svartype": "CHECKBOX",
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [],
+              "undersporsmal": [
+                {
+                  "id": "231",
+                  "tag": "INNTEKTSKILDE_ANDRE_ARBEIDSFORHOLD_ER_DU_SYKMELDT",
+                  "sporsmalstekst": "Er du sykmeldt fra dette?",
+                  "undertekst": null,
+                  "min": null,
+                  "max": null,
+                  "svartype": "JA_NEI",
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [],
+                  "undersporsmal": []
+                }
+              ]
+            },
+            {
+              "id": "232",
+              "tag": "INNTEKTSKILDE_SELVSTENDIG",
+              "sporsmalstekst": "selvstendig næringsdrivende",
+              "undertekst": null,
+              "min": null,
+              "max": null,
+              "svartype": "CHECKBOX",
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [
+                {
+                  "verdi": "CHECKED"
+                }
+              ],
+              "undersporsmal": [
+                {
+                  "id": "233",
+                  "tag": "INNTEKTSKILDE_SELVSTENDIG_ER_DU_SYKMELDT",
+                  "sporsmalstekst": "Er du sykmeldt fra dette?",
+                  "undertekst": null,
+                  "min": null,
+                  "max": null,
+                  "svartype": "JA_NEI",
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [
+                    {
+                      "verdi": "JA"
+                    }
+                  ],
+                  "undersporsmal": []
+                }
+              ]
+            },
+            {
+              "id": "234",
+              "tag": "INNTEKTSKILDE_SELVSTENDIG_DAGMAMMA",
+              "sporsmalstekst": "dagmamma",
+              "undertekst": null,
+              "min": null,
+              "max": null,
+              "svartype": "CHECKBOX",
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [],
+              "undersporsmal": [
+                {
+                  "id": "235",
+                  "tag": "INNTEKTSKILDE_SELVSTENDIG_DAGMAMMA_ER_DU_SYKMELDT",
+                  "sporsmalstekst": "Er du sykmeldt fra dette?",
+                  "undertekst": null,
+                  "min": null,
+                  "max": null,
+                  "svartype": "JA_NEI",
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [],
+                  "undersporsmal": []
+                }
+              ]
+            },
+            {
+              "id": "236",
+              "tag": "INNTEKTSKILDE_JORDBRUKER",
+              "sporsmalstekst": "jordbruk / fiske / reindrift",
+              "undertekst": null,
+              "min": null,
+              "max": null,
+              "svartype": "CHECKBOX",
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [],
+              "undersporsmal": [
+                {
+                  "id": "237",
+                  "tag": "INNTEKTSKILDE_JORDBRUKER_ER_DU_SYKMELDT",
+                  "sporsmalstekst": "Er du sykmeldt fra dette?",
+                  "undertekst": null,
+                  "min": null,
+                  "max": null,
+                  "svartype": "JA_NEI",
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [],
+                  "undersporsmal": []
+                }
+              ]
+            },
+            {
+              "id": "238",
+              "tag": "INNTEKTSKILDE_FRILANSER",
+              "sporsmalstekst": "frilanser",
+              "undertekst": null,
+              "min": null,
+              "max": null,
+              "svartype": "CHECKBOX",
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [],
+              "undersporsmal": [
+                {
+                  "id": "239",
+                  "tag": "INNTEKTSKILDE_FRILANSER_ER_DU_SYKMELDT",
+                  "sporsmalstekst": "Er du sykmeldt fra dette?",
+                  "undertekst": null,
+                  "min": null,
+                  "max": null,
+                  "svartype": "JA_NEI",
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [],
+                  "undersporsmal": []
+                }
+              ]
+            },
+            {
+              "id": "240",
+              "tag": "INNTEKTSKILDE_ANNET",
+              "sporsmalstekst": "annet",
+              "undertekst": null,
+              "min": null,
+              "max": null,
+              "svartype": "CHECKBOX",
+              "kriterieForVisningAvUndersporsmal": null,
+              "svar": [],
+              "undersporsmal": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "241",
+      "tag": "UTDANNING",
+      "sporsmalstekst": "Har du vært under utdanning i løpet av perioden 30. august - 13. september 2021?",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "JA_NEI",
+      "kriterieForVisningAvUndersporsmal": "JA",
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": [
+        {
+          "id": "242",
+          "tag": "UTDANNING_START",
+          "sporsmalstekst": "Når startet du på utdanningen?",
+          "undertekst": null,
+          "min": null,
+          "max": "2021-09-13",
+          "svartype": "DATO",
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [
+            {
+              "verdi": "2021-09-13"
+            }
+          ],
+          "undersporsmal": []
+        },
+        {
+          "id": "243",
+          "tag": "FULLTIDSSTUDIUM",
+          "sporsmalstekst": "Er utdanningen et fulltidsstudium?",
+          "undertekst": null,
+          "min": null,
+          "max": null,
+          "svartype": "JA_NEI",
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [
+            {
+              "verdi": "JA"
+            }
+          ],
+          "undersporsmal": []
+        }
+      ]
+    },
+    {
+      "id": "244",
+      "tag": "PERMITTERT_NAA",
+      "sporsmalstekst": "Var du permittert av arbeidsgiveren din da du ble sykmeldt 30. august 2021?",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "JA_NEI",
+      "kriterieForVisningAvUndersporsmal": "JA",
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": [
+        {
+          "id": "245",
+          "tag": "PERMITTERT_NAA_NAR",
+          "sporsmalstekst": "Velg første dag i permitteringen",
+          "undertekst": null,
+          "min": "2020-02-01",
+          "max": "2021-09-14",
+          "svartype": "DATO",
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [
+            {
+              "verdi": "2021-09-14"
+            }
+          ],
+          "undersporsmal": []
+        }
+      ]
+    },
+    {
+      "id": "246",
+      "tag": "BRUKTE_REISETILSKUDDET",
+      "sporsmalstekst": "Har du brukt reisetilskuddet mens du var sykmeldt?",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "JA_NEI",
+      "kriterieForVisningAvUndersporsmal": null,
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": []
+    },
+    {
+      "id": "249",
+      "tag": "TRANSPORT_TIL_DAGLIG",
+      "sporsmalstekst": "Brukte du bil eller offentlig transport til og fra jobben før du ble sykmeldt?",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "JA_NEI",
+      "kriterieForVisningAvUndersporsmal": "JA",
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": [
+        {
+          "id": "250",
+          "tag": "TYPE_TRANSPORT",
+          "sporsmalstekst": "Hva slags type transport brukte du?",
+          "undertekst": null,
+          "min": null,
+          "max": null,
+          "svartype": "CHECKBOX_GRUPPE",
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [],
+          "undersporsmal": [
+            {
+              "id": "251",
+              "tag": "OFFENTLIG_TRANSPORT_TIL_DAGLIG",
+              "sporsmalstekst": "Offentlig transport",
+              "undertekst": null,
+              "min": null,
+              "max": null,
+              "svartype": "CHECKBOX",
+              "kriterieForVisningAvUndersporsmal": "CHECKED",
+              "svar": [
+                {
+                  "verdi": "CHECKED"
+                }
+              ],
+              "undersporsmal": [
+                {
+                  "id": "252",
+                  "tag": "OFFENTLIG_TRANSPORT_BELOP",
+                  "sporsmalstekst": "Hvor mye betaler du vanligvis i måneden for offentlig transport?",
+                  "undertekst": "kr",
+                  "min": "0",
+                  "max": null,
+                  "svartype": "BELOP",
+                  "kriterieForVisningAvUndersporsmal": null,
+                  "svar": [
+                    {
+                      "verdi": "23400"
+                    }
+                  ],
+                  "undersporsmal": []
+                }
+              ]
+            },
+            {
+              "id": "253",
+              "tag": "BIL_TIL_DAGLIG",
+              "sporsmalstekst": "Bil",
+              "undertekst": null,
+              "min": null,
+              "max": null,
+              "svartype": "CHECKBOX",
+              "kriterieForVisningAvUndersporsmal": null,
+              "svar": [
+                {
+                  "verdi": "CHECKED"
+                }
+              ],
+              "undersporsmal": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "254",
+      "tag": "REISE_MED_BIL",
+      "sporsmalstekst": "Reiste du med egen bil, leiebil eller kollega til jobben mellom 30. august - 14. september 2021?",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "JA_NEI",
+      "kriterieForVisningAvUndersporsmal": "JA",
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": [
+        {
+          "id": "255",
+          "tag": "BIL_DATOER",
+          "sporsmalstekst": "Hvilke dager reiste du med bil i perioden 30. august - 14. september 2021?",
+          "undertekst": null,
+          "min": "2021-08-30",
+          "max": "2021-09-14",
+          "svartype": "DATOER",
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [
+            {
+              "verdi": "2021-08-31"
+            },
+            {
+              "verdi": "2021-09-06"
+            },
+            {
+              "verdi": "2021-09-14"
+            }
+          ],
+          "undersporsmal": []
+        },
+        {
+          "id": "256",
+          "tag": "BIL_BOMPENGER",
+          "sporsmalstekst": "Hadde du utgifter til bompenger?",
+          "undertekst": null,
+          "min": null,
+          "max": null,
+          "svartype": "JA_NEI",
+          "kriterieForVisningAvUndersporsmal": "JA",
+          "svar": [
+            {
+              "verdi": "JA"
+            }
+          ],
+          "undersporsmal": [
+            {
+              "id": "257",
+              "tag": "BIL_BOMPENGER_BELOP",
+              "sporsmalstekst": "Hvor mye betalte du i bompenger mellom hjemmet ditt og jobben?",
+              "undertekst": "kr",
+              "min": "0",
+              "max": null,
+              "svartype": "BELOP",
+              "kriterieForVisningAvUndersporsmal": null,
+              "svar": [
+                {
+                  "verdi": "54300"
+                }
+              ],
+              "undersporsmal": []
+            }
+          ]
+        },
+        {
+          "id": "258",
+          "tag": "KM_HJEM_JOBB",
+          "sporsmalstekst": "Hvor mange kilometer er kjøreturen mellom hjemmet ditt og jobben?",
+          "undertekst": "km",
+          "min": "0",
+          "max": null,
+          "svartype": "KILOMETER",
+          "kriterieForVisningAvUndersporsmal": null,
+          "svar": [
+            {
+              "verdi": "12"
+            }
+          ],
+          "undersporsmal": []
+        }
+      ]
+    },
+    {
+      "id": "259",
+      "tag": "KVITTERINGER",
+      "sporsmalstekst": "Last opp kvitteringer for reiser til og fra jobben mellom 30. august - 14. september 2021.",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "KVITTERING",
+      "kriterieForVisningAvUndersporsmal": null,
+      "svar": [
+        {
+          "verdi": "{\"blobId\":\"56762184-2b18-4bf6-89e1-fb431774e2ef\",\"belop\":50000,\"typeUtgift\":\"TAXI\",\"opprettet\":\"2021-09-15T09:59:04.294Z\"}"
+        }
+      ],
+      "undersporsmal": []
+    },
+    {
+      "id": "260",
+      "tag": "UTBETALING",
+      "sporsmalstekst": "Legger arbeidsgiveren din ut for reisene?",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "JA_NEI",
+      "kriterieForVisningAvUndersporsmal": null,
+      "svar": [
+        {
+          "verdi": "JA"
+        }
+      ],
+      "undersporsmal": []
+    },
+    {
+      "id": "247",
+      "tag": "VAER_KLAR_OVER_AT",
+      "sporsmalstekst": "Viktig å være klar over:",
+      "undertekst": "<ul><li>Du kan bare få sykepenger og reisetilskudd hvis det er din egen sykdom eller skade som hindrer deg i å jobbe. Sosiale eller økonomiske problemer gir ikke rett til sykepenger eller reisetilskudd.</li><li>Du kan miste retten til sykepenger og reisetilskudd hvis du nekter å opplyse om din egen arbeidsevne, eller hvis du ikke tar imot behandling eller tilrettelegging.</li><li>Retten til sykepenger og reisetilskudd gjelder bare inntekt du har mottatt som lønn og betalt skatt av på sykmeldingstidspunktet.</li><li>NAV kan innhente opplysninger som er nødvendige for å behandle søknaden.</li><li>Du må melde fra til NAV hvis du satt i varetekt, sonet straff eller var under forvaring i sykmeldingsperioden.</li><li>Fristen for å søke sykepenger er som hovedregel 3 måneder</li></ul><p>Du kan lese mer om rettigheter og plikter på <a href=\"https://www.nav.no/sykepenger\" target=\"_blank\">nav.no/sykepenger</a> og <a href=\"https://www.nav.no/reisetilskudd\" target=\"_blank\">nav.no/reisetilskudd</a>.</p>",
+      "min": null,
+      "max": null,
+      "svartype": "IKKE_RELEVANT",
+      "kriterieForVisningAvUndersporsmal": null,
+      "svar": [],
+      "undersporsmal": []
+    },
+    {
+      "id": "248",
+      "tag": "BEKREFT_OPPLYSNINGER",
+      "sporsmalstekst": "Jeg har lest all informasjonen jeg har fått i søknaden og bekrefter at opplysningene jeg har gitt er korrekte.",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "CHECKBOX_PANEL",
+      "kriterieForVisningAvUndersporsmal": null,
+      "svar": [
+        {
+          "verdi": "CHECKED"
+        }
+      ],
+      "undersporsmal": []
+    }
+  ],
+  "avsendertype": "BRUKER",
+  "ettersending": false,
+  "mottaker": "ARBEIDSGIVER_OG_NAV",
+  "egenmeldtSykmelding": false,
+  "harRedusertVenteperiode": null,
+  "behandlingsdager": null,
+  "permitteringer": [
+    {
+      "fom": "2021-09-14",
+      "tom": null
+    }
+  ],
+  "merknaderFraSykmelding": null
+}

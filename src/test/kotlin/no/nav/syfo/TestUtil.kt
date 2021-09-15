@@ -26,6 +26,17 @@ val mockSykepengesoknad: Pair<Sykepengesoknad, AltinnInnsendelseEkstraData>
         return Pair(sykepengesoknad, ekstra)
     }
 
+val mockGradertReisetilskuddSykepengesoknadDTO: SykepengesoknadDTO =
+    objectMapper.readValue(
+        Application::class.java.getResource("/gradertreisetilskuddarbeidstakersoknad.json"),
+        SykepengesoknadDTO::class.java
+    )
+
+val mockGradertReisetilskuddSykepengesoknad: Sykepengesoknad
+    get() {
+        return mockGradertReisetilskuddSykepengesoknadDTO.konverter()
+    }
+
 val mockSykepengesoknadBehandlingsdagerDTO: SykepengesoknadDTO =
     objectMapper.readValue(
         Application::class.java.getResource("/behandlingsdagersoknad.json"),

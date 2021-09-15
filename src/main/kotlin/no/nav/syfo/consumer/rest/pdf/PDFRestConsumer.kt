@@ -30,6 +30,7 @@ class PDFRestConsumer
         val url = when (sykepengesoknad.type) {
             Soknadstype.ARBEIDSTAKERE -> "$pdfgenUrl/api/v1/genpdf/syfosoknader/${PDFTemplate.ARBEIDSTAKERE}"
             Soknadstype.BEHANDLINGSDAGER -> "$pdfgenUrl/api/v1/genpdf/syfosoknader/${PDFTemplate.BEHANDLINGSDAGER}"
+            Soknadstype.GRADERT_REISETILSKUDD -> "$pdfgenUrl/api/v1/genpdf/syfosoknader/${PDFTemplate.GRADERTREISETILSKUDD}"
             else -> throw RuntimeException("Har ikke implementert PDF-template for søknad av typen: ${sykepengesoknad.type}")
         }
 

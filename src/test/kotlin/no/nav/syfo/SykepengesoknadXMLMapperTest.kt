@@ -21,4 +21,12 @@ class SykepengesoknadXMLMapperTest {
 
         assertThat(validationEventer).isEmpty()
     }
+
+    @Test
+    fun mapperGradertReisetilskuddSoknadTilXML() {
+        val validationEventer: MutableList<ValidationEvent> = mutableListOf()
+        sykepengesoknad2XMLByteArray(mockGradertReisetilskuddSykepengesoknad, validationEventer, "fnr", "orgnr")
+
+        assertThat(validationEventer).isEmpty()
+    }
 }

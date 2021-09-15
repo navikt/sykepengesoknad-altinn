@@ -70,6 +70,7 @@ class AivenSykepengesoknadListener(
     fun SykepengesoknadDTO.skalBehandles(): Boolean {
         return (
             this.type == SoknadstypeDTO.ARBEIDSTAKERE ||
+                (this.type == SoknadstypeDTO.GRADERT_REISETILSKUDD && this.arbeidssituasjon == ArbeidssituasjonDTO.ARBEIDSTAKER) ||
                 (this.type == SoknadstypeDTO.BEHANDLINGSDAGER && this.arbeidssituasjon == ArbeidssituasjonDTO.ARBEIDSTAKER)
             ) &&
             this.status == SoknadsstatusDTO.SENDT &&

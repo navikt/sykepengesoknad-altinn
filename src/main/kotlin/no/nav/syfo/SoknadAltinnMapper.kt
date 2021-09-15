@@ -57,11 +57,15 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
     }
 
     private fun opprettTittel(sykepengesoknad: Sykepengesoknad, ekstraData: AltinnInnsendelseEkstraData): String {
-        return if (sykepengesoknad.type == Soknadstype.BEHANDLINGSDAGER) {
-            "Søknad med enkeltstående behandlingsdager - ${periodeSomTekst(sykepengesoknad)} - ${ekstraData.navn} (${ekstraData.fnr})${if (sykepengesoknad.sendtNav != null) " - sendt til NAV" else ""}"
-        } else {
-            "Søknad om sykepenger - ${periodeSomTekst(sykepengesoknad)} - ${ekstraData.navn} (${ekstraData.fnr})${if (sykepengesoknad.sendtNav != null) " - sendt til NAV" else ""}"
+        return when (sykepengesoknad.type) {
+            Soknadstype.BEHANDLINGSDAGER -> tittelTekst("Søknad med enkeltstående behandlingsdager", sykepengesoknad, ekstraData)
+            Soknadstype.GRADERT_REISETILSKUDD -> tittelTekst("Søknad om Gradert reisetilskudd", sykepengesoknad, ekstraData)
+            else -> tittelTekst("Søknad om sykepenger", sykepengesoknad, ekstraData)
         }
+    }
+
+    private fun tittelTekst(type: String, sykepengesoknad: Sykepengesoknad, ekstraData: AltinnInnsendelseEkstraData): String {
+        return "$type - ${periodeSomTekst(sykepengesoknad)} - ${ekstraData.navn} (${ekstraData.fnr})${if (sykepengesoknad.sendtNav != null) " - sendt til NAV" else ""}"
     }
 
     private fun opprettInnholdstekst(sykepengesoknad: Sykepengesoknad): String {
