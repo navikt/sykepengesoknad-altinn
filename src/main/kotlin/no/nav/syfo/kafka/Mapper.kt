@@ -29,6 +29,9 @@ fun SykepengesoknadDTO.konverter(): Sykepengesoknad {
         egenmeldinger = this.egenmeldinger
             ?.map { konverter(it) }
             .orEmpty(),
+        fravarForSykmeldingen = this.fravarForSykmeldingen
+            ?.map { konverter(it) }
+            .orEmpty(),
         papirsykmeldinger = this.papirsykmeldinger
             ?.map { konverter(it) }
             .orEmpty(),

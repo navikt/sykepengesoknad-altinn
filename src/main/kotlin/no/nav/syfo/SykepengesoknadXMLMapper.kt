@@ -14,7 +14,7 @@ val sykepengesoknad2XMLByteArray = { sykepengesoknad: Sykepengesoknad, validatio
     }.toByteArray()
 }
 
-private val sykepengesoknad2XMLArbeidsgiver = { sykepengesoknad: Sykepengesoknad, fnr: String, juridiskOrgnummerArbeidsgiver: String? ->
+val sykepengesoknad2XMLArbeidsgiver = { sykepengesoknad: Sykepengesoknad, fnr: String, juridiskOrgnummerArbeidsgiver: String? ->
     XMLSykepengesoeknadArbeidsgiver()
         .withJuridiskOrganisasjonsnummer(juridiskOrgnummerArbeidsgiver)
         .withVirksomhetsnummer(sykepengesoknad.arbeidsgiver.orgnummer)
@@ -80,25 +80,6 @@ private val soknadsperiode2XMLKorrigertArbeidstid = { soknadsperiode: Soknadsper
     }
 }
 
-private val andreInntektskilder2XMLAnnenInntektskildeListe = { andreInntektskilder: List<Inntektskilde> ->
-    andreInntektskilder
-        .map { inntektskilde ->
-            XMLAnnenInntektskilde()
-                .withErSykmeldt(inntektskilde.sykmeldt ?: false)
-                .withType(
-                    when (inntektskilde.type) {
-                        Inntektskildetype.ANDRE_ARBEIDSFORHOLD -> XMLAnnenInntektskildeType.ANDRE_ARBEIDSFORHOLD
-                        Inntektskildetype.FRILANSER -> XMLAnnenInntektskildeType.FRILANSER
-                        Inntektskildetype.SELVSTENDIG_NARINGSDRIVENDE -> XMLAnnenInntektskildeType.SELVSTENDIG_NAERINGSDRIVENDE
-                        Inntektskildetype.SELVSTENDIG_NARINGSDRIVENDE_DAGMAMMA -> XMLAnnenInntektskildeType.SELVSTENDIG_NAERINGSDRIVENDE_DAGMAMMA
-                        Inntektskildetype.JORDBRUKER_FISKER_REINDRIFTSUTOVER -> XMLAnnenInntektskildeType.JORDBRUKER_FISKER_REINDRIFTSUTOEVER
-                        Inntektskildetype.ANNET -> XMLAnnenInntektskildeType.ANNET
-                        else -> throw IllegalArgumentException("Ugyldig inntektskildetype")
-                    }
-                )
-        }
-}
-
 private val fravar2XMLUtdanning = { fravarListe: List<Fravar> ->
     fravarListe
         .filter { fravar -> Fravarstype.UTDANNING_DELTID == fravar.type || Fravarstype.UTDANNING_FULLTID == fravar.type }
@@ -111,14 +92,20 @@ private val fravar2XMLUtdanning = { fravarListe: List<Fravar> ->
 }
 
 private val sykepengesoknad2XMLFravar = { sykepengesoknad: Sykepengesoknad ->
-    if (sykepengesoknad.egenmeldinger.isNullOrEmpty() && sykepengesoknad.fravar.isNullOrEmpty())
+    if (sykepengesoknad.egenmeldinger.isNullOrEmpty() && sykepengesoknad.fravarForSykmeldingen.isNullOrEmpty() && sykepengesoknad.fravar.isNullOrEmpty())
         null
-    else
+    else {
+        val egenmeldingerOgFravarFor = ArrayList<XMLPeriode>()
+            .also {
+                it.addAll(periodeListe2XMLPeriode(sykepengesoknad.egenmeldinger))
+                it.addAll(periodeListe2XMLPeriode(sykepengesoknad.fravarForSykmeldingen))
+            }
         XMLFravaer()
             .withFerieListe(listOrNull(fravar2XMLPeriode(sykepengesoknad.fravar, Fravarstype.FERIE)))
             .withPermisjonListe(listOrNull(fravar2XMLPeriode(sykepengesoknad.fravar, Fravarstype.PERMISJON)))
             .withOppholdUtenforNorge(fravar2XMLOppholdUtenforNorge(sykepengesoknad.fravar, sykepengesoknad.soktUtenlandsopphold))
-            .withEgenmeldingsperiodeListe(listOrNull(egenmeldinger2XMLPeriode(sykepengesoknad.egenmeldinger)))
+            .withEgenmeldingsperiodeListe(listOrNull(egenmeldingerOgFravarFor))
+    }
 }
 
 private val fravar2XMLOppholdUtenforNorge = { fravar: List<Fravar>, soktUtenlandsopphold: Boolean? ->
@@ -131,8 +118,8 @@ private val fravar2XMLOppholdUtenforNorge = { fravar: List<Fravar>, soktUtenland
             .withHarSoektOmSykepengerForOppholdet(soktUtenlandsopphold)
 }
 
-private val egenmeldinger2XMLPeriode = { egenmeldinger: List<Periode> ->
-    egenmeldinger
+private val periodeListe2XMLPeriode = { periodeListe: List<Periode> ->
+    periodeListe
         .map { periode -> periode2XMLPeriode(periode) }
 }
 

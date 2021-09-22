@@ -29,6 +29,7 @@ data class Sykepengesoknad(
     val soknadsperioder: List<Soknadsperiode> = arrayListOf(),
     val behandlingsdager: List<LocalDate> = arrayListOf(),
     val egenmeldinger: List<Periode> = arrayListOf(),
+    val fravarForSykmeldingen: List<Periode> = arrayListOf(),
     val papirsykmeldinger: List<Periode> = arrayListOf(),
     val fravar: List<Fravar> = arrayListOf(),
     val andreInntektskilder: List<Inntektskilde> = arrayListOf(),
