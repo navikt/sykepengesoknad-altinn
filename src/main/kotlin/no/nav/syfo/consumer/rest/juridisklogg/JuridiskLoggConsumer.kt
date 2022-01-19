@@ -50,7 +50,7 @@ class JuridiskLoggConsumer(
 
             if (result.statusCode != HttpStatus.OK) {
                 log.error(
-                    "Kall mot juridisk log feiler med HTTP-${result.statusCode}\n" +
+                    "Kall mot juridisk logg for sykepengesøknad med id ${sykepengesoknad.id} feiler med HTTP-${result.statusCode}\n" +
                         "Payload: $entry"
                 )
                 throw JuridiskLoggException(message = "Kall mot juridisk log feiler med HTTP-${result.statusCode}")
@@ -59,7 +59,8 @@ class JuridiskLoggConsumer(
             return result.body?.id ?: throw JuridiskLoggException("Fikk ikke ID tilbake fra juridisk logg")
         } catch (e: HttpClientErrorException) {
             log.error(
-                "Feil ved lagring i juridisk logg: ${e.responseBodyAsString}\n" +
+                "Feil ved lagring i juridisk logg for sykepengesøknad med id ${sykepengesoknad.id}: \n" +
+                    "ResponseBody: ${e.responseBodyAsString}\n" +
                     "Payload: $entry"
             )
             throw JuridiskLoggException("Feil ved lagring i juridisk logg", e)
