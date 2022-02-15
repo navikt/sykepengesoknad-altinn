@@ -1,11 +1,11 @@
 package no.nav.syfo.kafka
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import no.nav.helse.flex.sykepengesoknad.kafka.ArbeidssituasjonDTO
+import no.nav.helse.flex.sykepengesoknad.kafka.SoknadsstatusDTO
+import no.nav.helse.flex.sykepengesoknad.kafka.SoknadstypeDTO
+import no.nav.helse.flex.sykepengesoknad.kafka.SykepengesoknadDTO
 import no.nav.syfo.SendTilAltinnService
-import no.nav.syfo.kafka.felles.ArbeidssituasjonDTO
-import no.nav.syfo.kafka.felles.SoknadsstatusDTO
-import no.nav.syfo.kafka.felles.SoknadstypeDTO
-import no.nav.syfo.kafka.felles.SykepengesoknadDTO
 import no.nav.syfo.logger
 import no.nav.syfo.objectMapper
 import org.apache.kafka.clients.consumer.ConsumerRecord

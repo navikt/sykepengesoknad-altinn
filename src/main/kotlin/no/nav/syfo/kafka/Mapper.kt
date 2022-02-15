@@ -1,8 +1,7 @@
 package no.nav.syfo.kafka
 
+import no.nav.helse.flex.sykepengesoknad.kafka.*
 import no.nav.syfo.domain.soknad.*
-import no.nav.syfo.kafka.felles.*
-import no.nav.syfo.kafka.felles.SykepengesoknadDTO
 
 fun SykepengesoknadDTO.konverter(): Sykepengesoknad {
     return Sykepengesoknad(

@@ -1,8 +1,8 @@
 package no.nav.syfo
 
+import no.nav.helse.flex.sykepengesoknad.kafka.*
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.soknad.Sykepengesoknad
-import no.nav.syfo.kafka.felles.SykepengesoknadDTO
 import no.nav.syfo.kafka.konverter
 
 val mockSykepengesoknadDTO: SykepengesoknadDTO =
