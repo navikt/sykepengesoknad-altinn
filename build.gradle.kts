@@ -1,3 +1,4 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -65,12 +66,13 @@ dependencies {
     implementation("no.nav.security:token-validation-spring:$tokenSupportVersion")
 
     implementation("io.micrometer:micrometer-registry-prometheus")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-jta-atomikos")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
-    implementation("com.oracle.ojdbc:ojdbc8:$ojdbc8Version")
+    implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
+    implementation("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core")
     implementation("org.slf4j:slf4j-api")
+    implementation("org.aspectj:aspectjrt")
+    implementation("org.aspectj:aspectjweaver")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashLogbackEncoderVersion")
     implementation("no.nav.tjenestespesifikasjoner:behandle-altinnmelding-v1-tjenestespesifikasjon:$tjenestespesifikasjonerVersion")
     implementation("no.nav.tjenestespesifikasjoner:digisyfo-sykepengesoeknadarbeidsgiver:$tjenestespesifikasjonerVersion")
@@ -104,6 +106,8 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
     useJUnitPlatform()
     testLogging {
-        events("PASSED", "FAILED", "SKIPPED")
+        events("STARTED", "PASSED", "FAILED", "SKIPPED")
+        exceptionFormat = FULL
     }
+    failFast = false
 }
