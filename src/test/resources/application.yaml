@@ -34,16 +34,17 @@ aktoerregister.api.v1.url: "aktor.url"
 lagrejuridisklogg.rest.url: "lagrejuridisk.url"
 security.token.service.token.url: "security.token.service.token.url"
 
-javax.net.ssl:
-  trustStore: truststore
-  trustStorePassword: truststorepassword
-
 spring:
+  profiles:
+    active: test
   datasource:
-    url: 'jdbc:h2:mem:testdb;MODE=Oracle'
-    driver-class-name: 'org.h2.Driver'
-    username: 'sa'
-    password:
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 3
+  main:
+    banner-mode: off
+  flyway:
+    enabled: true
 
 KAFKA_TRUSTSTORE_PATH: ""
 KAFKA_CREDSTORE_PASSWORD: ""

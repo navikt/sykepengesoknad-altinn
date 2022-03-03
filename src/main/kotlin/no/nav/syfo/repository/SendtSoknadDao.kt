@@ -18,7 +18,7 @@ class SendtSoknadDao(internal val namedParameterJdbcTemplate: NamedParameterJdbc
 
     fun lagreSendtSoknad(sendtSoknad: SendtSoknad) {
         namedParameterJdbcTemplate.update(
-            "INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT) VALUES (SENDT_SOKNAD_ID_SEQ.NEXTVAL, :ressursId, :altinnId, :sendt)",
+            "INSERT INTO SENDT_SOKNAD ( SYKEPENGESOKNAD_ID, ALTINN_ID, SENDT) VALUES (:ressursId, :altinnId, :sendt)",
             MapSqlParameterSource()
                 .addValue("ressursId", sendtSoknad.ressursId)
                 .addValue("altinnId", sendtSoknad.altinnId)
@@ -28,7 +28,7 @@ class SendtSoknadDao(internal val namedParameterJdbcTemplate: NamedParameterJdbc
 
     fun lagreEttersendtSoknad(ressursId: String, altinnIdEttersending: String) {
         namedParameterJdbcTemplate.update(
-            "UPDATE SENDT_SOKNAD SET ALTINN_ID_ETTERS = :altinnIdEttersending WHERE RESSURS_ID = :ressursId",
+            "UPDATE SENDT_SOKNAD SET ALTINN_ID_ETTERS = :altinnIdEttersending WHERE SYKEPENGESOKNAD_ID = :ressursId",
             MapSqlParameterSource()
                 .addValue("altinnIdEttersending", altinnIdEttersending)
                 .addValue("ressursId", ressursId)
@@ -37,7 +37,7 @@ class SendtSoknadDao(internal val namedParameterJdbcTemplate: NamedParameterJdbc
 
     fun soknadErSendt(ressursId: String, erEttersending: Boolean): Boolean {
         val sendtSoknad = namedParameterJdbcTemplate.query(
-            "SELECT * FROM SENDT_SOKNAD WHERE RESSURS_ID = :ressursId",
+            "SELECT * FROM SENDT_SOKNAD WHERE SYKEPENGESOKNAD_ID = :ressursId",
             MapSqlParameterSource("ressursId", ressursId),
             sendtSoknadRowMapper
         ).firstOrNull() ?: return false
@@ -55,7 +55,7 @@ class SendtSoknadDao(internal val namedParameterJdbcTemplate: NamedParameterJdbc
 
 val sendtSoknadRowMapper = RowMapper { resultSet, _ ->
     SendtSoknad(
-        resultSet.getString("RESSURS_ID"),
+        resultSet.getString("SYKEPENGESOKNAD_ID"),
         resultSet.getString("ALTINN_ID"),
         resultSet.getTimestamp("SENDT").toLocalDateTime(),
         resultSet.getString("ALTINN_ID_ETTERS")

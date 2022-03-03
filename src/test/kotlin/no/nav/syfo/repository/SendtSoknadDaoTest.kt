@@ -42,7 +42,7 @@ class SendtSoknadDaoTest : AbstractContainerBaseTest() {
 
     @Test
     fun lagreEttersendtSoknadOppdatererDbVedEttersending() {
-        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30')")
+        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, SYKEPENGESOKNAD_ID, ALTINN_ID, SENDT) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30')")
 
         sendtSoknadDao.lagreEttersendtSoknad("ressursId", "altinnId2")
 
@@ -55,35 +55,35 @@ class SendtSoknadDaoTest : AbstractContainerBaseTest() {
 
     @Test
     fun soknadErSendtReturnererTrueHvisSoknadErSendt() {
-        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30')")
+        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, SYKEPENGESOKNAD_ID, ALTINN_ID, SENDT) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30')")
 
         assertThat(sendtSoknadDao.soknadErSendt("ressursId", false)).isTrue()
     }
 
     @Test
     fun soknadErSendtReturnererFalseHvisSoknadIkkeErSendt() {
-        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30')")
+        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, SYKEPENGESOKNAD_ID, ALTINN_ID, SENDT) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30')")
 
         assertThat(sendtSoknadDao.soknadErSendt("annenRessursId", false)).isFalse()
     }
 
     @Test
     fun soknadErSendtReturnererFalseHvisEttersendelseOgEttersendelseIkkeErSendt() {
-        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30')")
+        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, SYKEPENGESOKNAD_ID, ALTINN_ID, SENDT) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30')")
 
         assertThat(sendtSoknadDao.soknadErSendt("ressursId", true)).isFalse()
     }
 
     @Test
     fun soknadErSendtReturnererTrueHvisEttersendelseOgEttersendelseErSendt() {
-        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT, ALTINN_ID_ETTERS) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30', 'altinnId2')")
+        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, SYKEPENGESOKNAD_ID, ALTINN_ID, SENDT, ALTINN_ID_ETTERS) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30', 'altinnId2')")
 
         assertThat(sendtSoknadDao.soknadErSendt("ressursId", true)).isTrue()
     }
 
     @Test
     fun soknadErSendtReturnererTrueHvisIkkeEttersendelseOgEttersendelseLikevelErSendt() {
-        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, RESSURS_ID, ALTINN_ID, SENDT, ALTINN_ID_ETTERS) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30', 'altinnId2')")
+        jdbcTemplate.update("INSERT INTO SENDT_SOKNAD (ID, SYKEPENGESOKNAD_ID, ALTINN_ID, SENDT, ALTINN_ID_ETTERS) VALUES ('1', 'ressursId', 'altinnId', date '2019-10-30', 'altinnId2')")
 
         assertThat(sendtSoknadDao.soknadErSendt("ressursId", false)).isTrue()
     }
