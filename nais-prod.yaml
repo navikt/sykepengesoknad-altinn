@@ -7,6 +7,8 @@ metadata:
     team: flex
 spec:
   image: {{ image }}
+  strategy:
+    type: Recreate
   replicas:
     min: 1
     max: 1
@@ -35,18 +37,6 @@ spec:
   azure:
     application:
       enabled: true
-  vault:
-    enabled: true
-    paths:
-      - kvPath: serviceuser/data/prod/srvsykepengesoknad-altinn
-        mountPath: /secrets/serviceuser
-      - kvPath: oracle/data/prod/creds/sykepengesoknad-altinn_p-user
-        mountPath: /secrets/sykepengesoknad-altinn/credentials
-      - kvPath: oracle/data/prod/config/sykepengesoknad-altinn_p
-        mountPath: /secrets/sykepengesoknad-altinn/config
-      - kvPath: kv/prod/fss/sykepengesoknad-altinn/default
-        mountPath: /var/run/secrets/nais.io/vault
-  webproxy: false
   kafka:
     pool: nav-prod
   env:
