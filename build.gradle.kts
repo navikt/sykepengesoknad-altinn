@@ -58,7 +58,7 @@ dependencies {
     implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-ws-security:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-ws-policy:$cxfVersion")
-    implementation("com.sun.xml.messaging.saaj:saaj-impl:1.5.1")
+    implementation("com.sun.xml.messaging.saaj:saaj-impl:2.0.1")
     implementation("javax.xml.soap:saaj-api:1.3.5")
     implementation("javax.xml.ws:jaxws-api:2.3.1")
     implementation("org.apache.commons:commons-text:1.9")
