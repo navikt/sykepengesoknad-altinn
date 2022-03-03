@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 @DirtiesContext
@@ -35,7 +36,7 @@ class SendtSoknadDaoTest : AbstractContainerBaseTest() {
         assertThat(sendteSoknader).hasSize(1)
         assertThat(sendteSoknader.first().ressursId).isEqualTo("ressursId")
         assertThat(sendteSoknader.first().altinnId).isEqualTo("altinnId")
-        assertThat(sendteSoknader.first().sendt).isEqualTo(sendt)
+        assertThat(sendteSoknader.first().sendt.truncatedTo(ChronoUnit.SECONDS)).isEqualTo(sendt.truncatedTo(ChronoUnit.SECONDS))
         assertThat(sendteSoknader.first().altinnIdEttersending).isNull()
     }
 
