@@ -13,13 +13,11 @@ import org.springframework.stereotype.Component
 import java.nio.charset.StandardCharsets.UTF_8
 import java.time.Instant
 import java.time.ZoneOffset
-import javax.inject.Inject
 
 const val RETRY_TOPIC = "flex." + "sykepengesoknad-altinn-retry"
 
 @Component
-class RebehandleSykepengesoknadListener @Inject
-constructor(
+class RebehandleSykepengesoknadListener(
     private val sendTilAltinnService: SendTilAltinnService,
     private val rebehandleSykepengesoknadProducer: RebehandleSykepengesoknadProducer
 ) {

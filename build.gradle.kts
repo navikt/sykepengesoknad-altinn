@@ -47,7 +47,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("javax.jws:javax.jws-api:1.1")
-    implementation("javax.inject:javax.inject:1")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.hibernate.validator:hibernate-validator")

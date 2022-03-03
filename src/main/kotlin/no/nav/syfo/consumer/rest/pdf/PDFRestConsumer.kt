@@ -13,11 +13,9 @@ import org.springframework.retry.annotation.Backoff
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
-import javax.inject.Inject
 
 @Component
-class PDFRestConsumer
-@Inject constructor(
+class PDFRestConsumer(
     private val restTemplate: RestTemplate,
     @Value("\${pdfgen.url}") private val pdfgenUrl: String
 ) {

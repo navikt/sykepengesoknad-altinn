@@ -9,12 +9,10 @@ import no.nav.tjeneste.virksomhet.organisasjon.v4.meldinger.WSHentOrganisasjonRe
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
 import java.time.LocalDate
-import javax.inject.Inject
 import javax.xml.datatype.XMLGregorianCalendar
 
 @Component
-class OrganisasjonConsumer @Inject
-constructor(private val organisasjonV4: OrganisasjonV4) {
+class OrganisasjonConsumer(private val organisasjonV4: OrganisasjonV4) {
     val log = logger()
 
     fun hentJuridiskOrgnummer(virksomhetsnummer: String): String? {

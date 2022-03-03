@@ -9,11 +9,9 @@ import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import javax.inject.Inject
 
 @Component
-class AltinnConsumer @Inject
-constructor(
+class AltinnConsumer(
     private val iCorrespondenceAgencyExternalBasic: ICorrespondenceAgencyExternalBasic,
     private val soknadAltinnMapper: SoknadAltinnMapper,
     @Value("\${altinnUser.username}") private val altinnUsername: String,
