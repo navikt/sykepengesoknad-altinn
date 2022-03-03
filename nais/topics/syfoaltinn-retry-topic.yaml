@@ -1,7 +1,7 @@
 apiVersion: kafka.nais.io/v1
 kind: Topic
 metadata:
-  name: syfoaltinn-retry
+  name: sykepengesoknad-altinn-retry
   namespace: flex
   labels:
     team: flex
@@ -16,6 +16,6 @@ spec:
     retentionHours: 336  # 2 uker
   acl:
     - team: flex
-      application: syfoaltinn
+      application: sykepengesoknad-altinn
       access: readwrite
 

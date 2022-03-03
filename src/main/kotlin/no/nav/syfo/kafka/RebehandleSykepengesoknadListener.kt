@@ -15,7 +15,7 @@ import java.time.Instant
 import java.time.ZoneOffset
 import javax.inject.Inject
 
-const val RETRY_TOPIC = "flex." + "syfoaltinn-retry"
+const val RETRY_TOPIC = "flex." + "sykepengesoknad-altinn-retry"
 
 @Component
 class RebehandleSykepengesoknadListener @Inject

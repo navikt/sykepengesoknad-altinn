@@ -63,7 +63,7 @@ class SendTilAltinnService(
             } else {
                 sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, receiptId.toString(), now()))
             }
-            registry.counter("syfoaltinn.soknadSendtTilAltinn", Tags.of("type", "info")).increment()
+            registry.counter("sykepengesoknad-altinn.soknadSendtTilAltinn", Tags.of("type", "info")).increment()
         } else {
             val feil = validationeventer.joinToString("\n") { it.message }
             log.error("Validering feilet for sykepengesøknad med id ${sykepengesoknad.id} med følgende feil: $feil")

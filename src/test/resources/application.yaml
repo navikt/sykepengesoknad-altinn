@@ -7,7 +7,7 @@ management:
 
 fasit.environment.name: local
 
-nais.app.name: syfoaltinn
+nais.app.name: sykepengesoknad-altinn
 
 
 toggle.config:
@@ -24,7 +24,7 @@ ekstern.altinn.behandlealtinnmelding.v1.endpointurl: "ekstern.altinn.behandlealt
 
 virksomhet.Organisasjon.v4.endpointurl: "virksomhet.Organisasjon.v4.endpointurl"
 
-srvsyfoaltinn:
+srvsykepengesoknad-altinn:
   username: "kek"
   password: "bur"
 

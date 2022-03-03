@@ -28,8 +28,8 @@ class ApplicationConfig {
 
     @Bean
     fun basicAuthRestTemplate(
-        @Value("\${srvsyfoaltinn.username}") username: String,
-        @Value("\${srvsyfoaltinn.password}") password: String
+        @Value("\${srvsykepengesoknad-altinn.username}") username: String,
+        @Value("\${srvsykepengesoknad-altinn.password}") password: String
     ): RestTemplate {
         return RestTemplateBuilder()
             .basicAuthentication(username, password)

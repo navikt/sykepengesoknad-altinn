@@ -20,7 +20,7 @@ import java.util.*
 class JuridiskLoggConsumer(
     private val basicAuthRestTemplate: RestTemplate,
     @Value("\${lagrejuridisklogg.rest.url}") private val url: String,
-    @Value("\${srvsyfoaltinn.username}") private val username: String
+    @Value("\${srvsykepengesoknad-altinn.username}") private val username: String
 ) {
 
     val log = logger()

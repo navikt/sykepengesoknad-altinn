@@ -9,7 +9,7 @@ plugins {
 
 group = "no.nav.helse.flex"
 version = "1"
-description = "syfoaltinn"
+description = "sykepengesoknad-altinn"
 java.sourceCompatibility = JavaVersion.VERSION_14
 
 buildscript {

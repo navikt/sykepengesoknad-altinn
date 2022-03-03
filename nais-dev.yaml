@@ -1,7 +1,7 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: syfoaltinn
+  name: sykepengesoknad-altinn
   namespace: flex
   labels:
     team: flex
@@ -38,13 +38,13 @@ spec:
   vault:
     enabled: true
     paths:
-      - kvPath: serviceuser/data/dev/srvsyfoaltinn
+      - kvPath: serviceuser/data/dev/srvsykepengesoknad-altinn
         mountPath: /secrets/serviceuser
-      - kvPath: oracle/data/dev/creds/syfoaltinn_q1-user
-        mountPath: /secrets/syfoaltinn/credentials
-      - kvPath: oracle/data/dev/config/syfoaltinn_q1
-        mountPath: /secrets/syfoaltinn/config
-      - kvPath: kv/preprod/fss/syfoaltinn/default
+      - kvPath: oracle/data/dev/creds/sykepengesoknad-altinn_q1-user
+        mountPath: /secrets/sykepengesoknad-altinn/credentials
+      - kvPath: oracle/data/dev/config/sykepengesoknad-altinn_q1
+        mountPath: /secrets/sykepengesoknad-altinn/config
+      - kvPath: kv/preprod/fss/sykepengesoknad-altinn/default
         mountPath: /var/run/secrets/nais.io/vault
   webproxy: false
   kafka:

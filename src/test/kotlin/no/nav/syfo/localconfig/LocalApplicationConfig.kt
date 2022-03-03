@@ -11,7 +11,7 @@ class LocalApplicationConfig(environment: Environment) {
     */
     init {
         System.setProperty("SECURITYTOKENSERVICE_URL", environment.getProperty("securitytokenservice.url"))
-        System.setProperty("SRVSYFOALTINN_USERNAME", environment.getProperty("srvsyfoaltinn.username"))
-        System.setProperty("SRVSYFOALTINN_PASSWORD", environment.getProperty("srvsyfoaltinn.password"))
+        System.setProperty("SRVSYFOALTINN_USERNAME", environment.getProperty("srvsykepengesoknad-altinn.username"))
+        System.setProperty("SRVSYFOALTINN_PASSWORD", environment.getProperty("srvsykepengesoknad-altinn.password"))
     }
 }
