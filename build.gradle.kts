@@ -36,10 +36,10 @@ val h2Version = "1.4.200"
 val ojdbc8Version = "19.3.0.0"
 val logstashLogbackEncoderVersion = "6.6"
 val tjenestespesifikasjonerVersion = "1.2020.01.20-15.44-063ae9f84815"
-val cxfVersion = "3.2.10"
-val testContainersVersion = "1.16.0"
-val kluentVersion = "1.67"
-val tokenSupportVersion = "1.3.7"
+val cxfVersion = "3.5.1"
+val testContainersVersion = "1.16.3"
+val kluentVersion = "1.68"
+val tokenSupportVersion = "2.0.7"
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -69,7 +69,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-jta-atomikos")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     implementation("com.oracle.ojdbc:ojdbc8:$ojdbc8Version")
-    implementation("com.h2database:h2:$h2Version")
+    testImplementation("com.h2database:h2:$h2Version")
     implementation("org.flywaydb:flyway-core")
     implementation("org.slf4j:slf4j-api")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashLogbackEncoderVersion")
