@@ -11,7 +11,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: 'zulu'
-          java-version: '14'
+          java-version: '17'
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Generer versjon og image navn

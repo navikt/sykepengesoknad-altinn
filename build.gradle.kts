@@ -1,30 +1,20 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.4.7"
+    id("org.springframework.boot") version "2.6.4"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.5.30"
-    kotlin("plugin.spring") version "1.5.30"
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
+    kotlin("plugin.spring") version "1.6.10"
+    kotlin("jvm") version "1.6.10"
 }
 
 group = "no.nav.helse.flex"
 version = "1"
 description = "sykepengesoknad-altinn"
-java.sourceCompatibility = JavaVersion.VERSION_14
-
-buildscript {
-    repositories {
-        maven("https://plugins.gradle.org/m2/")
-    }
-    dependencies {
-        classpath("org.jlleitschuh.gradle:ktlint-gradle:10.1.0")
-    }
-}
+java.sourceCompatibility = JavaVersion.VERSION_17
 
 val githubUser: String by project
 val githubPassword: String by project
-
-apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
 repositories {
     mavenCentral()
@@ -105,7 +95,7 @@ tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "14"
+        jvmTarget = "17"
         if (System.getenv("CI") == "true") {
             kotlinOptions.allWarningsAsErrors = true
         }
