@@ -5,19 +5,19 @@ import no.nav.syfo.domain.SendtSoknad
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import javax.inject.Inject
 
 @DirtiesContext
 class SendtSoknadDaoTest : AbstractContainerBaseTest() {
 
-    @Inject
+    @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
 
-    @Inject
+    @Autowired
     private lateinit var sendtSoknadDao: SendtSoknadDao
 
     @BeforeEach
