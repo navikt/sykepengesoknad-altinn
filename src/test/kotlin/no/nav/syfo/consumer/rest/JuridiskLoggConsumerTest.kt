@@ -45,7 +45,7 @@ class JuridiskLoggConsumerTest {
             )
         ).willReturn(ResponseEntity(JuridiskRespose(123), HttpStatus.OK))
 
-        juridiskLoggConsumer = JuridiskLoggConsumer(basicAuthRestTemplate, "url", "username")
+        juridiskLoggConsumer = JuridiskLoggConsumer(basicAuthRestTemplate, "url")
     }
 
     @Test

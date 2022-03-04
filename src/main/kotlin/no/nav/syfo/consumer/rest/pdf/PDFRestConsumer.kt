@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate
 
 @Component
 class PDFRestConsumer(
-    private val restTemplate: RestTemplate,
+    private val pdfClientRestTemplate: RestTemplate,
     @Value("\${pdfgen.url}") private val pdfgenUrl: String
 ) {
 
@@ -37,7 +37,7 @@ class PDFRestConsumer(
 
         val entity = HttpEntity(pdfSoknad, headers)
 
-        val result = restTemplate.exchange(url, HttpMethod.POST, entity, ByteArray::class.java)
+        val result = pdfClientRestTemplate.exchange(url, HttpMethod.POST, entity, ByteArray::class.java)
 
         if (result.statusCode != OK) {
             throw RuntimeException("getPDFArbeidstakere feiler med HTTP-" + result.statusCode + " for søknad med id: " + sykepengesoknad.id)

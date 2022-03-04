@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component
 
 @Component
 class EnvironmentToggles(
-    @Value("\${fasit.environment.name:p}") private val fasitEnvironmentName: String
+    @Value("\${NAIS_CLUSTER_NAME}") private val fasitEnvironmentName: String
 ) {
-    fun isProd(): Boolean = "p" == fasitEnvironmentName
+    fun isProd(): Boolean = "prod-gcp" == fasitEnvironmentName
 
     fun allowsOrgnummer(orgnummer: String): Boolean {
         return allowedOrgnummer.contains(orgnummer)

@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component
 class AltinnConsumer(
     private val iCorrespondenceAgencyExternalBasic: ICorrespondenceAgencyExternalBasic,
     private val soknadAltinnMapper: SoknadAltinnMapper,
-    @Value("\${altinnUser.username}") private val altinnUsername: String,
-    @Value("\${altinnUser.password}") private val altinnPassword: String
+    @Value("\${altinn.username}") private val altinnUsername: String,
+    @Value("\${altinn.password}") private val altinnPassword: String
 ) {
 
     val log = logger()

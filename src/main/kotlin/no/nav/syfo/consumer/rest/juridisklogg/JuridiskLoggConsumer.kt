@@ -18,9 +18,8 @@ import java.util.*
 
 @Component
 class JuridiskLoggConsumer(
-    private val basicAuthRestTemplate: RestTemplate,
+    private val juridiskLoggRestTemplate: RestTemplate,
     @Value("\${lagrejuridisklogg.rest.url}") private val url: String,
-    @Value("\${srvsykepengesoknad-altinn.username}") private val username: String
 ) {
 
     val log = logger()
@@ -31,7 +30,7 @@ class JuridiskLoggConsumer(
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
         headers.set("Nav-Call-Id", sykepengesoknad.id)
-        headers.set("Nav-Consumer-Id", username)
+        // TODO    headers.set("Nav-Consumer-Id", TODO("Trenger consumer id"))
 
         val avsender = sykepengesoknad.fnr
         val innholdMeta = "hash: V6;altinnKvittering: $altinnKvitteringsId"
@@ -46,7 +45,7 @@ class JuridiskLoggConsumer(
         )
 
         try {
-            val result = basicAuthRestTemplate.exchange(url, HttpMethod.POST, HttpEntity(logg, headers), JuridiskRespose::class.java)
+            val result = juridiskLoggRestTemplate.exchange(url, HttpMethod.POST, HttpEntity(logg, headers), JuridiskRespose::class.java)
 
             if (result.statusCode != HttpStatus.OK) {
                 log.error(

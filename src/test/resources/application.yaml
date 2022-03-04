@@ -5,34 +5,21 @@ management:
     exposure.include: prometheus
     path-mapping.prometheus: /prometheus
 
-fasit.environment.name: local
+NAIS_CLUSTER_NAME: local
 
-nais.app.name: sykepengesoknad-altinn
-
-
-toggle.config:
-  ORGNUMMER_WHITELISTET:
-    enabled: true
-    byOrgnummer:
-      - orgnummer
 
 pdfgen.url: "http://pdf"
 
-altinnUser.username: "username"
-altinnUser.password: "password"
-ekstern.altinn.behandlealtinnmelding.v1.endpointurl: "ekstern.altinn.behandlealtinnmelding.v1.endpointurl"
+altinn.username: "username"
+altinn.password: "password"
+
+altinn.url: "http://altinn"
 
 virksomhet.Organisasjon.v4.endpointurl: "virksomhet.Organisasjon.v4.endpointurl"
 
-srvsykepengesoknad-altinn:
-  username: "kek"
-  password: "bur"
 
-servicegateway.url: "servicegateway.url"
-securitytokenservice.url: "http://sts.url"
 aktoerregister.api.v1.url: "aktor.url"
 lagrejuridisklogg.rest.url: "lagrejuridisk.url"
-security.token.service.token.url: "security.token.service.token.url"
 
 spring:
   profiles:
