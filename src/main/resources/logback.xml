@@ -12,5 +12,9 @@
 		<appender-ref ref="stdout_json"/>
 	</logger>
 
+	<logger name="org.springframework.kafka" level="DEBUG">
+		<appender-ref ref="stdout_json"/>
+	</logger>
+
 	<logger name="org.springframework" level="INFO"/>
 </configuration>
