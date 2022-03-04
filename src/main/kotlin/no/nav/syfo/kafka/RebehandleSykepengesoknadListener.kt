@@ -25,7 +25,8 @@ class RebehandleSykepengesoknadListener(
 
     @KafkaListener(
         topics = [RETRY_TOPIC],
-        containerFactory = "aivenKafkaListenerContainerFactory"
+        containerFactory = "aivenKafkaListenerContainerFactory",
+        properties = ["auto.offset.reset=earliest"],
     )
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         val sykepengesoknad = cr.value().tilSykepengesoknad()
@@ -40,9 +41,9 @@ class RebehandleSykepengesoknadListener(
             if (sovetid > 0) {
                 log.info(
                     "Mottok rebehandling av søknad ${sykepengesoknad.id} med behandlingstidspunkt ${
-                    behandlingstidspunkt.atOffset(
-                        ZoneOffset.UTC
-                    )
+                        behandlingstidspunkt.atOffset(
+                            ZoneOffset.UTC
+                        )
                     } sover i $sovetid millisekunder"
                 )
                 acknowledgment.nack(sovetid)
