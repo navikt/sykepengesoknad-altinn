@@ -7,7 +7,9 @@ import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.logger
 import no.nav.syfo.objectMapper
 import org.apache.kafka.clients.consumer.ConsumerRecord
+import org.springframework.context.event.EventListener
 import org.springframework.kafka.annotation.KafkaListener
+import org.springframework.kafka.event.ConsumerStoppedEvent
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
 import java.nio.charset.StandardCharsets.UTF_8
@@ -57,6 +59,14 @@ class RebehandleSykepengesoknadListener(
 
             acknowledgment.acknowledge()
         }
+    }
+
+    @EventListener
+    fun eventHandler(event: ConsumerStoppedEvent) {
+        if (event.reason == ConsumerStoppedEvent.Reason.NORMAL) {
+            return
+        }
+        log.error("Consumer stoppet grunnet ${event.reason}, restarter app")
     }
 
     fun String.tilSykepengesoknad(): Sykepengesoknad = objectMapper.readValue(this)
