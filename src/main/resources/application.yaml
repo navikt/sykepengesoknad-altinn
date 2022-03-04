@@ -25,6 +25,11 @@ spring:
 
 rebehandling.delay.sekunder: 240 # 4 minutter. Må være mindre enn max.poll.interval.ms
 
+
+altinn:
+  username: ${KUBERNETES_SECRET_ALTINN_USERNAME}
+  password: ${KUBERNETES_SECRET_ALTINN_PASSWORD}
+
 no.nav.security.jwt:
   client:
     registration:
