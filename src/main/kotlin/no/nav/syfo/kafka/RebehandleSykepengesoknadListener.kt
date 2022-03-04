@@ -41,9 +41,9 @@ class RebehandleSykepengesoknadListener(
             if (sovetid > 0) {
                 log.info(
                     "Mottok rebehandling av søknad ${sykepengesoknad.id} med behandlingstidspunkt ${
-                        behandlingstidspunkt.atOffset(
-                            ZoneOffset.UTC
-                        )
+                    behandlingstidspunkt.atOffset(
+                        ZoneOffset.UTC
+                    )
                     } sover i $sovetid millisekunder"
                 )
                 acknowledgment.nack(sovetid)
