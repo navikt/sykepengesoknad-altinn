@@ -18,9 +18,6 @@ altinn.url: "http://altinn"
 virksomhet.Organisasjon.v4.endpointurl: "virksomhet.Organisasjon.v4.endpointurl"
 
 
-aktoerregister.api.v1.url: "aktor.url"
-lagrejuridisklogg.rest.url: "lagrejuridisk.url"
-
 spring:
   profiles:
     active: test

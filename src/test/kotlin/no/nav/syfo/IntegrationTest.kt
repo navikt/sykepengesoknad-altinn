@@ -2,7 +2,6 @@ package no.nav.syfo
 
 import com.nhaarman.mockitokotlin2.*
 import no.nav.syfo.client.pdl.PdlClient
-import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
 import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
 import no.nav.syfo.consumer.ws.client.OrganisasjonConsumer
@@ -41,9 +40,6 @@ class IntegrationTest : AbstractContainerBaseTest() {
 
     @MockBean
     private lateinit var organisasjonConsumer: OrganisasjonConsumer
-
-    @MockBean
-    private lateinit var juridiskLoggConsumer: JuridiskLoggConsumer
 
     @Test
     fun `Sendt arbeidstaker søknad mottas og sendes til altinn`() {

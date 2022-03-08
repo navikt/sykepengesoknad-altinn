@@ -5,8 +5,6 @@ import io.micrometer.core.instrument.Counter
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Tags
 import no.nav.syfo.client.pdl.PdlClient
-import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
-import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggException
 import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
 import no.nav.syfo.consumer.ws.client.OrganisasjonConsumer
@@ -36,8 +34,6 @@ class SendTilAltinnServiceTest {
     @Mock
     private lateinit var organisasjonConsumer: OrganisasjonConsumer
     @Mock
-    private lateinit var juridiskLoggConsumer: JuridiskLoggConsumer
-    @Mock
     private lateinit var sendtSoknadDao: SendtSoknadDao
     @Mock
     private lateinit var registry: MeterRegistry
@@ -57,25 +53,6 @@ class SendTilAltinnServiceTest {
         given(altinnConsumer.sendSykepengesoknadTilArbeidsgiver(any(), any())).willReturn(123)
         given(sendtSoknadDao.soknadErSendt(ressursId, false)).willReturn(false)
         given(registry.counter(ArgumentMatchers.anyString(), ArgumentMatchers.any(Tags::class.java))).willReturn(counter)
-    }
-
-    @Test
-    fun senderTilAltinnOgLoggerJuridisk() {
-        sendTilAltinnService.sendSykepengesoknadTilAltinn(mockSykepengesoknad.first)
-
-        verify(juridiskLoggConsumer).lagreIJuridiskLogg(any(), any(), any())
-        verify(sendtSoknadDao).soknadErSendt(ressursId, false)
-        verify(sendtSoknadDao).lagreSendtSoknad(any())
-    }
-
-    @Test
-    fun feilIJuridiskStopperIkkeInnsending() {
-        given(juridiskLoggConsumer.lagreIJuridiskLogg(any(), any(), any())).willThrow(JuridiskLoggException())
-
-        sendTilAltinnService.sendSykepengesoknadTilAltinn(mockSykepengesoknad.first)
-
-        verify(sendtSoknadDao).soknadErSendt(ressursId, false)
-        verify(sendtSoknadDao).lagreSendtSoknad(any())
     }
 
     @Test

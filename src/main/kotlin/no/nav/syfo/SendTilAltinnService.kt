@@ -3,8 +3,6 @@ package no.nav.syfo
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Tags
 import no.nav.syfo.client.pdl.PdlClient
-import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggConsumer
-import no.nav.syfo.consumer.rest.juridisklogg.JuridiskLoggException
 import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
 import no.nav.syfo.consumer.ws.client.OrganisasjonConsumer
@@ -21,7 +19,6 @@ class SendTilAltinnService(
     private val altinnConsumer: AltinnConsumer,
     private val pdfRestConsumer: PDFRestConsumer,
     private val organisasjonConsumer: OrganisasjonConsumer,
-    private val juridiskLoggConsumer: JuridiskLoggConsumer,
     private val sendtSoknadDao: SendtSoknadDao,
     private val registry: MeterRegistry,
     private val pdlClient: PdlClient,
@@ -68,13 +65,6 @@ class SendTilAltinnService(
             val feil = validationeventer.joinToString("\n") { it.message }
             log.error("Validering feilet for sykepengesøknad med id ${sykepengesoknad.id} med følgende feil: $feil")
             throw RuntimeException("Validering feilet for sykepengesøknad med id ${sykepengesoknad.id} med følgende feil: $feil")
-        }
-
-        try {
-            juridiskLoggConsumer.lagreIJuridiskLogg(sykepengesoknad, receiptId, ekstraData)
-            log.info("Søknad ${sykepengesoknad.id} er sendt til Altinn")
-        } catch (e: JuridiskLoggException) {
-            log.warn("Ved innsending av sykepengesøknad: ${sykepengesoknad.id} feilet juridisk logging", e)
         }
     }
 
