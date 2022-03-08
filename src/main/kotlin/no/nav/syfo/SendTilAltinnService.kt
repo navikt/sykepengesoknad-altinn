@@ -2,9 +2,9 @@ package no.nav.syfo
 
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Tags
+import no.nav.syfo.client.altinn.AltinnClient
+import no.nav.syfo.client.pdf.PDFClient
 import no.nav.syfo.client.pdl.PdlClient
-import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
-import no.nav.syfo.consumer.ws.client.AltinnConsumer
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.SendtSoknad
 import no.nav.syfo.domain.soknad.Sykepengesoknad
@@ -15,8 +15,8 @@ import javax.xml.bind.ValidationEvent
 
 @Service
 class SendTilAltinnService(
-    private val altinnConsumer: AltinnConsumer,
-    private val pdfRestConsumer: PDFRestConsumer,
+    private val altinnClient: AltinnClient,
+    private val pdfClient: PDFClient,
     private val sendtSoknadDao: SendtSoknadDao,
     private val registry: MeterRegistry,
     private val pdlClient: PdlClient,
@@ -36,7 +36,7 @@ class SendTilAltinnService(
         val fnr = sykepengesoknad.fnr
         val navn = pdlClient.hentFormattertNavn(fnr)
 
-        val pdf = pdfRestConsumer.getPDF(sykepengesoknad, fnr, navn)
+        val pdf = pdfClient.getPDF(sykepengesoknad, fnr, navn)
         val validationeventer: MutableList<ValidationEvent> = mutableListOf()
         val juridiskOrgnummerArbeidsgiver = sykepengesoknad.arbeidsgiver.orgnummer // TODO hent fra db
 
@@ -51,7 +51,7 @@ class SendTilAltinnService(
 
         val receiptId: Int?
         if (validationeventer.isEmpty()) {
-            receiptId = altinnConsumer.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad, ekstraData)
+            receiptId = altinnClient.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad, ekstraData)
             if (erEttersending) {
                 sendtSoknadDao.lagreEttersendtSoknad(sykepengesoknad.id, receiptId.toString())
             } else {

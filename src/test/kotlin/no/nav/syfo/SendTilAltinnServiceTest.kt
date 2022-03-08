@@ -4,9 +4,9 @@ import com.nhaarman.mockitokotlin2.*
 import io.micrometer.core.instrument.Counter
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Tags
+import no.nav.syfo.client.altinn.AltinnClient
+import no.nav.syfo.client.pdf.PDFClient
 import no.nav.syfo.client.pdl.PdlClient
-import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
-import no.nav.syfo.consumer.ws.client.AltinnConsumer
 import no.nav.syfo.repository.SendtSoknadDao
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -25,11 +25,11 @@ import java.time.LocalDateTime
 class SendTilAltinnServiceTest {
 
     @Mock
-    private lateinit var altinnConsumer: AltinnConsumer
+    private lateinit var altinnConsumer: AltinnClient
     @Mock
     private lateinit var pdlClient: PdlClient
     @Mock
-    private lateinit var pdfRestConsumer: PDFRestConsumer
+    private lateinit var pdfClient: PDFClient
     @Mock
     private lateinit var sendtSoknadDao: SendtSoknadDao
     @Mock
@@ -45,7 +45,7 @@ class SendTilAltinnServiceTest {
     @BeforeEach
     fun setup() {
         given(pdlClient.hentFormattertNavn(any())).willReturn("Navn Navnesen")
-        given(pdfRestConsumer.getPDF(any(), any(), any())).willReturn("pdf".toByteArray())
+        given(pdfClient.getPDF(any(), any(), any())).willReturn("pdf".toByteArray())
         given(altinnConsumer.sendSykepengesoknadTilArbeidsgiver(any(), any())).willReturn(123)
         given(sendtSoknadDao.soknadErSendt(ressursId, false)).willReturn(false)
         given(registry.counter(ArgumentMatchers.anyString(), ArgumentMatchers.any(Tags::class.java))).willReturn(counter)

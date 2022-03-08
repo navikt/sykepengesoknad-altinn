@@ -1,4 +1,4 @@
-package no.nav.syfo.config
+package no.nav.syfo.client.pdf
 
 import com.fasterxml.jackson.databind.SerializationFeature
 import org.springframework.context.annotation.Bean
@@ -7,7 +7,7 @@ import org.springframework.http.converter.json.AbstractJackson2HttpMessageConver
 import org.springframework.web.client.RestTemplate
 
 @Configuration
-class ApplicationConfig {
+class PDFClientRestTemplateConfig {
 
     @Bean
     fun pdfClientRestTemplate(): RestTemplate {

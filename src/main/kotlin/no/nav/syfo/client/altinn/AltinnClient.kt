@@ -1,4 +1,4 @@
-package no.nav.syfo.consumer.ws.client
+package no.nav.syfo.client.altinn
 
 import no.altinn.schemas.services.intermediary.receipt._2009._10.ReceiptStatusEnum
 import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondenceAgencyExternalBasic
@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class AltinnConsumer(
+class AltinnClient(
     private val iCorrespondenceAgencyExternalBasic: ICorrespondenceAgencyExternalBasic,
     private val soknadAltinnMapper: SoknadAltinnMapper,
     @Value("\${altinn.username}") private val altinnUsername: String,

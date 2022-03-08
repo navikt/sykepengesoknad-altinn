@@ -1,4 +1,4 @@
-package no.nav.syfo.config
+package no.nav.syfo.toggles
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component

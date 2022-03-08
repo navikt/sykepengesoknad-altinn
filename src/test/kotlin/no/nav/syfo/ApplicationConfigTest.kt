@@ -1,6 +1,5 @@
-package no.nav.syfo.config
+package no.nav.syfo
 
-import no.nav.syfo.AbstractContainerBaseTest
 import org.junit.jupiter.api.Test
 import org.springframework.test.annotation.DirtiesContext
 

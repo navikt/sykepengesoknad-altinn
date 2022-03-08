@@ -1,9 +1,9 @@
 package no.nav.syfo
 
 import com.nhaarman.mockitokotlin2.*
+import no.nav.syfo.client.altinn.AltinnClient
+import no.nav.syfo.client.pdf.PDFClient
 import no.nav.syfo.client.pdl.PdlClient
-import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
-import no.nav.syfo.consumer.ws.client.AltinnConsumer
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.kafka.SYKEPENGESOKNAD_TOPIC
@@ -32,10 +32,10 @@ class RebehandlingIntegrationTest : AbstractContainerBaseTest() {
     private lateinit var pdlClient: PdlClient
 
     @MockBean
-    private lateinit var altinnConsumer: AltinnConsumer
+    private lateinit var altinnConsumer: AltinnClient
 
     @MockBean
-    private lateinit var pdfRestConsumer: PDFRestConsumer
+    private lateinit var pdfClient: PDFClient
 
     @Test
     fun `Sendt arbeidstaker søknad mottas, pdf generering feiler første gang, men neste gang går det og den sendes til altinn`() {
@@ -43,7 +43,7 @@ class RebehandlingIntegrationTest : AbstractContainerBaseTest() {
         val enkelSoknad = mockSykepengesoknadDTO.copy(id = id)
 
         whenever(pdlClient.hentFormattertNavn(enkelSoknad.fnr)).thenReturn("Ole Gunnar")
-        whenever(pdfRestConsumer.getPDF(any(), any(), any())).thenThrow(RuntimeException("OOOPS")).thenReturn("pdf".toByteArray())
+        whenever(pdfClient.getPDF(any(), any(), any())).thenThrow(RuntimeException("OOOPS")).thenReturn("pdf".toByteArray())
 
         aivenKafkaProducer.send(
             ProducerRecord(
@@ -64,7 +64,7 @@ class RebehandlingIntegrationTest : AbstractContainerBaseTest() {
         val ekstradataCaptor: KArgumentCaptor<AltinnInnsendelseEkstraData> = argumentCaptor()
 
         verify(altinnConsumer).sendSykepengesoknadTilArbeidsgiver(sykepengesoknadCaptor.capture(), ekstradataCaptor.capture())
-        verify(pdfRestConsumer, times(2)).getPDF(any(), any(), any())
+        verify(pdfClient, times(2)).getPDF(any(), any(), any())
 
         sykepengesoknadCaptor.lastValue.id `should be equal to` id
         sykepengesoknadCaptor.lastValue.fnr `should be equal to` "13068700000"

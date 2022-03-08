@@ -10,11 +10,11 @@ import no.altinn.schemas.services.serviceengine.notification._2009._10.Notificat
 import no.altinn.schemas.services.serviceengine.subscription._2009._10.AttachmentFunctionType
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentExternalBEV2List
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentV2
-import no.nav.syfo.config.EnvironmentToggles
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.soknad.Avsendertype.SYSTEM
 import no.nav.syfo.domain.soknad.Soknadstype
 import no.nav.syfo.domain.soknad.Sykepengesoknad
+import no.nav.syfo.toggles.EnvironmentToggles
 import org.springframework.stereotype.Component
 import java.io.IOException
 import java.time.format.DateTimeFormatter

@@ -1,10 +1,10 @@
-package no.nav.syfo.config
+package no.nav.syfo.tokensupport
 
 import no.nav.security.token.support.client.core.ClientProperties
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties
 import no.nav.security.token.support.client.spring.oauth2.EnableOAuth2Client
-import no.nav.syfo.logger
+import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -15,9 +15,8 @@ import org.springframework.web.client.RestTemplate
 
 @EnableOAuth2Client(cacheEnabled = true)
 @Configuration
+@EnableJwtTokenValidation
 class AadRestTemplateConfiguration {
-
-    val log = logger()
 
     @Bean
     fun pdlRestTemplate(

@@ -1,4 +1,4 @@
-package no.nav.syfo.config
+package no.nav.syfo.client.altinn
 
 import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondenceAgencyExternalBasic
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean
