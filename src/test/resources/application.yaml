@@ -8,7 +8,6 @@ management:
 NAIS_CLUSTER_NAME: local
 
 
-pdfgen.url: "http://pdf"
 
 altinn.username: "username"
 altinn.password: "password"

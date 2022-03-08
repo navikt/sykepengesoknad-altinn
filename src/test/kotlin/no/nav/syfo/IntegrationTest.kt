@@ -2,7 +2,6 @@ package no.nav.syfo
 
 import com.nhaarman.mockitokotlin2.*
 import no.nav.syfo.client.altinn.AltinnClient
-import no.nav.syfo.client.pdf.PDFClient
 import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.soknad.Sykepengesoknad
@@ -34,16 +33,12 @@ class IntegrationTest : AbstractContainerBaseTest() {
     @MockBean
     private lateinit var altinnConsumer: AltinnClient
 
-    @MockBean
-    private lateinit var pdfClient: PDFClient
-
     @Test
     fun `Sendt arbeidstaker søknad mottas og sendes til altinn`() {
         val id = UUID.randomUUID().toString()
         val enkelSoknad = mockSykepengesoknadDTO.copy(id = id)
 
         whenever(pdlClient.hentFormattertNavn(enkelSoknad.fnr)).thenReturn("Ole Gunnar")
-        whenever(pdfClient.getPDF(any(), any(), any())).thenReturn("pdf".toByteArray())
 
         aivenKafkaProducer.send(
             ProducerRecord(
@@ -78,6 +73,6 @@ class IntegrationTest : AbstractContainerBaseTest() {
         sykepengesoknadCaptor.lastValue.fnr `should be equal to` "13068700000"
 
         ekstradataCaptor.lastValue.navn `should be equal to` "Ole Gunnar"
-        ekstradataCaptor.lastValue.pdf `should be equal to` "pdf".toByteArray()
+        ekstradataCaptor.lastValue.pdf.shouldNotBeNull()
     }
 }
