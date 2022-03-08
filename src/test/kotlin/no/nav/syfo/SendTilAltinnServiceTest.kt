@@ -7,7 +7,6 @@ import io.micrometer.core.instrument.Tags
 import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
-import no.nav.syfo.consumer.ws.client.OrganisasjonConsumer
 import no.nav.syfo.repository.SendtSoknadDao
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -32,8 +31,6 @@ class SendTilAltinnServiceTest {
     @Mock
     private lateinit var pdfRestConsumer: PDFRestConsumer
     @Mock
-    private lateinit var organisasjonConsumer: OrganisasjonConsumer
-    @Mock
     private lateinit var sendtSoknadDao: SendtSoknadDao
     @Mock
     private lateinit var registry: MeterRegistry
@@ -48,7 +45,6 @@ class SendTilAltinnServiceTest {
     @BeforeEach
     fun setup() {
         given(pdlClient.hentFormattertNavn(any())).willReturn("Navn Navnesen")
-        given(organisasjonConsumer.hentJuridiskOrgnummer(any())).willReturn("Juridisk Orgnummer")
         given(pdfRestConsumer.getPDF(any(), any(), any())).willReturn("pdf".toByteArray())
         given(altinnConsumer.sendSykepengesoknadTilArbeidsgiver(any(), any())).willReturn(123)
         given(sendtSoknadDao.soknadErSendt(ressursId, false)).willReturn(false)

@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.*
 import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
-import no.nav.syfo.consumer.ws.client.OrganisasjonConsumer
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.kafka.SYKEPENGESOKNAD_TOPIC
@@ -37,9 +36,6 @@ class IntegrationTest : AbstractContainerBaseTest() {
 
     @MockBean
     private lateinit var pdfRestConsumer: PDFRestConsumer
-
-    @MockBean
-    private lateinit var organisasjonConsumer: OrganisasjonConsumer
 
     @Test
     fun `Sendt arbeidstaker søknad mottas og sendes til altinn`() {

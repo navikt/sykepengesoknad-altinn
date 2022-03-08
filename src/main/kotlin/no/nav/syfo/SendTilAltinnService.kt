@@ -5,7 +5,6 @@ import io.micrometer.core.instrument.Tags
 import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.consumer.rest.pdf.PDFRestConsumer
 import no.nav.syfo.consumer.ws.client.AltinnConsumer
-import no.nav.syfo.consumer.ws.client.OrganisasjonConsumer
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.SendtSoknad
 import no.nav.syfo.domain.soknad.Sykepengesoknad
@@ -18,7 +17,6 @@ import javax.xml.bind.ValidationEvent
 class SendTilAltinnService(
     private val altinnConsumer: AltinnConsumer,
     private val pdfRestConsumer: PDFRestConsumer,
-    private val organisasjonConsumer: OrganisasjonConsumer,
     private val sendtSoknadDao: SendtSoknadDao,
     private val registry: MeterRegistry,
     private val pdlClient: PdlClient,
@@ -26,7 +24,6 @@ class SendTilAltinnService(
 
     val log = logger()
 
-    @Synchronized
     fun sendSykepengesoknadTilAltinn(sykepengesoknad: Sykepengesoknad) {
         val erEttersending = sykepengesoknad.ettersending
         if (sendtSoknadDao.soknadErSendt(sykepengesoknad.id, erEttersending)) {
@@ -41,8 +38,8 @@ class SendTilAltinnService(
 
         val pdf = pdfRestConsumer.getPDF(sykepengesoknad, fnr, navn)
         val validationeventer: MutableList<ValidationEvent> = mutableListOf()
-        val juridiskOrgnummerArbeidsgiver =
-            organisasjonConsumer.hentJuridiskOrgnummer(sykepengesoknad.arbeidsgiver.orgnummer)
+        val juridiskOrgnummerArbeidsgiver = sykepengesoknad.arbeidsgiver.orgnummer // TODO hent fra db
+
         val xml = sykepengesoknad2XMLByteArray(sykepengesoknad, validationeventer, fnr, juridiskOrgnummerArbeidsgiver)
 
         val ekstraData = AltinnInnsendelseEkstraData(
