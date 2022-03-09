@@ -1,20 +1,14 @@
 package no.nav.syfo
 
-import com.nhaarman.mockitokotlin2.*
-import no.nav.syfo.client.altinn.AltinnClient
-import no.nav.syfo.client.pdf.PDFClient
-import no.nav.syfo.client.pdl.PdlClient
-import no.nav.syfo.domain.AltinnInnsendelseEkstraData
-import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.kafka.SYKEPENGESOKNAD_TOPIC
 import no.nav.syfo.repository.SendtSoknadDao
+import okhttp3.mockwebserver.MockResponse
 import org.amshove.kluent.*
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.annotation.DirtiesContext
 import java.time.Duration
 import java.util.*
@@ -28,22 +22,22 @@ class RebehandlingIntegrationTest : Testoppsett() {
     @Autowired
     private lateinit var sendtSoknadDao: SendtSoknadDao
 
-    @MockBean
-    private lateinit var pdlClient: PdlClient
-
-    @MockBean
-    private lateinit var altinnConsumer: AltinnClient
-
-    @MockBean
-    private lateinit var pdfClient: PDFClient
-
     @Test
-    fun `Sendt arbeidstaker søknad mottas, pdf generering feiler første gang, men neste gang går det og den sendes til altinn`() {
+    fun `Sendt arbeidstaker søknad mottas, altinn kall feiler første gang, men neste gang går det og den sendes til altinn`() {
         val id = UUID.randomUUID().toString()
         val enkelSoknad = mockSykepengesoknadDTO.copy(id = id)
 
-        whenever(pdlClient.hentFormattertNavn(enkelSoknad.fnr)).thenReturn("Ole Gunnar")
-        whenever(pdfClient.getPDF(any(), any(), any())).thenThrow(RuntimeException("OOOPS")).thenReturn("pdf".toByteArray())
+        val errorResponse = MockResponse()
+            .setBody("ERRÅRRR")
+            .setResponseCode(500)
+
+        // 3 ganger grunnet retryable
+        pdlMockWebserver.enqueue(errorResponse)
+        pdlMockWebserver.enqueue(errorResponse)
+        pdlMockWebserver.enqueue(errorResponse)
+
+        mockPdlResponse()
+        mockAltinnResponse()
 
         aivenKafkaProducer.send(
             ProducerRecord(
@@ -55,21 +49,16 @@ class RebehandlingIntegrationTest : Testoppsett() {
         )
 
         // Det skal ta ca 10 sekunder grunnet rebehandlinga
-        await().between(Duration.ofSeconds(8), Duration.ofSeconds(12))
+        await().between(Duration.ofSeconds(8), Duration.ofSeconds(30))
             .until {
                 sendtSoknadDao.soknadErSendt(id, false)
             }
 
-        val sykepengesoknadCaptor: KArgumentCaptor<Sykepengesoknad> = argumentCaptor()
-        val ekstradataCaptor: KArgumentCaptor<AltinnInnsendelseEkstraData> = argumentCaptor()
+        val altinnRequest = altinnMockWebserver.takeRequest().parseCorrespondence()
+        altinnRequest.externalShipmentReference `should be equal to` id
 
-        verify(altinnConsumer).sendSykepengesoknadTilArbeidsgiver(sykepengesoknadCaptor.capture(), ekstradataCaptor.capture())
-        verify(pdfClient, times(2)).getPDF(any(), any(), any())
-
-        sykepengesoknadCaptor.lastValue.id `should be equal to` id
-        sykepengesoknadCaptor.lastValue.fnr `should be equal to` "13068700000"
-
-        ekstradataCaptor.lastValue.navn `should be equal to` "Ole Gunnar"
-        ekstradataCaptor.lastValue.pdf `should be equal to` "pdf".toByteArray()
+        repeat(4) {
+            pdlMockWebserver.takeRequest()
+        }
     }
 }
