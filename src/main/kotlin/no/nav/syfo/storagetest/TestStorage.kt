@@ -1,7 +1,6 @@
 package no.nav.syfo.storagetest
 
 import com.google.cloud.storage.BucketInfo
-import com.google.cloud.storage.StorageClass
 import com.google.cloud.storage.StorageOptions
 import no.nav.syfo.logger
 import no.nav.syfo.toggles.EnvironmentToggles
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.time.Instant
 import javax.annotation.PostConstruct
-
 
 @Component
 class TestStorage(
@@ -25,10 +23,7 @@ class TestStorage(
             val storage = StorageOptions.getDefaultInstance().service
             val bucket = storage.create(BucketInfo.of(bucketName))
 
-            if (bucket.storageClass != StorageClass.ARCHIVE) {
-                bucket.toBuilder().setStorageClass(StorageClass.ARCHIVE).build().update();
-            }
-            val blobName = Instant.now().toEpochMilli().toString() + "/" + "my_blob_name.txt";
+            val blobName = Instant.now().toEpochMilli().toString() + "/" + "my_blob_name.txt"
             val blob = bucket.create(blobName, "Hello, World!".toByteArray(charset = Charsets.UTF_8), "text/plain")
             log.info("Oppretta blob " + blob.name)
         }

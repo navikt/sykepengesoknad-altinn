@@ -6,7 +6,7 @@ management:
     path-mapping.prometheus: /prometheus
 
 NAIS_CLUSTER_NAME: local
-
+BUCKET_NAME: "DEV"
 
 
 altinn.username: "username"
