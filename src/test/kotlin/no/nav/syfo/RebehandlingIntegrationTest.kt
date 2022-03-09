@@ -36,7 +36,7 @@ class RebehandlingIntegrationTest : Testoppsett() {
         // Det skal ta ca 10 sekunder grunnet rebehandlinga
         await().between(Duration.ofSeconds(8), Duration.ofSeconds(30))
             .until {
-                sendtSoknadDao.soknadErSendt(id, false)
+                sendtSoknadDao.soknadErSendt(id)
             }
 
         val altinnRequest = altinnMockWebserver.takeRequest().parseCorrespondence()

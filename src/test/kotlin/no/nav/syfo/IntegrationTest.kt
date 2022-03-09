@@ -28,7 +28,7 @@ class IntegrationTest : Testoppsett() {
 
         await().atMost(Duration.ofSeconds(10))
             .until {
-                sendtSoknadDao.soknadErSendt(id, false)
+                sendtSoknadDao.soknadErSendt(id)
             }
 
         pdlMockWebserver.takeRequest()

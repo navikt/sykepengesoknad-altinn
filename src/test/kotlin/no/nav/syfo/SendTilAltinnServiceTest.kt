@@ -33,10 +33,10 @@ class SendTilAltinnServiceTest : Testoppsett() {
 
         leggSøknadPåKafka(soknad)
         await().atMost(Duration.ofSeconds(10)).until {
-            sendtSoknadDao.soknadErSendt(soknad.id, false)
+            sendtSoknadDao.soknadErSendt(soknad.id)
         }
 
-        sendtSoknadDao.soknadErSendt(soknad.id, false).`should be true`()
+        sendtSoknadDao.soknadErSendt(soknad.id).`should be true`()
 
         pdlMockWebserver.takeRequest()
         altinnMockWebserver.takeRequest()

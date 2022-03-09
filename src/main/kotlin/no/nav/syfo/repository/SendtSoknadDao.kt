@@ -18,37 +18,20 @@ class SendtSoknadDao(internal val namedParameterJdbcTemplate: NamedParameterJdbc
 
     fun lagreSendtSoknad(sendtSoknad: SendtSoknad) {
         namedParameterJdbcTemplate.update(
-            "INSERT INTO SENDT_SOKNAD ( SYKEPENGESOKNAD_ID, ALTINN_ID, SENDT) VALUES (:ressursId, :altinnId, :sendt)",
+            "INSERT INTO SENDT_SOKNAD ( SYKEPENGESOKNAD_ID, SENDT) VALUES (:ressursId, :sendt)",
             MapSqlParameterSource()
                 .addValue("ressursId", sendtSoknad.ressursId)
-                .addValue("altinnId", sendtSoknad.altinnId)
                 .addValue("sendt", sendtSoknad.sendt)
         )
     }
 
-    fun lagreEttersendtSoknad(ressursId: String, altinnIdEttersending: String) {
-        namedParameterJdbcTemplate.update(
-            "UPDATE SENDT_SOKNAD SET ALTINN_ID_ETTERS = :altinnIdEttersending WHERE SYKEPENGESOKNAD_ID = :ressursId",
-            MapSqlParameterSource()
-                .addValue("altinnIdEttersending", altinnIdEttersending)
-                .addValue("ressursId", ressursId)
-        )
-    }
-
-    fun soknadErSendt(ressursId: String, erEttersending: Boolean): Boolean {
-        val sendtSoknad = namedParameterJdbcTemplate.query(
+    fun soknadErSendt(ressursId: String): Boolean {
+        namedParameterJdbcTemplate.query(
             "SELECT * FROM SENDT_SOKNAD WHERE SYKEPENGESOKNAD_ID = :ressursId",
             MapSqlParameterSource("ressursId", ressursId),
             sendtSoknadRowMapper
         ).firstOrNull() ?: return false
 
-        if (erEttersending && sendtSoknad.altinnIdEttersending == null) {
-            return false
-        }
-
-        if (!erEttersending && sendtSoknad.altinnIdEttersending != null) {
-            log.error("Forsøker å sende søknad med id {} som allerede har blitt ettersendt, avbryter..", sendtSoknad.ressursId)
-        }
         return true
     }
 }
@@ -56,8 +39,6 @@ class SendtSoknadDao(internal val namedParameterJdbcTemplate: NamedParameterJdbc
 val sendtSoknadRowMapper = RowMapper { resultSet, _ ->
     SendtSoknad(
         resultSet.getString("SYKEPENGESOKNAD_ID"),
-        resultSet.getString("ALTINN_ID"),
         resultSet.getTimestamp("SENDT").toLocalDateTime(),
-        resultSet.getString("ALTINN_ID_ETTERS")
     )
 }

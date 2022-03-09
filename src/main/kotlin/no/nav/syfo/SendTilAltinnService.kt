@@ -25,11 +25,11 @@ class SendTilAltinnService(
     val log = logger()
 
     fun sendSykepengesoknadTilAltinn(sykepengesoknad: Sykepengesoknad) {
-        val erEttersending = sykepengesoknad.ettersending
-        if (sendtSoknadDao.soknadErSendt(sykepengesoknad.id, erEttersending)) {
+        if (sendtSoknadDao.soknadErSendt(sykepengesoknad.id)) {
             log.warn("Forsøkte å sende søknad om sykepenger med id ${sykepengesoknad.id} til Altinn som allerede er sendt")
             return
-        } else if (ettersendtTilNAV(sykepengesoknad)) {
+        }
+        if (ettersendtTilNAV(sykepengesoknad)) {
             log.info("Behandler ikke ettersending til NAV for ${sykepengesoknad.id}")
             return
         }
@@ -49,14 +49,9 @@ class SendTilAltinnService(
             xml = xml
         )
 
-        val receiptId: Int?
         if (validationeventer.isEmpty()) {
-            receiptId = altinnClient.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad, ekstraData)
-            if (erEttersending) {
-                sendtSoknadDao.lagreEttersendtSoknad(sykepengesoknad.id, receiptId.toString())
-            } else {
-                sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, receiptId.toString(), now()))
-            }
+            altinnClient.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad, ekstraData)
+            sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, now()))
             registry.counter("sykepengesoknad-altinn.soknadSendtTilAltinn", Tags.of("type", "info")).increment()
         } else {
             val feil = validationeventer.joinToString("\n") { it.message }
