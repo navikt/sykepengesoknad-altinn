@@ -1,6 +1,6 @@
 package no.nav.syfo.repository
 
-import no.nav.syfo.AbstractContainerBaseTest
+import no.nav.syfo.Testoppsett
 import no.nav.syfo.domain.SendtSoknad
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -12,7 +12,7 @@ import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
 @DirtiesContext
-class SendtSoknadDaoTest : AbstractContainerBaseTest() {
+class SendtSoknadDaoTest : Testoppsett() {
 
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate

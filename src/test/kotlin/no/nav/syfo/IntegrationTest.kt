@@ -1,10 +1,5 @@
 package no.nav.syfo
 
-import com.nhaarman.mockitokotlin2.*
-import no.nav.syfo.client.altinn.AltinnClient
-import no.nav.syfo.client.pdl.PdlClient
-import no.nav.syfo.domain.AltinnInnsendelseEkstraData
-import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.kafka.SYKEPENGESOKNAD_TOPIC
 import no.nav.syfo.repository.SendtSoknadDao
 import org.amshove.kluent.*
@@ -13,13 +8,12 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.annotation.DirtiesContext
 import java.time.Duration
 import java.util.*
 
 @DirtiesContext
-class IntegrationTest : AbstractContainerBaseTest() {
+class IntegrationTest : Testoppsett() {
 
     @Autowired
     private lateinit var aivenKafkaProducer: KafkaProducer<String, String>
@@ -27,18 +21,13 @@ class IntegrationTest : AbstractContainerBaseTest() {
     @Autowired
     private lateinit var sendtSoknadDao: SendtSoknadDao
 
-    @MockBean
-    private lateinit var pdlClient: PdlClient
-
-    @MockBean
-    private lateinit var altinnConsumer: AltinnClient
-
     @Test
     fun `Sendt arbeidstaker søknad mottas og sendes til altinn`() {
         val id = UUID.randomUUID().toString()
         val enkelSoknad = mockSykepengesoknadDTO.copy(id = id)
 
-        whenever(pdlClient.hentFormattertNavn(enkelSoknad.fnr)).thenReturn("Ole Gunnar")
+        mockPdlResponse()
+        mockAltinnResponse()
 
         aivenKafkaProducer.send(
             ProducerRecord(
@@ -64,15 +53,16 @@ class IntegrationTest : AbstractContainerBaseTest() {
                 sendtSoknadDao.soknadErSendt(id, false)
             }
 
-        val sykepengesoknadCaptor: KArgumentCaptor<Sykepengesoknad> = argumentCaptor()
-        val ekstradataCaptor: KArgumentCaptor<AltinnInnsendelseEkstraData> = argumentCaptor()
+        pdlMockWebserver.takeRequest()
+        val altinnRequest = altinnMockWebserver.takeRequest().parseCorrespondence()
+        altinnRequest.externalShipmentReference `should be equal to` id
+        val correspondence = altinnRequest.correspondence
+        correspondence.serviceCode.value `should be equal to` "4751"
+        correspondence.content.value.messageTitle.value `should be equal to` "Søknad om sykepenger - 01.01.2019-09.01.2019 - Ole Gunnar (13068700000) - sendt til NAV"
 
-        verify(altinnConsumer).sendSykepengesoknadTilArbeidsgiver(sykepengesoknadCaptor.capture(), ekstradataCaptor.capture())
-
-        sykepengesoknadCaptor.lastValue.id `should be equal to` id
-        sykepengesoknadCaptor.lastValue.fnr `should be equal to` "13068700000"
-
-        ekstradataCaptor.lastValue.navn `should be equal to` "Ole Gunnar"
-        ekstradataCaptor.lastValue.pdf.shouldNotBeNull()
+        val attachments = correspondence.content.value.attachments.value.binaryAttachments.value.binaryAttachmentV2
+        attachments shouldHaveSize 2
+        attachments[0].fileName.value `should be equal to` "Sykepengesøknad.pdf"
+        attachments[1].fileName.value `should be equal to` "sykepengesoeknad.xml"
     }
 }

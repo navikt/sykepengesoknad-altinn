@@ -20,7 +20,7 @@ import java.time.Duration
 import java.util.*
 
 @DirtiesContext
-class RebehandlingIntegrationTest : AbstractContainerBaseTest() {
+class RebehandlingIntegrationTest : Testoppsett() {
 
     @Autowired
     private lateinit var aivenKafkaProducer: KafkaProducer<String, String>

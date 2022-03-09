@@ -37,21 +37,21 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
         val sykepengesoeknadTekst = opprettInnholdstekst(sykepengesoknad)
 
         return InsertCorrespondenceV2()
-            .withAllowForwarding(JAXBElement<Boolean>(QName(namespace, "AllowForwarding"), Boolean::class.java, false))
+            .withAllowForwarding(JAXBElement(QName(namespace, "AllowForwarding"), Boolean::class.java, false))
             .withReportee(
-                JAXBElement<String>(
+                JAXBElement(
                     QName(namespace, "Reportee"), String::class.java,
                     getOrgnummerForSendingTilAltinn(sykepengesoknad.arbeidsgiver.orgnummer)
                 )
             )
             .withMessageSender(
-                JAXBElement<String>(
+                JAXBElement(
                     QName(namespace, "MessageSender"), String::class.java,
                     byggMessageSender(sykepengesoknad, ekstraData)
                 )
             )
-            .withServiceCode(JAXBElement<String>(QName(namespace, "ServiceCode"), String::class.java, SYKEPENGESOEKNAD_TJENESTEKODE))
-            .withServiceEdition(JAXBElement<String>(QName(namespace, "ServiceEdition"), String::class.java, SYKEPENGESOEKNAD_TJENESTEVERSJON))
+            .withServiceCode(JAXBElement(QName(namespace, "ServiceCode"), String::class.java, SYKEPENGESOEKNAD_TJENESTEKODE))
+            .withServiceEdition(JAXBElement(QName(namespace, "ServiceEdition"), String::class.java, SYKEPENGESOEKNAD_TJENESTEVERSJON))
             .withNotifications(opprettNotifications(namespace))
             .withContent(tilInnhold(namespace, binaryNamespace, tittel, sykepengesoeknadTekst, ekstraData))
     }
@@ -91,7 +91,7 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
     }
 
     private fun opprettNotifications(namespace: String): JAXBElement<NotificationBEList> {
-        return JAXBElement<NotificationBEList>(
+        return JAXBElement(
             QName(namespace, "Notifications"), NotificationBEList::class.java,
             NotificationBEList()
                 .withNotification(epostNotification(), smsNotification())
@@ -120,19 +120,19 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
     }
 
     private fun tilInnhold(namespace: String, binaryNamespace: String, tittel: String, sykepengesoeknadTekst: String, ekstraData: AltinnInnsendelseEkstraData): JAXBElement<ExternalContentV2> {
-        return JAXBElement<ExternalContentV2>(
+        return JAXBElement(
             QName(namespace, "Content"), ExternalContentV2::class.java,
             ExternalContentV2()
-                .withLanguageCode(JAXBElement<String>(QName(namespace, "LanguageCode"), String::class.java, "1044"))
-                .withMessageTitle(JAXBElement<String>(QName(namespace, "MessageTitle"), String::class.java, tittel))
-                .withMessageBody(JAXBElement<String>(QName(namespace, "MessageBody"), String::class.java, sykepengesoeknadTekst))
+                .withLanguageCode(JAXBElement(QName(namespace, "LanguageCode"), String::class.java, "1044"))
+                .withMessageTitle(JAXBElement(QName(namespace, "MessageTitle"), String::class.java, tittel))
+                .withMessageBody(JAXBElement(QName(namespace, "MessageBody"), String::class.java, sykepengesoeknadTekst))
                 .withCustomMessageData(null)
                 .withAttachments(
-                    JAXBElement<AttachmentsV2>(
+                    JAXBElement(
                         QName(namespace, "Attachments"), AttachmentsV2::class.java,
                         AttachmentsV2()
                             .withBinaryAttachments(
-                                JAXBElement<BinaryAttachmentExternalBEV2List>(
+                                JAXBElement(
                                     QName(namespace, "BinaryAttachments"), BinaryAttachmentExternalBEV2List::class.java,
                                     BinaryAttachmentExternalBEV2List()
                                         .withBinaryAttachmentV2(
@@ -157,12 +157,12 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
     private fun opprettBinaertVedlegg(binaryNamespace: String, bytes: ByteArray, restriction: UserTypeRestriction, name: String, fileName: String): BinaryAttachmentV2 {
         return BinaryAttachmentV2()
             .withDestinationType(restriction)
-            .withFileName(JAXBElement<String>(QName(binaryNamespace, "FileName"), String::class.java, fileName))
-            .withName(JAXBElement<String>(QName(binaryNamespace, "Name"), String::class.java, name))
+            .withFileName(JAXBElement(QName(binaryNamespace, "FileName"), String::class.java, fileName))
+            .withName(JAXBElement(QName(binaryNamespace, "Name"), String::class.java, name))
             .withFunctionType(AttachmentFunctionType.fromValue("Unspecified"))
             .withEncrypted(false)
-            .withSendersReference(JAXBElement<String>(QName(binaryNamespace, "SendersReference"), String::class.java, "senders ref"))
-            .withData(JAXBElement<ByteArray>(QName("http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10", "Data"), ByteArray::class.java, bytes))
+            .withSendersReference(JAXBElement(QName(binaryNamespace, "SendersReference"), String::class.java, "senders ref"))
+            .withData(JAXBElement(QName("http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10", "Data"), ByteArray::class.java, bytes))
     }
 
     fun getOrgnummerForSendingTilAltinn(orgnummer: String) =

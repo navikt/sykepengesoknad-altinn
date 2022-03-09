@@ -12,7 +12,6 @@ NAIS_CLUSTER_NAME: local
 altinn.username: "username"
 altinn.password: "password"
 
-altinn.url: "http://altinn"
 
 virksomhet.Organisasjon.v4.endpointurl: "virksomhet.Organisasjon.v4.endpointurl"
 
@@ -51,4 +50,3 @@ no.nav.security.jwt:
           client-secret: secretzz
           client-auth-method: client_secret_basic
 
-pdl.api.url: "http://pdl-api.pdl"

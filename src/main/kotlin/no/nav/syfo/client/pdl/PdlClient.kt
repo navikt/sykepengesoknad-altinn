@@ -21,7 +21,6 @@ class PdlClient(
     private val TEMA = "Tema"
     private val TEMA_SYK = "SYK"
     private val IDENT = "ident"
-
     private val HENT_PERSON_QUERY =
         """
 query(${"$"}ident: ID!){

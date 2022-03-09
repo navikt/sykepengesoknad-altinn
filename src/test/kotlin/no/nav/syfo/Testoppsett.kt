@@ -1,5 +1,7 @@
 package no.nav.syfo
 
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
+import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.TestInstance
 import org.springframework.boot.test.context.SpringBootTest
 import org.testcontainers.containers.GenericContainer
@@ -13,9 +15,12 @@ private class PdfGenerator :
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest
-abstract class AbstractContainerBaseTest {
+@EnableMockOAuth2Server
+abstract class Testoppsett {
 
     companion object {
+        var altinnMockWebserver: MockWebServer
+        var pdlMockWebserver: MockWebServer
         init {
             KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.1.0")).also {
                 it.start()
@@ -32,6 +37,16 @@ abstract class AbstractContainerBaseTest {
                 it.start()
                 System.setProperty("pdfgen.url", "http://${it.host}:${it.firstMappedPort}")
             }
+            altinnMockWebserver = MockWebServer()
+                .also { it.start() }
+                .also {
+                    System.setProperty("altinn.url", "http://localhost:${it.port}")
+                }
+
+            pdlMockWebserver = MockWebServer()
+                .also {
+                    System.setProperty("pdl.api.url", "http://localhost:${it.port}")
+                }
         }
     }
 }

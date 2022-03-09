@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.test.annotation.DirtiesContext
 
 @DirtiesContext
-class ApplicationConfigTest : AbstractContainerBaseTest() {
+class ApplicationConfigTest : Testoppsett() {
 
     @Test
     fun test() {
