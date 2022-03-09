@@ -1,11 +1,8 @@
 package no.nav.syfo
 
-import no.nav.syfo.kafka.SYKEPENGESOKNAD_TOPIC
 import no.nav.syfo.repository.SendtSoknadDao
 import okhttp3.mockwebserver.MockResponse
 import org.amshove.kluent.*
-import org.apache.kafka.clients.producer.KafkaProducer
-import org.apache.kafka.clients.producer.ProducerRecord
 import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,9 +10,6 @@ import java.time.Duration
 import java.util.*
 
 class RebehandlingIntegrationTest : Testoppsett() {
-
-    @Autowired
-    private lateinit var aivenKafkaProducer: KafkaProducer<String, String>
 
     @Autowired
     private lateinit var sendtSoknadDao: SendtSoknadDao
@@ -37,14 +31,7 @@ class RebehandlingIntegrationTest : Testoppsett() {
         mockPdlResponse()
         mockAltinnResponse()
 
-        aivenKafkaProducer.send(
-            ProducerRecord(
-                SYKEPENGESOKNAD_TOPIC,
-                null,
-                id,
-                enkelSoknad.serialisertTilString()
-            )
-        )
+        leggSøknadPåKafka(enkelSoknad)
 
         // Det skal ta ca 10 sekunder grunnet rebehandlinga
         await().between(Duration.ofSeconds(8), Duration.ofSeconds(30))

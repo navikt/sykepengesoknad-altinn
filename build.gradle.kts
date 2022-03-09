@@ -32,9 +32,6 @@ repositories {
 ext["okhttp3.version"] = "4.9.0" // For at token support testen kjører (tror jeg)
 
 val sykepengesoknadKafkaVersion = "2022.02.10-16.07-0892e94a"
-val mockitoKotlinVersion = "2.2.0"
-val h2Version = "1.4.200"
-val ojdbc8Version = "19.3.0.0"
 val logstashLogbackEncoderVersion = "7.0.1"
 val tjenestespesifikasjonerVersion = "1.2020.01.20-15.44-063ae9f84815"
 val cxfVersion = "3.5.1"
@@ -83,8 +80,6 @@ dependencies {
     testImplementation("org.testcontainers:kafka:$testContainersVersion")
     testImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
     testImplementation("org.testcontainers:postgresql:$testContainersVersion")
-    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion")
-    testImplementation("org.mockito:mockito-core")
     testImplementation("org.awaitility:awaitility")
 }
 

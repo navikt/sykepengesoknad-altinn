@@ -1,21 +1,14 @@
 package no.nav.syfo
 
-import no.nav.syfo.kafka.SYKEPENGESOKNAD_TOPIC
 import no.nav.syfo.repository.SendtSoknadDao
 import org.amshove.kluent.*
-import org.apache.kafka.clients.producer.KafkaProducer
-import org.apache.kafka.clients.producer.ProducerRecord
 import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.Duration
 import java.util.*
 
-
 class IntegrationTest : Testoppsett() {
-
-    @Autowired
-    private lateinit var aivenKafkaProducer: KafkaProducer<String, String>
 
     @Autowired
     private lateinit var sendtSoknadDao: SendtSoknadDao
@@ -28,24 +21,10 @@ class IntegrationTest : Testoppsett() {
         mockPdlResponse()
         mockAltinnResponse()
 
-        aivenKafkaProducer.send(
-            ProducerRecord(
-                SYKEPENGESOKNAD_TOPIC,
-                null,
-                id,
-                enkelSoknad.serialisertTilString()
-            )
-        )
+        leggSøknadPåKafka(enkelSoknad)
 
         // Håndterer duplikat
-        aivenKafkaProducer.send(
-            ProducerRecord(
-                SYKEPENGESOKNAD_TOPIC,
-                null,
-                id,
-                enkelSoknad.serialisertTilString()
-            )
-        )
+        leggSøknadPåKafka(enkelSoknad)
 
         await().atMost(Duration.ofSeconds(10))
             .until {

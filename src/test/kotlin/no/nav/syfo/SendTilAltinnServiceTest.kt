@@ -1,80 +1,71 @@
 package no.nav.syfo
 
-import com.nhaarman.mockitokotlin2.*
-import io.micrometer.core.instrument.Counter
-import io.micrometer.core.instrument.MeterRegistry
-import io.micrometer.core.instrument.Tags
-import no.nav.syfo.client.altinn.AltinnClient
-import no.nav.syfo.client.pdf.PDFClient
-import no.nav.syfo.client.pdl.PdlClient
+import no.nav.helse.flex.sykepengesoknad.kafka.SykepengesoknadDTO
 import no.nav.syfo.repository.SendtSoknadDao
-import org.junit.jupiter.api.BeforeEach
+import org.amshove.kluent.`should be null`
+import org.amshove.kluent.`should be true`
+import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.junit.jupiter.MockitoSettings
-import org.mockito.quality.Strictness
+import org.springframework.beans.factory.annotation.Autowired
+import java.time.Duration
 import java.time.LocalDateTime
+import java.util.*
+import java.util.concurrent.TimeUnit
 
-@ExtendWith(MockitoExtension::class)
-@MockitoSettings(strictness = Strictness.LENIENT)
-class SendTilAltinnServiceTest {
+class SendTilAltinnServiceTest : Testoppsett() {
 
-    @Mock
-    private lateinit var altinnConsumer: AltinnClient
-    @Mock
-    private lateinit var pdlClient: PdlClient
-    @Mock
-    private lateinit var pdfClient: PDFClient
-    @Mock
+    @Autowired
     private lateinit var sendtSoknadDao: SendtSoknadDao
-    @Mock
-    private lateinit var registry: MeterRegistry
-    @Mock
-    private lateinit var counter: Counter
 
-    @InjectMocks
-    private lateinit var sendTilAltinnService: SendTilAltinnService
-
-    private val ressursId = "d053fef8-6f2e-4d45-bc9f-ed6c5cd457dd"
-
-    @BeforeEach
-    fun setup() {
-        given(pdlClient.hentFormattertNavn(any())).willReturn("Navn Navnesen")
-        given(pdfClient.getPDF(any(), any(), any())).willReturn("pdf".toByteArray())
-        given(altinnConsumer.sendSykepengesoknadTilArbeidsgiver(any(), any())).willReturn(123)
-        given(sendtSoknadDao.soknadErSendt(ressursId, false)).willReturn(false)
-        given(registry.counter(ArgumentMatchers.anyString(), ArgumentMatchers.any(Tags::class.java))).willReturn(counter)
-    }
+    val grunnSoknad: SykepengesoknadDTO =
+        objectMapper.readValue(
+            Application::class.java.getResource("/arbeidstakersoknad.json"),
+            SykepengesoknadDTO::class.java
+        )
 
     @Test
     fun senderIkkeTilAltinnHvisSoknadAlleredeErSendt() {
-        given(sendtSoknadDao.soknadErSendt(ressursId, false)).willReturn(true)
-        sendTilAltinnService.sendSykepengesoknadTilAltinn(mockSykepengesoknad.first)
+        val soknad = grunnSoknad.copy(
+            id = UUID.randomUUID().toString()
+        )
+        mockPdlResponse()
+        mockAltinnResponse()
 
-        verify(sendtSoknadDao).soknadErSendt(ressursId, false)
-        verify(altinnConsumer, Mockito.never()).sendSykepengesoknadTilArbeidsgiver(any(), any())
-        verify(sendtSoknadDao, Mockito.never()).lagreSendtSoknad(any())
+        leggSøknadPåKafka(soknad)
+        await().atMost(Duration.ofSeconds(10)).until {
+            sendtSoknadDao.soknadErSendt(soknad.id, false)
+        }
+
+        sendtSoknadDao.soknadErSendt(soknad.id, false).`should be true`()
+
+        pdlMockWebserver.takeRequest()
+        altinnMockWebserver.takeRequest()
+
+        leggSøknadPåKafka(soknad)
+
+        // Sendes ikke igjen
+        altinnMockWebserver.takeRequest(5, TimeUnit.SECONDS).`should be null`()
     }
 
     @Test
     fun ettersendingTilNavBehandlesIkke() {
-        val soknad = mockSykepengesoknad.first.copy(
+
+        val soknad = grunnSoknad.copy(
             sendtArbeidsgiver = LocalDateTime.now().minusDays(1),
             sendtNav = LocalDateTime.now(),
-            ettersending = true
+            ettersending = true,
+            id = UUID.randomUUID().toString()
         )
-        sendTilAltinnService.sendSykepengesoknadTilAltinn(soknad)
 
-        verify(altinnConsumer, Mockito.never()).sendSykepengesoknadTilArbeidsgiver(any(), any())
+        leggSøknadPåKafka(soknad)
+
+        altinnMockWebserver.takeRequest(5, TimeUnit.SECONDS).`should be null`()
     }
-
+/*
     @Test
     fun ettersendingTilArbeidsgiver_OK() {
+        val ressursId = UUID.randomUUID().toString()
+
         val innsending1 = LocalDateTime.now().minusDays(1)
         val soknad1 = mockSykepengesoknad.first.copy(
             sendtArbeidsgiver = innsending1,
@@ -94,5 +85,5 @@ class SendTilAltinnServiceTest {
         sendTilAltinnService.sendSykepengesoknadTilAltinn(soknad2)
         verify(altinnConsumer, Mockito.times(2)).sendSykepengesoknadTilArbeidsgiver(any(), any())
         verify(sendtSoknadDao, Mockito.times(1)).lagreEttersendtSoknad(any(), any())
-    }
+    }*/
 }

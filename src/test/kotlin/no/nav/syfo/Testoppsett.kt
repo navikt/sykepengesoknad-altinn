@@ -1,8 +1,13 @@
 package no.nav.syfo
 
+import no.nav.helse.flex.sykepengesoknad.kafka.SykepengesoknadDTO
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
+import no.nav.syfo.kafka.SYKEPENGESOKNAD_TOPIC
 import okhttp3.mockwebserver.MockWebServer
+import org.apache.kafka.clients.producer.KafkaProducer
+import org.apache.kafka.clients.producer.ProducerRecord
 import org.junit.jupiter.api.TestInstance
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.KafkaContainer
@@ -48,5 +53,19 @@ abstract class Testoppsett {
                     System.setProperty("pdl.api.url", "http://localhost:${it.port}")
                 }
         }
+    }
+
+    @Autowired
+    lateinit var aivenKafkaProducer: KafkaProducer<String, String>
+
+    fun leggSøknadPåKafka(soknad: SykepengesoknadDTO) {
+        aivenKafkaProducer.send(
+            ProducerRecord(
+                SYKEPENGESOKNAD_TOPIC,
+                null,
+                soknad.id,
+                soknad.serialisertTilString()
+            )
+        )
     }
 }
