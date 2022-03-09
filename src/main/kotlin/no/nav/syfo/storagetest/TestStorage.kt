@@ -6,7 +6,6 @@ import no.nav.syfo.toggles.EnvironmentToggles
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.time.Instant
-import javax.annotation.PostConstruct
 
 @Component
 class TestStorage(
@@ -16,7 +15,6 @@ class TestStorage(
 ) {
     val log = logger()
 
-    @PostConstruct
     fun bucketTesting() {
         if (env.isDevGcp()) {
             val storage = StorageOptions.getDefaultInstance().service
