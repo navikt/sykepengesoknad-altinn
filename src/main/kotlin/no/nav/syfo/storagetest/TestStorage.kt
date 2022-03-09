@@ -1,6 +1,5 @@
 package no.nav.syfo.storagetest
 
-import com.google.cloud.storage.BucketInfo
 import com.google.cloud.storage.StorageOptions
 import no.nav.syfo.logger
 import no.nav.syfo.toggles.EnvironmentToggles
@@ -21,7 +20,7 @@ class TestStorage(
     fun bucketTesting() {
         if (env.isDevGcp()) {
             val storage = StorageOptions.getDefaultInstance().service
-            val bucket = storage.create(BucketInfo.of(bucketName))
+            val bucket = storage.get(bucketName)
 
             val blobName = Instant.now().toEpochMilli().toString() + "/" + "my_blob_name.txt"
             val blob = bucket.create(blobName, "Hello, World!".toByteArray(charset = Charsets.UTF_8), "text/plain")
