@@ -8,11 +8,10 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.annotation.DirtiesContext
 import java.time.Duration
 import java.util.*
 
-@DirtiesContext
+
 class IntegrationTest : Testoppsett() {
 
     @Autowired

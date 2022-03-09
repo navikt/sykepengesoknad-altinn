@@ -7,11 +7,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.test.annotation.DirtiesContext
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-@DirtiesContext
 class SendtSoknadDaoTest : Testoppsett() {
 
     @Autowired
