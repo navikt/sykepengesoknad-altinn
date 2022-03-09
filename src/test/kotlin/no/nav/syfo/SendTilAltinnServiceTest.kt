@@ -1,7 +1,7 @@
 package no.nav.syfo
 
 import no.nav.helse.flex.sykepengesoknad.kafka.SykepengesoknadDTO
-import no.nav.syfo.repository.SendtSoknadDao
+import no.nav.syfo.repository.SendtSoknadRepository
 import org.amshove.kluent.`should be null`
 import org.amshove.kluent.`should be true`
 import org.awaitility.Awaitility.await
@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 class SendTilAltinnServiceTest : Testoppsett() {
 
     @Autowired
-    private lateinit var sendtSoknadDao: SendtSoknadDao
+    private lateinit var sendtSoknadRepository: SendtSoknadRepository
 
     val grunnSoknad: SykepengesoknadDTO =
         objectMapper.readValue(
@@ -33,10 +33,10 @@ class SendTilAltinnServiceTest : Testoppsett() {
 
         leggSøknadPåKafka(soknad)
         await().atMost(Duration.ofSeconds(10)).until {
-            sendtSoknadDao.soknadErSendt(soknad.id)
+            sendtSoknadRepository.existsBySykepengesoknadId(soknad.id)
         }
 
-        sendtSoknadDao.soknadErSendt(soknad.id).`should be true`()
+        sendtSoknadRepository.existsBySykepengesoknadId(soknad.id).`should be true`()
 
         pdlMockWebserver.takeRequest()
         altinnMockWebserver.takeRequest()
@@ -61,29 +61,4 @@ class SendTilAltinnServiceTest : Testoppsett() {
 
         altinnMockWebserver.takeRequest(5, TimeUnit.SECONDS).`should be null`()
     }
-/*
-    @Test
-    fun ettersendingTilArbeidsgiver_OK() {
-        val ressursId = UUID.randomUUID().toString()
-
-        val innsending1 = LocalDateTime.now().minusDays(1)
-        val soknad1 = mockSykepengesoknad.first.copy(
-            sendtArbeidsgiver = innsending1,
-            sendtNav = innsending1,
-            ettersending = false
-        )
-        sendTilAltinnService.sendSykepengesoknadTilAltinn(soknad1)
-        verify(altinnConsumer, Mockito.times(1)).sendSykepengesoknadTilArbeidsgiver(any(), any())
-        verify(sendtSoknadDao, Mockito.times(1)).lagreSendtSoknad(any())
-
-        val innsending2 = LocalDateTime.now()
-        val soknad2 = mockSykepengesoknad.first.copy(
-            sendtArbeidsgiver = innsending2,
-            sendtNav = innsending1,
-            ettersending = true
-        )
-        sendTilAltinnService.sendSykepengesoknadTilAltinn(soknad2)
-        verify(altinnConsumer, Mockito.times(2)).sendSykepengesoknadTilArbeidsgiver(any(), any())
-        verify(sendtSoknadDao, Mockito.times(1)).lagreEttersendtSoknad(any(), any())
-    }*/
 }

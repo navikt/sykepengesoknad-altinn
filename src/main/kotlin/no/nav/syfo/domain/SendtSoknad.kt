@@ -1,8 +1,11 @@
 package no.nav.syfo.domain
 
-import java.time.LocalDateTime
+import org.springframework.data.annotation.Id
+import java.time.Instant
 
 data class SendtSoknad(
-    val ressursId: String,
-    val sendt: LocalDateTime,
+    @Id
+    val id: String? = null,
+    val sykepengesoknadId: String,
+    val sendt: Instant,
 )

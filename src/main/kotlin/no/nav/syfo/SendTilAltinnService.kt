@@ -8,16 +8,16 @@ import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.SendtSoknad
 import no.nav.syfo.domain.soknad.Sykepengesoknad
-import no.nav.syfo.repository.SendtSoknadDao
+import no.nav.syfo.repository.SendtSoknadRepository
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime.now
+import java.time.Instant
 import javax.xml.bind.ValidationEvent
 
 @Service
 class SendTilAltinnService(
     private val altinnClient: AltinnClient,
     private val pdfClient: PDFClient,
-    private val sendtSoknadDao: SendtSoknadDao,
+    private val sendtSoknadRepository: SendtSoknadRepository,
     private val registry: MeterRegistry,
     private val pdlClient: PdlClient,
 ) {
@@ -25,7 +25,7 @@ class SendTilAltinnService(
     val log = logger()
 
     fun sendSykepengesoknadTilAltinn(sykepengesoknad: Sykepengesoknad) {
-        if (sendtSoknadDao.soknadErSendt(sykepengesoknad.id)) {
+        if (sendtSoknadRepository.existsBySykepengesoknadId(sykepengesoknad.id)) {
             log.warn("Forsøkte å sende søknad om sykepenger med id ${sykepengesoknad.id} til Altinn som allerede er sendt")
             return
         }
@@ -51,7 +51,7 @@ class SendTilAltinnService(
 
         if (validationeventer.isEmpty()) {
             altinnClient.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad, ekstraData)
-            sendtSoknadDao.lagreSendtSoknad(SendtSoknad(sykepengesoknad.id, now()))
+            sendtSoknadRepository.save(SendtSoknad(null, sykepengesoknad.id, Instant.now()))
             registry.counter("sykepengesoknad-altinn.soknadSendtTilAltinn", Tags.of("type", "info")).increment()
         } else {
             val feil = validationeventer.joinToString("\n") { it.message }

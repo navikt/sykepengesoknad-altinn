@@ -1,6 +1,6 @@
 package no.nav.syfo
 
-import no.nav.syfo.repository.SendtSoknadDao
+import no.nav.syfo.repository.SendtSoknadRepository
 import org.amshove.kluent.*
 import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
@@ -11,7 +11,7 @@ import java.util.*
 class IntegrationTest : Testoppsett() {
 
     @Autowired
-    private lateinit var sendtSoknadDao: SendtSoknadDao
+    private lateinit var sendtSoknadRepository: SendtSoknadRepository
 
     @Test
     fun `Sendt arbeidstaker søknad mottas og sendes til altinn`() {
@@ -28,7 +28,7 @@ class IntegrationTest : Testoppsett() {
 
         await().atMost(Duration.ofSeconds(10))
             .until {
-                sendtSoknadDao.soknadErSendt(id)
+                sendtSoknadRepository.existsBySykepengesoknadId(id)
             }
 
         pdlMockWebserver.takeRequest()

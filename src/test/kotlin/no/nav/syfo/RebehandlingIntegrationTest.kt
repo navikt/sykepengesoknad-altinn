@@ -1,6 +1,6 @@
 package no.nav.syfo
 
-import no.nav.syfo.repository.SendtSoknadDao
+import no.nav.syfo.repository.SendtSoknadRepository
 import okhttp3.mockwebserver.MockResponse
 import org.amshove.kluent.*
 import org.awaitility.Awaitility.await
@@ -12,7 +12,7 @@ import java.util.*
 class RebehandlingIntegrationTest : Testoppsett() {
 
     @Autowired
-    private lateinit var sendtSoknadDao: SendtSoknadDao
+    private lateinit var sendtSoknadRepository: SendtSoknadRepository
 
     @Test
     fun `Sendt arbeidstaker søknad mottas, altinn kall feiler første gang, men neste gang går det og den sendes til altinn`() {
@@ -36,7 +36,7 @@ class RebehandlingIntegrationTest : Testoppsett() {
         // Det skal ta ca 10 sekunder grunnet rebehandlinga
         await().between(Duration.ofSeconds(8), Duration.ofSeconds(30))
             .until {
-                sendtSoknadDao.soknadErSendt(id)
+                sendtSoknadRepository.existsBySykepengesoknadId(id)
             }
 
         val altinnRequest = altinnMockWebserver.takeRequest().parseCorrespondence()
