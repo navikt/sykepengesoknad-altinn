@@ -38,6 +38,7 @@ val cxfVersion = "3.5.1"
 val testContainersVersion = "1.16.3"
 val kluentVersion = "1.68"
 val tokenSupportVersion = "2.0.8"
+val smCommonVersion = "1.a434402"
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -60,6 +61,7 @@ dependencies {
     implementation("org.apache.commons:commons-text:1.9")
     implementation("no.nav.security:token-client-spring:$tokenSupportVersion")
     implementation("no.nav.security:token-validation-spring:$tokenSupportVersion")
+    implementation("no.nav.helse:syfosm-common-models:$smCommonVersion")
 
     implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")

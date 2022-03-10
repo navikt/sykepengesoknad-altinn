@@ -3,6 +3,8 @@ package no.nav.syfo
 import no.nav.helse.flex.sykepengesoknad.kafka.SykepengesoknadDTO
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.syfo.kafka.SYKEPENGESOKNAD_TOPIC
+import no.nav.syfo.orgnummer.SYKMELDINGSENDT_TOPIC
+import no.nav.syfo.orgnummer.SykmeldingKafkaMessage
 import okhttp3.mockwebserver.MockWebServer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -65,6 +67,17 @@ abstract class Testoppsett {
                 null,
                 soknad.id,
                 soknad.serialisertTilString()
+            )
+        )
+    }
+
+    fun leggSykmeldingPåKafka(sykmeldingKafkaMessage: SykmeldingKafkaMessage) {
+        aivenKafkaProducer.send(
+            ProducerRecord(
+                SYKMELDINGSENDT_TOPIC,
+                null,
+                sykmeldingKafkaMessage.kafkaMetadata.sykmeldingId,
+                sykmeldingKafkaMessage.serialisertTilString()
             )
         )
     }

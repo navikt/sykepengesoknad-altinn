@@ -7,8 +7,11 @@ Om søknaden sendes til arbeidsgiveren styres av feltet `sendtArbeidsgiver` på 
 
 ## Data
 Applikasjonen har en database i GCP. 
-Her lagres id på søknad som er sendt til altinn samt tidspunktet dette skjedde. 
-Formålet med databasen er å ikke sende samme søknad flere ganger. 
+I tabellen `SENDT_SOKNAD` lagres id på søknad som er sendt til altinn samt tidspunktet dette skjedde. 
+Formålet med tabellen er å ikke sende samme søknad flere ganger. 
+Det slettes ikke data fra denne tabellen.
+
+I tabellen `JURIDISK_ORGNUMMER` lagres relasjonen mellom orgnummer og juridisk orgnummer.
 Det slettes ikke data fra denne tabellen.
 
 Applikasjonen har også en Google Cloud Storage Bucket. 
