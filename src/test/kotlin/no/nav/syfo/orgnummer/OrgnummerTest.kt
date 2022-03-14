@@ -14,18 +14,19 @@ class OrgnummerTest : Testoppsett() {
     private lateinit var juridiskOrgnummerRepository: JuridiskOrgnummerRepository
 
     @Test
-    fun `Sendt arbeidstaker søknad mottas og sendes til altinn`() {
+    fun `Sendt arbeidstaker sykmelding mottas og orgnumemr lagres`() {
         juridiskOrgnummerRepository.deleteAll()
         juridiskOrgnummerRepository.count() `should be equal to` 0
 
         val orgnummer1 = "111111111"
         val juridiskOrgnummer1 = "22222222"
 
+        val sykmeldingKafkaMessage = skapSykmeldingKafkaMessage(
+            orgnummer = orgnummer1,
+            juridiskOrgnummer = juridiskOrgnummer1
+        )
         leggSykmeldingPåKafka(
-            skapSykmeldingKafkaMessage(
-                orgnummer = orgnummer1,
-                juridiskOrgnummer = juridiskOrgnummer1
-            )
+            sykmeldingKafkaMessage
         )
 
         await().atMost(Duration.ofSeconds(10))
@@ -33,30 +34,8 @@ class OrgnummerTest : Testoppsett() {
                 juridiskOrgnummerRepository.count() == 1L
             }
 
-        juridiskOrgnummerRepository.findByOrgnummer(orgnummer1)!!.juridiskOrgnummer `should be equal to` juridiskOrgnummer1
-
-        val orgnummer2 = "4444444"
-        val juridiskOrgnummer2 = "3333333"
-
-        leggSykmeldingPåKafka(
-            skapSykmeldingKafkaMessage(
-                orgnummer = orgnummer1,
-                juridiskOrgnummer = juridiskOrgnummer2
-            )
-        )
-        leggSykmeldingPåKafka(
-            skapSykmeldingKafkaMessage(
-                orgnummer = orgnummer2,
-                juridiskOrgnummer = juridiskOrgnummer2
-            )
-        )
-        await().atMost(Duration.ofSeconds(10))
-            .until {
-                juridiskOrgnummerRepository.count() == 2L
-            }
-
-        juridiskOrgnummerRepository.findByOrgnummer(orgnummer1)!!.juridiskOrgnummer `should be equal to` juridiskOrgnummer2
-        juridiskOrgnummerRepository.findByOrgnummer(orgnummer2)!!.juridiskOrgnummer `should be equal to` juridiskOrgnummer2
+        juridiskOrgnummerRepository.findBySykmeldingId(sykmeldingKafkaMessage.sykmelding.id)!!.juridiskOrgnummer `should be equal to` juridiskOrgnummer1
+        juridiskOrgnummerRepository.findBySykmeldingId(sykmeldingKafkaMessage.sykmelding.id)!!.orgnummer `should be equal to` orgnummer1
 
         juridiskOrgnummerRepository.deleteAll()
     }

@@ -6,12 +6,13 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface JuridiskOrgnummerRepository : CrudRepository<JuridiskOrgnummer, String> {
-    fun findByOrgnummer(orgnummer: String): JuridiskOrgnummer?
+    fun findBySykmeldingId(sykmeldingId: String): JuridiskOrgnummer?
 }
 
 data class JuridiskOrgnummer(
     @Id
     val id: String? = null,
+    val sykmeldingId: String,
     val orgnummer: String,
-    val juridiskOrgnummer: String,
+    val juridiskOrgnummer: String?,
 )

@@ -24,25 +24,30 @@ class SendtSykmeldingListener(
     fun listen(records: List<ConsumerRecord<String, String>>, acknowledgment: Acknowledgment) {
         records
             .map { it.value().tilSykmeldingKafkaMessage() }
-            .mapNotNull { it.event.arbeidsgiver }
-            .forEach { agStatus ->
-                val juridiskOrgnummer = agStatus.juridiskOrgnummer
-                if (juridiskOrgnummer != null) {
-                    val eksisterende = juridiskOrgnummerRepository.findByOrgnummer(agStatus.orgnummer)
-                    if (eksisterende != null) {
-                        if (eksisterende.juridiskOrgnummer != juridiskOrgnummer) {
-                            log.info("Mismatch mellom eksisterende juridisk orgnummer ${eksisterende.juridiskOrgnummer} og nytt $juridiskOrgnummer for ${agStatus.orgnummer}. Oppdater db")
-                            juridiskOrgnummerRepository.save(eksisterende.copy(juridiskOrgnummer = juridiskOrgnummer))
-                        }
-                    } else {
-                        juridiskOrgnummerRepository.save(
-                            JuridiskOrgnummer(
-                                id = null,
-                                juridiskOrgnummer = juridiskOrgnummer,
-                                orgnummer = agStatus.orgnummer
-                            )
-                        )
+            .forEach {
+                if (it.event.arbeidsgiver == null) {
+                    return@forEach
+                }
+
+                val arbeidsgiver = it.event.arbeidsgiver!!
+                val sykmeldingId = it.event.sykmeldingId
+                val eksisterende = juridiskOrgnummerRepository.findBySykmeldingId(sykmeldingId)
+                if (eksisterende != null) {
+                    if (eksisterende.juridiskOrgnummer != arbeidsgiver.juridiskOrgnummer) {
+                        log.warn("Mismatch mellom eksisterende juridisk orgnummer ${eksisterende.juridiskOrgnummer} og nytt ${arbeidsgiver.juridiskOrgnummer} for sykmelding $sykmeldingId")
                     }
+                    if (eksisterende.orgnummer != arbeidsgiver.orgnummer) {
+                        log.warn("Mismatch mellom eksisterende orgnummer ${eksisterende.orgnummer} og nytt ${arbeidsgiver.orgnummer} for sykmelding $sykmeldingId")
+                    }
+                } else {
+                    juridiskOrgnummerRepository.save(
+                        JuridiskOrgnummer(
+                            id = null,
+                            sykmeldingId = sykmeldingId,
+                            juridiskOrgnummer = arbeidsgiver.juridiskOrgnummer,
+                            orgnummer = arbeidsgiver.orgnummer
+                        )
+                    )
                 }
             }
 
