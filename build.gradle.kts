@@ -39,6 +39,8 @@ val testContainersVersion = "1.16.3"
 val kluentVersion = "1.68"
 val tokenSupportVersion = "2.0.11"
 val smCommonVersion = "1.a434402"
+val gcsVersion = "2.4.5"
+val gcsNioVersion = "0.123.24"
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -62,6 +64,7 @@ dependencies {
     implementation("no.nav.security:token-client-spring:$tokenSupportVersion")
     implementation("no.nav.security:token-validation-spring:$tokenSupportVersion")
     implementation("no.nav.helse:syfosm-common-models:$smCommonVersion")
+    implementation("com.google.cloud:google-cloud-storage:$gcsVersion")
 
     implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
@@ -76,6 +79,7 @@ dependencies {
     implementation("no.nav.tjenestespesifikasjoner:digisyfo-sykepengesoeknadarbeidsgiver:$tjenestespesifikasjonerVersion")
     implementation("no.nav.tjenestespesifikasjoner:altinn-correspondence-agency-external:$tjenestespesifikasjonerVersion")
 
+    testImplementation("com.google.cloud:google-cloud-nio:$gcsNioVersion")
     testImplementation("no.nav.security:token-validation-spring-test:$tokenSupportVersion")
     testImplementation("org.amshove.kluent:kluent:$kluentVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

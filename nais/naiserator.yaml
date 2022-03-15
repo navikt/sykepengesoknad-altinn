@@ -48,6 +48,12 @@ spec:
         databases:
           - name: sykepengesoknad-altinn-db
             envVarPrefix: DB
+    buckets:
+      - name: {{ bucketName }}
+        retentionPeriodDays: {{ retentionDays }}
+        lifecycleCondition:
+          age: {{ retentionDays }}
+          withState: ANY
   accessPolicy:
     outbound:
       rules:
@@ -55,7 +61,9 @@ spec:
   envFrom:
     - secret: altinn-serviceuser
   env:
+    - name: BUCKET_NAME
+      value: {{ bucketName }}
   {{#each env}}
-     - name: {{@key}}
-       value: "{{this}}"
+    - name: {{@key}}
+      value: "{{this}}"
   {{/each}}

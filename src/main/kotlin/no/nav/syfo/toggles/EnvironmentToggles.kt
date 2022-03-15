@@ -8,6 +8,7 @@ class EnvironmentToggles(
     @Value("\${NAIS_CLUSTER_NAME}") private val fasitEnvironmentName: String
 ) {
     fun isProd(): Boolean = "prod-gcp" == fasitEnvironmentName
+    fun isDevGcp(): Boolean = "dev-gcp" == fasitEnvironmentName
 
     fun allowsOrgnummer(orgnummer: String): Boolean {
         return allowedOrgnummer.contains(orgnummer)
