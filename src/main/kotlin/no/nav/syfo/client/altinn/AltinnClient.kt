@@ -38,7 +38,6 @@ class AltinnClient(
             val blobInfo = BlobInfo.newBuilder(
                 BlobId.of(bucketName, mappe + filnavn)
             ).setContentType(contentType).build()
-
             storage.create(blobInfo, content)
         }
         try {
@@ -55,6 +54,11 @@ class AltinnClient(
                 contentType = "application/xml",
                 content = ekstraData.xml,
             )
+            lagreFil(
+                filnavn = "correspondence.xml",
+                contentType = "application/xml",
+                content = correspondence.serialiser().toByteArray(),
+            )
 
             val receiptExternal = iCorrespondenceAgencyExternalBasic.insertCorrespondenceBasicV2(
                 altinnUsername,
@@ -63,6 +67,12 @@ class AltinnClient(
                 sykepengesoknad.id,
                 correspondence
             )
+            lagreFil(
+                filnavn = "receiptExternal.xml",
+                contentType = "application/xml",
+                content = receiptExternal.serialiser().toByteArray(),
+            )
+
             if (receiptExternal.receiptStatusCode != ReceiptStatusEnum.OK) {
                 log.error("Fikk uventet statuskode fra Altinn {}", receiptExternal.receiptStatusCode)
                 throw RuntimeException("feil")
