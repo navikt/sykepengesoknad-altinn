@@ -1,10 +1,12 @@
 package no.nav.syfo
 
+import com.google.cloud.storage.Storage
 import no.nav.syfo.repository.SendtSoknadRepository
 import org.amshove.kluent.*
 import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import java.time.Duration
 import java.util.*
 
@@ -12,6 +14,11 @@ class IntegrationTest : Testoppsett() {
 
     @Autowired
     private lateinit var sendtSoknadRepository: SendtSoknadRepository
+
+    @Autowired
+    private lateinit var storage: Storage
+
+    @Value("\${BUCKET_NAME}") lateinit var bucketName: String
 
     @Test
     fun `Sendt arbeidstaker søknad mottas og sendes til altinn`() {
@@ -42,5 +49,11 @@ class IntegrationTest : Testoppsett() {
         attachments shouldHaveSize 2
         attachments[0].fileName.value `should be equal to` "Sykepengesøknad.pdf"
         attachments[1].fileName.value `should be equal to` "sykepengesoeknad.xml"
+
+        val innhold = storage.list(bucketName).values.toList()
+        val relaterteFiler = innhold.filter { it.name.contains(id) }
+        relaterteFiler.shouldHaveSize(2)
+        relaterteFiler.first { it.name.contains("sykepengesoknad.xml") }.contentType `should be equal to` "application/xml"
+        relaterteFiler.first { it.name.contains("sykepengesoknad.pdf") }.contentType `should be equal to` "application/pdf"
     }
 }
