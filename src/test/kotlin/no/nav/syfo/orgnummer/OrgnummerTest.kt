@@ -4,14 +4,10 @@ import no.nav.syfo.Testoppsett
 import org.amshove.kluent.*
 import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import java.time.Duration
 import java.util.*
 
 class OrgnummerTest : Testoppsett() {
-
-    @Autowired
-    private lateinit var juridiskOrgnummerRepository: JuridiskOrgnummerRepository
 
     @Test
     fun `Sendt arbeidstaker sykmelding mottas og orgnumemr lagres`() {

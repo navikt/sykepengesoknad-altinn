@@ -1,21 +1,17 @@
 package no.nav.syfo
 
 import no.nav.helse.flex.sykepengesoknad.kafka.SykepengesoknadDTO
-import no.nav.syfo.repository.SendtSoknadRepository
+import no.nav.syfo.orgnummer.JuridiskOrgnummer
 import org.amshove.kluent.`should be null`
 import org.amshove.kluent.`should be true`
 import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 class SendTilAltinnServiceTest : Testoppsett() {
-
-    @Autowired
-    private lateinit var sendtSoknadRepository: SendtSoknadRepository
 
     val grunnSoknad: SykepengesoknadDTO =
         objectMapper.readValue(
@@ -28,6 +24,8 @@ class SendTilAltinnServiceTest : Testoppsett() {
         val soknad = grunnSoknad.copy(
             id = UUID.randomUUID().toString()
         )
+        juridiskOrgnummerRepository.save(JuridiskOrgnummer(orgnummer = "12345678", juridiskOrgnummer = "LEGAL123", sykmeldingId = soknad.sykmeldingId!!))
+
         mockPdlResponse()
         mockAltinnResponse()
 

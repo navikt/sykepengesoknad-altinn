@@ -3,11 +3,14 @@ package no.nav.syfo
 import no.nav.helse.flex.sykepengesoknad.kafka.SykepengesoknadDTO
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import no.nav.syfo.kafka.SYKEPENGESOKNAD_TOPIC
+import no.nav.syfo.orgnummer.JuridiskOrgnummerRepository
 import no.nav.syfo.orgnummer.SYKMELDINGSENDT_TOPIC
 import no.nav.syfo.orgnummer.SykmeldingKafkaMessage
+import no.nav.syfo.repository.SendtSoknadRepository
 import okhttp3.mockwebserver.MockWebServer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -28,6 +31,7 @@ abstract class Testoppsett {
     companion object {
         var altinnMockWebserver: MockWebServer
         var pdlMockWebserver: MockWebServer
+
         init {
             KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.1.0")).also {
                 it.start()
@@ -59,6 +63,18 @@ abstract class Testoppsett {
 
     @Autowired
     lateinit var aivenKafkaProducer: KafkaProducer<String, String>
+
+    @Autowired
+    lateinit var sendtSoknadRepository: SendtSoknadRepository
+
+    @Autowired
+    lateinit var juridiskOrgnummerRepository: JuridiskOrgnummerRepository
+
+    @AfterEach
+    internal fun tearDown() {
+        juridiskOrgnummerRepository.deleteAll()
+        sendtSoknadRepository.deleteAll()
+    }
 
     fun leggSøknadPåKafka(soknad: SykepengesoknadDTO) {
         aivenKafkaProducer.send(

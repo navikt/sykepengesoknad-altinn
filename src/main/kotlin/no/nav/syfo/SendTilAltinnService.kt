@@ -8,6 +8,7 @@ import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.SendtSoknad
 import no.nav.syfo.domain.soknad.Sykepengesoknad
+import no.nav.syfo.orgnummer.JuridiskOrgnummerRepository
 import no.nav.syfo.repository.SendtSoknadRepository
 import org.springframework.stereotype.Service
 import java.time.Instant
@@ -20,6 +21,7 @@ class SendTilAltinnService(
     private val sendtSoknadRepository: SendtSoknadRepository,
     private val registry: MeterRegistry,
     private val pdlClient: PdlClient,
+    private val juridiskOrgnummerRepository: JuridiskOrgnummerRepository,
 ) {
 
     val log = logger()
@@ -38,7 +40,8 @@ class SendTilAltinnService(
 
         val pdf = pdfClient.getPDF(sykepengesoknad, fnr, navn)
         val validationeventer: MutableList<ValidationEvent> = mutableListOf()
-        val juridiskOrgnummerArbeidsgiver = sykepengesoknad.arbeidsgiver.orgnummer // TODO hent fra db
+        val orgnrFraDb = juridiskOrgnummerRepository.findBySykmeldingId(sykmeldingId = sykepengesoknad.sykmeldingId!!) ?: throw RuntimeException("Mangler orgnummer i databasen")
+        val juridiskOrgnummerArbeidsgiver = orgnrFraDb.juridiskOrgnummer ?: sykepengesoknad.arbeidsgiver.orgnummer
 
         val xml = sykepengesoknad2XMLByteArray(sykepengesoknad, validationeventer, fnr, juridiskOrgnummerArbeidsgiver)
 

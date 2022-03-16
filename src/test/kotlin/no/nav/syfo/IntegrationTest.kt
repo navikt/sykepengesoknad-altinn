@@ -1,7 +1,7 @@
 package no.nav.syfo
 
 import com.google.cloud.storage.Storage
-import no.nav.syfo.repository.SendtSoknadRepository
+import no.nav.syfo.orgnummer.JuridiskOrgnummer
 import org.amshove.kluent.*
 import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
@@ -13,9 +13,6 @@ import java.util.*
 class IntegrationTest : Testoppsett() {
 
     @Autowired
-    private lateinit var sendtSoknadRepository: SendtSoknadRepository
-
-    @Autowired
     private lateinit var storage: Storage
 
     @Value("\${BUCKET_NAME}") lateinit var bucketName: String
@@ -24,7 +21,7 @@ class IntegrationTest : Testoppsett() {
     fun `Sendt arbeidstaker søknad mottas og sendes til altinn`() {
         val id = UUID.randomUUID().toString()
         val enkelSoknad = mockSykepengesoknadDTO.copy(id = id)
-
+        juridiskOrgnummerRepository.save(JuridiskOrgnummer(orgnummer = "12345678", juridiskOrgnummer = "LEGAL123", sykmeldingId = enkelSoknad.sykmeldingId!!))
         mockPdlResponse()
         mockAltinnResponse()
 
@@ -57,5 +54,10 @@ class IntegrationTest : Testoppsett() {
         relaterteFiler.first { it.name.contains("correspondence.xml") }.contentType `should be equal to` "application/xml"
         relaterteFiler.first { it.name.contains("receiptExternal.xml") }.contentType `should be equal to` "application/xml"
         relaterteFiler.first { it.name.contains("sykepengesoknad.pdf") }.contentType `should be equal to` "application/pdf"
+
+        val soknadXml = relaterteFiler.first { it.name.contains("sykepengesoknad.xml") }.getContent().tilXMLSykepengesoeknadArbeidsgiver()
+        soknadXml.juridiskOrganisasjonsnummer `should be equal to` "LEGAL123"
+
+        juridiskOrgnummerRepository.deleteAll()
     }
 }

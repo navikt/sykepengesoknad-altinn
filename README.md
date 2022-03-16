@@ -11,7 +11,7 @@ I tabellen `SENDT_SOKNAD` lagres id på søknad som er sendt til altinn samt tid
 Formålet med tabellen er å ikke sende samme søknad flere ganger. 
 Det slettes ikke data fra denne tabellen.
 
-I tabellen `JURIDISK_ORGNUMMER` lagres relasjonen mellom orgnummer og juridisk orgnummer.
+I tabellen `JURIDISK_ORGNUMMER` lagres relasjonen mellom sykmeldingId, orgnummer og juridisk orgnummer.
 Det slettes ikke data fra denne tabellen.
 
 Applikasjonen har også en Google Cloud Storage Bucket. 

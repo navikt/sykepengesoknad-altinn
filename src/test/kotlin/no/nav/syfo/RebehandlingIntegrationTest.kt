@@ -1,23 +1,20 @@
 package no.nav.syfo
 
-import no.nav.syfo.repository.SendtSoknadRepository
+import no.nav.syfo.orgnummer.JuridiskOrgnummer
 import okhttp3.mockwebserver.MockResponse
 import org.amshove.kluent.*
 import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import java.time.Duration
 import java.util.*
 
 class RebehandlingIntegrationTest : Testoppsett() {
 
-    @Autowired
-    private lateinit var sendtSoknadRepository: SendtSoknadRepository
-
     @Test
     fun `Sendt arbeidstaker søknad mottas, altinn kall feiler første gang, men neste gang går det og den sendes til altinn`() {
         val id = UUID.randomUUID().toString()
         val enkelSoknad = mockSykepengesoknadDTO.copy(id = id)
+        juridiskOrgnummerRepository.save(JuridiskOrgnummer(orgnummer = "12345678", juridiskOrgnummer = "LEGAL123", sykmeldingId = enkelSoknad.sykmeldingId!!))
 
         val errorResponse = MockResponse()
             .setBody("ERRÅRRR")

@@ -15,9 +15,6 @@ class SendtSoknadRepositoryTest : Testoppsett() {
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
 
-    @Autowired
-    private lateinit var sendtSoknadRepository: SendtSoknadRepository
-
     @BeforeEach
     fun cleanup() {
         jdbcTemplate.update("DELETE FROM SENDT_SOKNAD")
