@@ -52,7 +52,7 @@ class ImportTest : Testoppsett() {
         val records = sendtSoknadRepository.findAll().iterator().asSequence().toList()
         records.shouldHaveSize(2)
         records.first { it.sykepengesoknadId == innsending.sykepengesoknadId }.sykepengesoknadId `should be equal to` innsending.sykepengesoknadId
-        records.first { it.sykepengesoknadId == innsending.sykepengesoknadId }.sendt!!.truncatedTo(ChronoUnit.SECONDS) `should be equal to` innsending.sendt!!.toInstant()
+        records.first { it.sykepengesoknadId == innsending.sykepengesoknadId }.sendt.truncatedTo(ChronoUnit.SECONDS) `should be equal to` innsending.sendt.toInstant()
             .truncatedTo(ChronoUnit.SECONDS)
     }
 
