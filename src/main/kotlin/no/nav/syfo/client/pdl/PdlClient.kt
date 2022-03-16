@@ -13,7 +13,7 @@ import java.util.*
 
 @Component
 class PdlClient(
-    @Value("\${pdl.api.url}")
+    @Value("\${PDL_URL}")
     private val pdlApiUrl: String,
     private val pdlRestTemplate: RestTemplate
 ) {

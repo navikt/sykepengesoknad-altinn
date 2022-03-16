@@ -56,7 +56,7 @@ abstract class Testoppsett {
 
             pdlMockWebserver = MockWebServer()
                 .also {
-                    System.setProperty("pdl.api.url", "http://localhost:${it.port}")
+                    System.setProperty("PDL_URL", "http://localhost:${it.port}")
                 }
         }
     }
