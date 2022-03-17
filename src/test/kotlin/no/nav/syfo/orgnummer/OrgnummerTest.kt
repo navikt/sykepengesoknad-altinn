@@ -5,7 +5,6 @@ import org.amshove.kluent.*
 import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
 import java.time.Duration
-import java.util.*
 
 class OrgnummerTest : Testoppsett() {
 
