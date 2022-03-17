@@ -28,13 +28,10 @@ class SendTilAltinnService(
 
     fun sendSykepengesoknadTilAltinn(sykepengesoknad: Sykepengesoknad) {
         if (sendtSoknadRepository.existsBySykepengesoknadId(sykepengesoknad.id)) {
-            log.warn("Forsøkte å sende søknad om sykepenger med id ${sykepengesoknad.id} til Altinn som allerede er sendt")
+            log.info("Forsøkte å sende søknad om sykepenger med id ${sykepengesoknad.id} til Altinn som allerede er sendt")
             return
         }
-        if (ettersendtTilNAV(sykepengesoknad)) {
-            log.info("Behandler ikke ettersending til NAV for ${sykepengesoknad.id}")
-            return
-        }
+
         val fnr = sykepengesoknad.fnr
         val navn = pdlClient.hentFormattertNavn(fnr)
 
@@ -63,6 +60,4 @@ class SendTilAltinnService(
         }
     }
 
-    private fun ettersendtTilNAV(sykepengesoknad: Sykepengesoknad) = sykepengesoknad.sendtNav != null &&
-        sykepengesoknad.sendtArbeidsgiver?.isBefore(sykepengesoknad.sendtNav) ?: false
 }
