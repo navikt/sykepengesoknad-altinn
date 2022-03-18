@@ -28,7 +28,7 @@ class SendTilAltinnService(
 
     fun sendSykepengesoknadTilAltinn(sykepengesoknad: Sykepengesoknad) {
         if (sendtSoknadRepository.existsBySykepengesoknadId(sykepengesoknad.id)) {
-            log.warn("Forsøkte å sende søknad om sykepenger med id ${sykepengesoknad.id} til Altinn som allerede er sendt")
+            log.info("Forsøkte å sende søknad om sykepenger med id ${sykepengesoknad.id} til Altinn som allerede er sendt")
             return
         }
         if (ettersendtTilNAV(sykepengesoknad)) {
