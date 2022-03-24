@@ -38,6 +38,12 @@ class RebehandleSykepengesoknadListener(
             ?.let { Instant.ofEpochMilli(it.toLong()) }
             ?: Instant.now()
 
+        if (sykepengesoknad.id in listOf("82e53926-1751-331d-b2d5-668f3df92cb0", "303fc735-7b99-3a18-aaf9-579deca67066",)) {
+            log.info("Behandler ikke søknad ${sykepengesoknad.id}")
+            acknowledgment.acknowledge()
+            return
+        }
+
         try {
             val sovetid = behandlingstidspunkt.toEpochMilli() - Instant.now().toEpochMilli()
             if (sovetid > 0) {
