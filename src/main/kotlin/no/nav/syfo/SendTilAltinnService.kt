@@ -56,6 +56,7 @@ class SendTilAltinnService(
             altinnClient.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad, ekstraData)
             sendtSoknadRepository.save(SendtSoknad(null, sykepengesoknad.id, Instant.now()))
             registry.counter("sykepengesoknad-altinn.soknadSendtTilAltinn", Tags.of("type", "info")).increment()
+            log.info("Sykepengesøknad ${sykepengesoknad.id} ble sendt til altinn")
         } else {
             val feil = validationeventer.joinToString("\n") { it.message }
             log.error("Validering feilet for sykepengesøknad med id ${sykepengesoknad.id} med følgende feil: $feil")
