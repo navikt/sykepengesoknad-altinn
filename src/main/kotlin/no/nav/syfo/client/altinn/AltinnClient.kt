@@ -78,12 +78,8 @@ class AltinnClient(
                 throw RuntimeException("feil")
             }
             return receiptExternal.receiptId
-        } catch (e: ICorrespondenceAgencyExternalInsertCorrespondenceV2AltinnFaultFaultFaultMessage) {
-            log.error("feil", e)
-            throw RuntimeException("feil", e)
         } catch (e: Exception) {
-            log.error("feil", e)
-            throw e
+            throw RuntimeException(e)
         }
     }
 
