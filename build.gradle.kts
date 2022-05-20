@@ -32,7 +32,7 @@ repositories {
 ext["okhttp3.version"] = "4.9.0" // For at token support testen kjører (tror jeg)
 
 val sykepengesoknadKafkaVersion = "2022.02.10-16.07-0892e94a"
-val logstashLogbackEncoderVersion = "7.1.1"
+val logstashLogbackEncoderVersion = "7.2"
 val tjenestespesifikasjonerVersion = "1.2020.01.20-15.44-063ae9f84815"
 val cxfVersion = "3.5.2"
 val testContainersVersion = "1.17.1"
