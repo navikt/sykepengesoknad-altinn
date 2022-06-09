@@ -20,7 +20,8 @@ class SendtSykmeldingListener(
     @KafkaListener(
         topics = [SYKMELDINGSENDT_TOPIC],
         containerFactory = "sendtSykmeldingContainerFactory",
-        concurrency = "3"
+        concurrency = "3",
+        properties = ["auto.offset.reset=earliest"],
     )
     fun listen(records: List<ConsumerRecord<String, String>>, acknowledgment: Acknowledgment) {
         records
