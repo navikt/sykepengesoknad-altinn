@@ -15,6 +15,7 @@ altinn.password: "password"
 
 virksomhet.Organisasjon.v4.endpointurl: "virksomhet.Organisasjon.v4.endpointurl"
 
+lagre.alle.dokumenter: true
 
 spring:
   profiles:
