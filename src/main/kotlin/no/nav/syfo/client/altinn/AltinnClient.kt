@@ -79,12 +79,19 @@ class AltinnClient(
                 sykepengesoknad.id,
                 correspondence
             )
+            val serialisertReceipt = receiptExternal.serialiser()
             lagreFil(
-                filnavn = "receiptExternal.xml",
-                contentType = "application/xml",
-                content = receiptExternal.serialiser().toByteArray(),
+                filnavn = "receiptExternal.gz",
+                contentType = "application/gzip",
+                content = serialisertReceipt.gzip(),
             )
-
+            if (lagreAlleDokumenter) {
+                lagreFil(
+                    filnavn = "receiptExternal.xml",
+                    contentType = "application/xml",
+                    content = serialisertReceipt.toByteArray(),
+                )
+            }
             if (receiptExternal.receiptStatusCode != ReceiptStatusEnum.OK) {
                 log.error("Fikk uventet statuskode fra Altinn {}", receiptExternal.receiptStatusCode)
                 throw RuntimeException("feil")
