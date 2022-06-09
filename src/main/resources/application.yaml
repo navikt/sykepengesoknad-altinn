@@ -24,7 +24,7 @@ spring:
       maximum-pool-size: 3
 
 rebehandling.delay.sekunder: 240 # 4 minutter. Må være mindre enn max.poll.interval.ms
-
+lagre.alle.dokumenter: false
 
 altinn:
   username: ${KUBERNETES_SECRET_ALTINN_USERNAME}

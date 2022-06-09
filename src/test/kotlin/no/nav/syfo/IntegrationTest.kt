@@ -49,10 +49,12 @@ class IntegrationTest : Testoppsett() {
 
         val innhold = storage.list(bucketName).values.toList()
         val relaterteFiler = innhold.filter { it.name.contains(id) }
-        relaterteFiler.shouldHaveSize(4)
+        relaterteFiler.shouldHaveSize(6)
         relaterteFiler.first { it.name.contains("sykepengesoknad.xml") }.contentType `should be equal to` "application/xml"
         relaterteFiler.first { it.name.contains("correspondence.xml") }.contentType `should be equal to` "application/xml"
+        relaterteFiler.first { it.name.contains("correspondence.gz") }.contentType `should be equal to` "application/gzip"
         relaterteFiler.first { it.name.contains("receiptExternal.xml") }.contentType `should be equal to` "application/xml"
+        relaterteFiler.first { it.name.contains("receiptExternal.gz") }.contentType `should be equal to` "application/gzip"
         relaterteFiler.first { it.name.contains("sykepengesoknad.pdf") }.contentType `should be equal to` "application/pdf"
 
         val soknadXml = relaterteFiler.first { it.name.contains("sykepengesoknad.xml") }.getContent().tilXMLSykepengesoeknadArbeidsgiver()

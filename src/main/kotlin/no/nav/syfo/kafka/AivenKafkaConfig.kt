@@ -67,7 +67,7 @@ class AivenKafkaConfig(
     @Bean
     fun sendtSykmeldingContainerFactory(
         kafkaErrorHandler: KafkaErrorHandler
-    ): ConcurrentKafkaListenerContainerFactory<String, String> {
+    ): ConcurrentKafkaListenerContainerFactory<String, String?> {
         val config = mapOf(
             ConsumerConfig.GROUP_ID_CONFIG to "sykepengesoknad-altinn-v2",
             ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to "earliest",
@@ -77,9 +77,9 @@ class AivenKafkaConfig(
             ConsumerConfig.MAX_POLL_RECORDS_CONFIG to "12000",
             ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG to ConsumerConfig.DEFAULT_MAX_PARTITION_FETCH_BYTES * 3,
         ) + commonConfig()
-        val consumerFactory = DefaultKafkaConsumerFactory<String, String>(config)
+        val consumerFactory = DefaultKafkaConsumerFactory<String, String?>(config)
 
-        val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
+        val factory = ConcurrentKafkaListenerContainerFactory<String, String?>()
         factory.consumerFactory = consumerFactory
         factory.isBatchListener = true
         factory.setCommonErrorHandler(kafkaErrorHandler)

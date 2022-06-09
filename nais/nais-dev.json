@@ -7,6 +7,7 @@
     "PDL_URL": "https://pdl-api.dev-fss-pub.nais.io",
     "PDL_API_AAD_CLIENT_ID": "dev-fss.pdl.pdl-api",
     "PDFGEN_URL":"http://flex-sykepengesoknad-pdfgen",
-    "ALTINN_URL": "https://tt02.altinn.no"
+    "ALTINN_URL": "https://tt02.altinn.no",
+    "LAGRE_ALLE_DOKUMENTER": "true"
   }
 }
