@@ -39,7 +39,7 @@ val testContainersVersion = "1.17.2"
 val kluentVersion = "1.68"
 val tokenSupportVersion = "2.0.20"
 val smCommonVersion = "1.a434402"
-val gcsVersion = "2.8.0"
+val gcsVersion = "2.8.1"
 val gcsNioVersion = "0.123.28"
 
 dependencies {
