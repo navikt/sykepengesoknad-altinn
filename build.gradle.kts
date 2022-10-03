@@ -60,7 +60,7 @@ dependencies {
     implementation("com.sun.xml.messaging.saaj:saaj-impl:2.0.1")
     implementation("javax.xml.soap:saaj-api:1.3.5")
     implementation("javax.xml.ws:jaxws-api:2.3.1")
-    implementation("org.apache.commons:commons-text:1.9")
+    implementation("org.apache.commons:commons-text:1.10.0")
     implementation("no.nav.security:token-client-spring:$tokenSupportVersion")
     implementation("no.nav.security:token-validation-spring:$tokenSupportVersion")
     implementation("no.nav.helse:syfosm-common-models:$smCommonVersion")
