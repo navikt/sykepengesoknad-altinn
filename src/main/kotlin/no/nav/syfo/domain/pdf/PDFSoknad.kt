@@ -14,7 +14,7 @@ class PDFSoknad(sykepengesoknad: Sykepengesoknad, val fnr: String, val navn: Str
     val soknadPerioder = sykepengesoknad.soknadsperioder.map { PDFPeriode(it) }
     val avsendertype = sykepengesoknad.avsendertype
     val sporsmal = sykepengesoknad.sporsmal
-        .filter { it.tag !in listOf("ANDRE_INNTEKTSKILDER", "ARBEID_UTENFOR_NORGE") }
+        .filter { it.tag !in listOf("ANDRE_INNTEKTSKILDER", "ANDRE_INNTEKTSKILDER_V2", "ARBEID_UTENFOR_NORGE") }
         .sortedWith(
             Comparator.comparingInt {
                 when (it.tag) {

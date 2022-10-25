@@ -21,6 +21,9 @@ class PDFSoknadTest {
             sporsmal = listOf(
                 Sporsmal(
                     tag = "ANDRE_INNTEKTSKILDER"
+                ),
+                Sporsmal(
+                    tag = "ANDRE_INNTEKTSKILDER_V2"
                 )
             )
         )
