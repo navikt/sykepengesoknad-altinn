@@ -21,6 +21,8 @@ class SendtSykmeldingListener(
         topics = [SYKMELDINGSENDT_TOPIC],
         containerFactory = "sendtSykmeldingContainerFactory",
         concurrency = "3",
+        id = "sykmelding-sendt",
+        idIsGroup = false,
     )
     fun listen(records: List<ConsumerRecord<String, String?>>, acknowledgment: Acknowledgment) {
         records

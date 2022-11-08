@@ -32,6 +32,8 @@ class RebehandleSykepengesoknadListener(
         topics = [RETRY_TOPIC],
         containerFactory = "aivenKafkaListenerContainerFactory",
         properties = ["auto.offset.reset=earliest"],
+        id = "sykepengesoknad-sendt-retry",
+        idIsGroup = false,
     )
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         val sykepengesoknad = cr.value().tilSykepengesoknad()
