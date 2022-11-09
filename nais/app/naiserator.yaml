@@ -50,6 +50,7 @@ spec:
             envVarPrefix: DB
     buckets:
       - name: {{ bucketName }}
+        publicAccessPrevention: true
         retentionPeriodDays: {{ retentionDays }}
         lifecycleCondition:
           age: {{ retentionDays }}
