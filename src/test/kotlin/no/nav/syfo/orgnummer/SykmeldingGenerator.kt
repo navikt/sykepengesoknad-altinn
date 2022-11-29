@@ -88,7 +88,8 @@ private fun getSykmeldingDto(
         tiltakArbeidsplassen = null,
         prognose = null,
         papirsykmelding = false,
-        merknader = merknader
+        merknader = merknader,
+        utenlandskSykmelding = null
     )
 }
 
