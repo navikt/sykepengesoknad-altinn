@@ -40,7 +40,7 @@ val kluentVersion = "1.72"
 val tokenSupportVersion = "2.1.9"
 val smCommonVersion = "1.1e5e122"
 val gcsVersion = "2.13.0"
-val gcsNioVersion = "0.124.19"
+val gcsNioVersion = "0.125.0"
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
