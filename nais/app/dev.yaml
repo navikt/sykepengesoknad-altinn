@@ -1,4 +1,5 @@
 kafkaPool: nav-dev
+db_tier: db-f1-micro
 environment: dev
 bucketName: flex-sykepengesoknad-altinn-bucket-dev
 retentionDays: '2'
