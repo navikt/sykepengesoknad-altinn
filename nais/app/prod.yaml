@@ -1,4 +1,5 @@
 kafkaPool: nav-prod
+db_tier: db-custom-1-3840
 environment: prod
 bucketName: flex-sykepengesoknad-altinn-bucket-prod
 retentionDays: '1825'

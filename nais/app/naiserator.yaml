@@ -6,7 +6,7 @@ metadata:
   labels:
     team: flex
 spec:
-  image: {{ image }}
+  image: {{image}}
   strategy:
     type: Recreate
   replicas:
@@ -44,6 +44,7 @@ spec:
   gcp:
     sqlInstances:
       - type: POSTGRES_14
+        tier: {{db_tier}}
         diskAutoresize: true
         databases:
           - name: sykepengesoknad-altinn-db
