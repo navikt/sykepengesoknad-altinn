@@ -44,7 +44,7 @@ spec:
   gcp:
     sqlInstances:
       - type: POSTGRES_14
-        db_tier: {{db_tier}}
+        tier: {{db_tier}}
         diskAutoresize: true
         databases:
           - name: sykepengesoknad-altinn-db
