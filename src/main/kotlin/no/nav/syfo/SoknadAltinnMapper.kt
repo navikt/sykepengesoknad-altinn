@@ -103,8 +103,8 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
             listOf(
                 "Ny søknad om sykepenger i Altinn",
                 "<p>En ansatt i \$reporteeName$ (\$reporteeNumber$) har sendt inn en søknad om sykepenger.</p>" +
-                    "<p><a href=\"" + lenkeAltinnPortal() + "\">" +
-                    "Logg inn på Altinn</a> for å se søknaden.</p>" +
+                    "<p>" +
+                    "Logg inn på Altinn for å se søknaden.</p>" +
                     "<p>Vennlig hilsen NAV.</p>"
             )
         )
@@ -114,7 +114,7 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
         return opprettSMSNotification(
             listOf(
                 "En ansatt i \$reporteeName$ (\$reporteeNumber$) har sendt inn en søknad om sykepenger. ",
-                "Gå til " + smsLenkeAltinnPortal() + " for å se søknaden. Vennlig hilsen NAV."
+                "Logg inn på Altinn for å se søknaden. Vennlig hilsen NAV."
             )
         )
     }

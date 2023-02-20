@@ -19,18 +19,6 @@ fun opprettSMSNotification(text: List<String>): Notification {
     return opprettNotification(null, SMS, text)
 }
 
-private fun urlEncode(lenke: String): String {
-    return lenke.replace("=".toRegex(), "%3D")
-}
-
-fun smsLenkeAltinnPortal(): String {
-    return urlEncode(lenkeAltinnPortal())
-}
-
-fun lenkeAltinnPortal(): String {
-    return "https://www.altinn.no/ui/MessageBox?O=\$reporteeNumber\$"
-}
-
 private fun opprettNotification(fraEpost: String?, type: TransportType, text: List<String>): Notification {
     return opprettNotification(fraEpost, type, konverterTilTextTokens(text))
 }
