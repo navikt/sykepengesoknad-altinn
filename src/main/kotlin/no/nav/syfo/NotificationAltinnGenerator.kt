@@ -34,7 +34,8 @@ private fun opprettNotification(fraEpost: String?, type: TransportType, textToke
         .withFromAddress(if (fraEpost == null) null else JAXBElement<String>(QName(NOTIFICATION_NAMESPACE, "FromAddress"), String::class.java, fraEpost))
         .withReceiverEndPoints(
             JAXBElement(
-                QName(NOTIFICATION_NAMESPACE, "ReceiverEndPoints"), ReceiverEndPointBEList::class.java,
+                QName(NOTIFICATION_NAMESPACE, "ReceiverEndPoints"),
+                ReceiverEndPointBEList::class.java,
                 ReceiverEndPointBEList()
                     .withReceiverEndPoint(
                         ReceiverEndPoint()
@@ -44,7 +45,8 @@ private fun opprettNotification(fraEpost: String?, type: TransportType, textToke
         )
         .withTextTokens(
             JAXBElement(
-                QName(NOTIFICATION_NAMESPACE, "TextTokens"), TextTokenSubstitutionBEList::class.java,
+                QName(NOTIFICATION_NAMESPACE, "TextTokens"),
+                TextTokenSubstitutionBEList::class.java,
                 TextTokenSubstitutionBEList()
                     .withTextToken(*textTokens)
             )

@@ -14,5 +14,5 @@ data class JuridiskOrgnummer(
     val id: String? = null,
     val sykmeldingId: String,
     val orgnummer: String,
-    val juridiskOrgnummer: String?,
+    val juridiskOrgnummer: String?
 )

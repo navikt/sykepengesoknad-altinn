@@ -33,7 +33,6 @@ fun RecordedRequest.parseCorrespondence(): InsertCorrespondenceBasicV2 {
     while (sr.hasNext()) {
         val type = sr.next()
         if (type == XMLStreamReader.START_ELEMENT && "InsertCorrespondenceBasicV2" == sr.localName) {
-
             val jc: JAXBContext = JAXBContext.newInstance(InsertCorrespondenceBasicV2::class.java)
             val unmarshaller = jc.createUnmarshaller()
             val je: JAXBElement<InsertCorrespondenceBasicV2> = unmarshaller.unmarshal(sr, InsertCorrespondenceBasicV2::class.java)

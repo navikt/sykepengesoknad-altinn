@@ -22,7 +22,7 @@ class SendtSykmeldingListener(
         containerFactory = "sendtSykmeldingContainerFactory",
         concurrency = "3",
         id = "sykmelding-sendt",
-        idIsGroup = false,
+        idIsGroup = false
     )
     fun listen(records: List<ConsumerRecord<String, String?>>, acknowledgment: Acknowledgment) {
         records

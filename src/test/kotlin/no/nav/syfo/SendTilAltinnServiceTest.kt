@@ -47,7 +47,6 @@ class SendTilAltinnServiceTest : Testoppsett() {
 
     @Test
     fun ettersendingTilNavBehandlesIkke() {
-
         val soknad = grunnSoknad.copy(
             sendtArbeidsgiver = LocalDateTime.now().minusDays(1),
             sendtNav = LocalDateTime.now(),

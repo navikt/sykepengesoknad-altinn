@@ -92,9 +92,9 @@ private val fravar2XMLUtdanning = { fravarListe: List<Fravar> ->
 }
 
 private val sykepengesoknad2XMLFravar = { sykepengesoknad: Sykepengesoknad ->
-    if (sykepengesoknad.egenmeldinger.isNullOrEmpty() && sykepengesoknad.fravarForSykmeldingen.isNullOrEmpty() && sykepengesoknad.fravar.isNullOrEmpty())
+    if (sykepengesoknad.egenmeldinger.isNullOrEmpty() && sykepengesoknad.fravarForSykmeldingen.isNullOrEmpty() && sykepengesoknad.fravar.isNullOrEmpty()) {
         null
-    else {
+    } else {
         val egenmeldingerOgFravarFor = ArrayList<XMLPeriode>()
             .also {
                 it.addAll(periodeListe2XMLPeriode(sykepengesoknad.egenmeldinger))
@@ -110,12 +110,13 @@ private val sykepengesoknad2XMLFravar = { sykepengesoknad: Sykepengesoknad ->
 
 private val fravar2XMLOppholdUtenforNorge = { fravar: List<Fravar>, soktUtenlandsopphold: Boolean? ->
     val periodeliste = listOrNull(fravar2XMLPeriode(fravar, Fravarstype.UTLANDSOPPHOLD))
-    if (periodeliste == null)
+    if (periodeliste == null) {
         null
-    else
+    } else {
         XMLOppholdUtenforNorge()
             .withPeriodeListe(periodeliste)
             .withHarSoektOmSykepengerForOppholdet(soktUtenlandsopphold)
+    }
 }
 
 private val periodeListe2XMLPeriode = { periodeListe: List<Periode> ->
@@ -140,8 +141,9 @@ private val fravar2XMLPeriode = { fravarListe: List<Fravar>, type: Fravarstype -
 }
 
 private inline fun <reified T> listOrNull(list: List<T>?): List<T>? {
-    return if (list.isNullOrEmpty())
+    return if (list.isNullOrEmpty()) {
         null
-    else
+    } else {
         list
+    }
 }

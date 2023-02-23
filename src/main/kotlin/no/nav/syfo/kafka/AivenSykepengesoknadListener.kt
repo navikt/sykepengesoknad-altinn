@@ -18,7 +18,7 @@ const val SYKEPENGESOKNAD_TOPIC = "flex." + "sykepengesoknad"
 @Component
 class AivenSykepengesoknadListener(
     private val sendTilAltinnService: SendTilAltinnService,
-    private val rebehandleSykepengesoknadProducer: RebehandleSykepengesoknadProducer,
+    private val rebehandleSykepengesoknadProducer: RebehandleSykepengesoknadProducer
 
 ) {
 
@@ -29,10 +29,9 @@ class AivenSykepengesoknadListener(
         concurrency = "3",
         containerFactory = "aivenKafkaListenerContainerFactory",
         id = "sykepengesoknad-sendt",
-        idIsGroup = false,
+        idIsGroup = false
     )
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
-
         val sykepengesoknadDTO = cr.value().tilSykepengesoknadDTO()
 
         if (sykepengesoknadDTO.skalBehandles()) {

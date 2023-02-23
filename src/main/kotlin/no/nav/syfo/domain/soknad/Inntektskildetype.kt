@@ -11,5 +11,5 @@ enum class Inntektskildetype {
     OMSORGSLONN,
     ARBEIDSFORHOLD,
     FRILANSER_SELVSTENDIG,
-    STYREVERV,
+    STYREVERV
 }

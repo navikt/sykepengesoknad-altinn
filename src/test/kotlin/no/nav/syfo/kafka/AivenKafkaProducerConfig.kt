@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class AivenKafkaProducerConfig(
-    private val aivenKafkaConfig: AivenKafkaConfig,
+    private val aivenKafkaConfig: AivenKafkaConfig
 ) {
 
     @Bean

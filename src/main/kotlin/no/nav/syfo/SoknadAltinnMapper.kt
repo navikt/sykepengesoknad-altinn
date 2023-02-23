@@ -40,13 +40,15 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
             .withAllowForwarding(JAXBElement(QName(namespace, "AllowForwarding"), Boolean::class.java, false))
             .withReportee(
                 JAXBElement(
-                    QName(namespace, "Reportee"), String::class.java,
+                    QName(namespace, "Reportee"),
+                    String::class.java,
                     getOrgnummerForSendingTilAltinn(sykepengesoknad.arbeidsgiver.orgnummer)
                 )
             )
             .withMessageSender(
                 JAXBElement(
-                    QName(namespace, "MessageSender"), String::class.java,
+                    QName(namespace, "MessageSender"),
+                    String::class.java,
                     byggMessageSender(sykepengesoknad, ekstraData)
                 )
             )
@@ -92,7 +94,8 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
 
     private fun opprettNotifications(namespace: String): JAXBElement<NotificationBEList> {
         return JAXBElement(
-            QName(namespace, "Notifications"), NotificationBEList::class.java,
+            QName(namespace, "Notifications"),
+            NotificationBEList::class.java,
             NotificationBEList()
                 .withNotification(epostNotification(), smsNotification())
         )
@@ -121,7 +124,8 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
 
     private fun tilInnhold(namespace: String, binaryNamespace: String, tittel: String, sykepengesoeknadTekst: String, ekstraData: AltinnInnsendelseEkstraData): JAXBElement<ExternalContentV2> {
         return JAXBElement(
-            QName(namespace, "Content"), ExternalContentV2::class.java,
+            QName(namespace, "Content"),
+            ExternalContentV2::class.java,
             ExternalContentV2()
                 .withLanguageCode(JAXBElement(QName(namespace, "LanguageCode"), String::class.java, "1044"))
                 .withMessageTitle(JAXBElement(QName(namespace, "MessageTitle"), String::class.java, tittel))
@@ -129,11 +133,13 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
                 .withCustomMessageData(null)
                 .withAttachments(
                     JAXBElement(
-                        QName(namespace, "Attachments"), AttachmentsV2::class.java,
+                        QName(namespace, "Attachments"),
+                        AttachmentsV2::class.java,
                         AttachmentsV2()
                             .withBinaryAttachments(
                                 JAXBElement(
-                                    QName(namespace, "BinaryAttachments"), BinaryAttachmentExternalBEV2List::class.java,
+                                    QName(namespace, "BinaryAttachments"),
+                                    BinaryAttachmentExternalBEV2List::class.java,
                                     BinaryAttachmentExternalBEV2List()
                                         .withBinaryAttachmentV2(
                                             pdfVedlegg(binaryNamespace, ekstraData.pdf),

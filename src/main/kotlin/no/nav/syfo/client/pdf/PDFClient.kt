@@ -22,7 +22,6 @@ class PDFClient(
 
     @Retryable(backoff = Backoff(delay = 5000))
     fun getPDF(sykepengesoknad: Sykepengesoknad, fnr: String, navn: String): ByteArray {
-
         val pdfSoknad = PDFSoknad(sykepengesoknad, fnr, navn)
 
         val url = when (sykepengesoknad.type) {

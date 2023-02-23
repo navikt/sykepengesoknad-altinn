@@ -21,7 +21,7 @@ class SendTilAltinnService(
     private val sendtSoknadRepository: SendtSoknadRepository,
     private val registry: MeterRegistry,
     private val pdlClient: PdlClient,
-    private val juridiskOrgnummerRepository: JuridiskOrgnummerRepository,
+    private val juridiskOrgnummerRepository: JuridiskOrgnummerRepository
 ) {
 
     val log = logger()

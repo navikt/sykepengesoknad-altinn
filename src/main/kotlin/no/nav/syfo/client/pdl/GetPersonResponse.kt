@@ -15,7 +15,7 @@ data class ResponseError(
 )
 
 data class ResponseData(
-    val hentPerson: HentPerson? = null,
+    val hentPerson: HentPerson? = null
 )
 
 data class ErrorLocation(
@@ -29,7 +29,7 @@ data class ErrorExtension(
 )
 
 data class HentPerson(
-    val navn: List<Navn>? = null,
+    val navn: List<Navn>? = null
 )
 
 data class Navn(

@@ -7,5 +7,5 @@ data class SendtSoknad(
     @Id
     val id: String? = null,
     val sykepengesoknadId: String,
-    val sendt: Instant,
+    val sendt: Instant
 )

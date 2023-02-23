@@ -15,7 +15,8 @@ class IntegrationTest : Testoppsett() {
     @Autowired
     private lateinit var storage: Storage
 
-    @Value("\${BUCKET_NAME}") lateinit var bucketName: String
+    @Value("\${BUCKET_NAME}")
+    lateinit var bucketName: String
 
     @Test
     fun `Sendt arbeidstaker søknad mottas og sendes til altinn`() {

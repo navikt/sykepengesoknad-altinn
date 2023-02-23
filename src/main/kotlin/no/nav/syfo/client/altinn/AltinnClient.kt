@@ -53,23 +53,23 @@ class AltinnClient(
                 lagreFil(
                     filnavn = "sykepengesoknad.pdf",
                     contentType = "application/pdf",
-                    content = ekstraData.pdf,
+                    content = ekstraData.pdf
                 )
                 lagreFil(
                     filnavn = "sykepengesoknad.xml",
                     contentType = "application/xml",
-                    content = ekstraData.xml,
+                    content = ekstraData.xml
                 )
                 lagreFil(
                     filnavn = "correspondence.xml",
                     contentType = "application/xml",
-                    content = serialisertRequest.toByteArray(),
+                    content = serialisertRequest.toByteArray()
                 )
             }
             lagreFil(
                 filnavn = "correspondence.gz",
                 contentType = "application/gzip",
-                content = serialisertRequest.gzip(),
+                content = serialisertRequest.gzip()
             )
 
             val receiptExternal = iCorrespondenceAgencyExternalBasic.insertCorrespondenceBasicV2(
@@ -83,13 +83,13 @@ class AltinnClient(
             lagreFil(
                 filnavn = "receiptExternal.gz",
                 contentType = "application/gzip",
-                content = serialisertReceipt.gzip(),
+                content = serialisertReceipt.gzip()
             )
             if (lagreAlleDokumenter) {
                 lagreFil(
                     filnavn = "receiptExternal.xml",
                     contentType = "application/xml",
-                    content = serialisertReceipt.toByteArray(),
+                    content = serialisertReceipt.toByteArray()
                 )
             }
             if (receiptExternal.receiptStatusCode != ReceiptStatusEnum.OK) {

@@ -28,7 +28,7 @@ class AadRestTemplateConfiguration {
             registrationName = "pdl-api-client-credentials",
             restTemplateBuilder = restTemplateBuilder,
             clientConfigurationProperties = clientConfigurationProperties,
-            oAuth2AccessTokenService = oAuth2AccessTokenService,
+            oAuth2AccessTokenService = oAuth2AccessTokenService
         )
 
     private fun downstreamRestTemplate(
