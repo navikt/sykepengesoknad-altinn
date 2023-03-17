@@ -55,6 +55,28 @@ class PDFSoknadTest {
     }
 
     @Test
+    fun filtrererBortYrkesskade() {
+        val sykepengesoknad = Sykepengesoknad(
+            id = "abc",
+            fnr = "123",
+            type = Soknadstype.ARBEIDSTAKERE,
+            status = Soknadsstatus.SENDT,
+            arbeidsgiver = Arbeidsgiver("abc", "123"),
+            sporsmal = listOf(
+                Sporsmal(
+                    tag = "YRKESSKADE"
+                ),
+                Sporsmal(
+                    tag = "ANSVARSERKLARING"
+                )
+            )
+        )
+        val pdf = PDFSoknad(sykepengesoknad, "123", "abc")
+
+        assertThat(pdf.sporsmal.size).isEqualTo(1)
+    }
+
+    @Test
     fun `filtrerer bort utenlandsk sykmelding spm`() {
         val sykepengesoknad = Sykepengesoknad(
             id = "abc",

@@ -19,6 +19,7 @@ class PDFSoknad(sykepengesoknad: Sykepengesoknad, val fnr: String, val navn: Str
                 "ANDRE_INNTEKTSKILDER",
                 "ANDRE_INNTEKTSKILDER_V2",
                 "ARBEID_UTENFOR_NORGE",
+                "YRKESSKADE",
                 "UTENLANDSK_SYKMELDING_BOSTED",
                 "UTENLANDSK_SYKMELDING_TRYGD_UTENFOR_NORGE",
                 "UTENLANDSK_SYKMELDING_LONNET_ARBEID_UTENFOR_NORGE"
