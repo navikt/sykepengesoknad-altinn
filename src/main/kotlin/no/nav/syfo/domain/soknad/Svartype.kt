@@ -10,6 +10,7 @@ enum class Svartype {
     PERIODER,
     TIMER,
     FRITEKST,
+    LAND,
     IKKE_RELEVANT,
     PROSENT,
     RADIO_GRUPPE,
@@ -18,8 +19,8 @@ enum class Svartype {
     RADIO,
     TALL,
     INFO_BEHANDLINGSDAGER,
-    BELOP,
+    KVITTERING,
     DATOER,
-    KILOMETER,
-    KVITTERING
+    BELOP,
+    KILOMETER
 }
