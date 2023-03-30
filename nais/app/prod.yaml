@@ -3,6 +3,9 @@ db_tier: db-custom-1-3840
 environment: prod
 bucketName: flex-sykepengesoknad-altinn-bucket-prod
 retentionDays: '1825'
+external-host:
+  - pdl-api.prod-fss-pub.nais.io
+  - www.altinn.no
 env:
   PDL_URL: https://pdl-api.prod-fss-pub.nais.io
   PDL_API_AAD_CLIENT_ID: prod-fss.pdl.pdl-api

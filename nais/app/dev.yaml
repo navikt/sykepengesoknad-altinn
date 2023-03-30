@@ -3,6 +3,9 @@ db_tier: db-f1-micro
 environment: dev
 bucketName: flex-sykepengesoknad-altinn-bucket-dev
 retentionDays: '2'
+external-host:
+  - pdl-api.dev-fss-pub.nais.io
+  - tt02.altinn.no
 env:
   PDL_URL: https://pdl-api.dev-fss-pub.nais.io
   PDL_API_AAD_CLIENT_ID: dev-fss.pdl.pdl-api
