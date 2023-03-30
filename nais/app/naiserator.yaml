@@ -60,6 +60,10 @@ spec:
     outbound:
       rules:
         - application: flex-sykepengesoknad-pdfgen
+      external:
+  {{#each external-host}}
+        - host: {{this}}
+  {{/each}}
   envFrom:
     - secret: altinn-serviceuser
   env:
