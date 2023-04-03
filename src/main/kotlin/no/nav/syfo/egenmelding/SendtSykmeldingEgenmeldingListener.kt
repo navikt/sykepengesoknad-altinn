@@ -23,6 +23,7 @@ class SendtSykmeldingEgenmeldingListener(
         topics = [SYKMELDINGSENDT_TOPIC],
         containerFactory = "sendtSykmeldingEgenmeldingContainerFactory",
         concurrency = "3",
+        properties = ["offset.reset=latest"],
         id = "sykmelding-sendt-egenmelding",
         idIsGroup = true
     )
@@ -47,13 +48,15 @@ class SendtSykmeldingEgenmeldingListener(
             ?.svar
 
         egenmeldingsvar?.let {
-            egenmeldingFraSykmeldingRepository.save(
-                EgenmeldingFraSykmelding(
-                    id = null,
-                    sykmeldingId = sykmeldingId,
-                    egenmeldingssvar = it
+            if (egenmeldingFraSykmeldingRepository.findBySykmeldingId(sykmeldingId) == null) {
+                egenmeldingFraSykmeldingRepository.save(
+                    EgenmeldingFraSykmelding(
+                        id = null,
+                        sykmeldingId = sykmeldingId,
+                        egenmeldingssvar = it
+                    )
                 )
-            )
+            }
         }
 
         acknowledgment.acknowledge()

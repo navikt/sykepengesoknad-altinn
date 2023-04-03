@@ -15,17 +15,30 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.*
 
-fun skapSykmeldingKafkaMessage(orgnummer: String, juridiskOrgnummer: String?): SykmeldingKafkaMessage {
+fun skapSykmeldingKafkaMessage(
+    orgnummer: String,
+    juridiskOrgnummer: String? = null,
+    sykmeldingId: String = UUID.randomUUID().toString(),
+    ekstraSporsmal: List<SporsmalOgSvarDTO> = emptyList(),
+    erSvarOppdatering: Boolean? = null
+
+): SykmeldingKafkaMessage {
     val fnr = "12354324"
     val basisdato = LocalDate.now()
     val sykmeldingStatusKafkaMessageDTO = skapSykmeldingStatusKafkaMessageDTO(
+        sykmeldingId = sykmeldingId,
         fnr = fnr,
         arbeidssituasjon = Arbeidssituasjon.ARBEIDSTAKER,
         statusEvent = STATUS_SENDT,
-        arbeidsgiver = ArbeidsgiverStatusDTO(orgnummer = orgnummer, orgNavn = "Kebabbiten", juridiskOrgnummer = juridiskOrgnummer)
+        arbeidsgiver = ArbeidsgiverStatusDTO(
+            orgnummer = orgnummer,
+            orgNavn = "Kebabbiten",
+            juridiskOrgnummer = juridiskOrgnummer
+        ),
+        ekstraSporsmal = ekstraSporsmal,
+        erSvarOppdatering = erSvarOppdatering
 
     )
-    val sykmeldingId = sykmeldingStatusKafkaMessageDTO.event.sykmeldingId
     val sykmelding = getSykmeldingDto(
         sykmeldingId = sykmeldingId,
         fom = basisdato.minusDays(20),
@@ -100,7 +113,9 @@ private fun skapSykmeldingStatusKafkaMessageDTO(
     fnr: String,
     timestamp: OffsetDateTime = OffsetDateTime.now(),
     arbeidsgiver: ArbeidsgiverStatusDTO? = null,
-    sykmeldingId: String = UUID.randomUUID().toString()
+    sykmeldingId: String = UUID.randomUUID().toString(),
+    ekstraSporsmal: List<SporsmalOgSvarDTO>,
+    erSvarOppdatering: Boolean?
 
 ): SykmeldingStatusKafkaMessageDTO {
     return SykmeldingStatusKafkaMessageDTO(
@@ -109,14 +124,15 @@ private fun skapSykmeldingStatusKafkaMessageDTO(
             sykmeldingId = sykmeldingId,
             arbeidsgiver = arbeidsgiver,
             timestamp = timestamp,
-            sporsmals = listOf(
+            erSvarOppdatering = erSvarOppdatering,
+            sporsmals = arrayListOf(
                 SporsmalOgSvarDTO(
                     tekst = "Hva jobber du som?",
                     shortName = ShortNameDTO.ARBEIDSSITUASJON,
                     svartype = SvartypeDTO.ARBEIDSSITUASJON,
                     svar = arbeidssituasjon.name
                 )
-            )
+            ).also { it.addAll(ekstraSporsmal) }
         ),
         kafkaMetadata = KafkaMetadataDTO(
             sykmeldingId = sykmeldingId,

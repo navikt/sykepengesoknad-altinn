@@ -11,7 +11,7 @@ class SykepengesoknadXMLMapperTest {
     @Test
     fun mapperSykepengesoknadTilXML() {
         val validationEventer: MutableList<ValidationEvent> = mutableListOf()
-        sykepengesoknad2XMLByteArray(mockSykepengesoknad.first, validationEventer, "fnr", "orgnr")
+        sykepengesoknad2XMLByteArray(mockSykepengesoknad.first, validationEventer, "fnr", "orgnr", null)
 
         assertThat(validationEventer).isEmpty()
     }
@@ -19,7 +19,7 @@ class SykepengesoknadXMLMapperTest {
     @Test
     fun mapperBehandlingsdagerTilXML() {
         val validationEventer: MutableList<ValidationEvent> = mutableListOf()
-        sykepengesoknad2XMLByteArray(mockSykepengesoknadBehandlingsdager, validationEventer, "fnr", "orgnr")
+        sykepengesoknad2XMLByteArray(mockSykepengesoknadBehandlingsdager, validationEventer, "fnr", "orgnr", null)
 
         assertThat(validationEventer).isEmpty()
     }
@@ -27,7 +27,7 @@ class SykepengesoknadXMLMapperTest {
     @Test
     fun mapperGradertReisetilskuddSoknadTilXML() {
         val validationEventer: MutableList<ValidationEvent> = mutableListOf()
-        sykepengesoknad2XMLByteArray(mockGradertReisetilskuddSykepengesoknad, validationEventer, "fnr", "orgnr")
+        sykepengesoknad2XMLByteArray(mockGradertReisetilskuddSykepengesoknad, validationEventer, "fnr", "orgnr", null)
 
         assertThat(validationEventer).isEmpty()
     }
@@ -46,7 +46,7 @@ class SykepengesoknadXMLMapperTest {
             egenmeldinger = emptyList()
         )
         val xmlArbeidsgiver =
-            sykepengesoknad2XMLArbeidsgiver(soknad, "fnr", "orgnr")
+            sykepengesoknad2XMLArbeidsgiver(soknad, "fnr", "orgnr", null)
 
         assertThat(xmlArbeidsgiver.sykepengesoeknad.fravaer.egenmeldingsperiodeListe).hasSize(1)
         assertThat(xmlArbeidsgiver.sykepengesoeknad.fravaer.egenmeldingsperiodeListe[0].fom).isEqualTo(fom)
@@ -66,7 +66,7 @@ class SykepengesoknadXMLMapperTest {
             )
         )
         val xmlArbeidsgiver =
-            sykepengesoknad2XMLArbeidsgiver(soknad, "fnr", "orgnr")
+            sykepengesoknad2XMLArbeidsgiver(soknad, "fnr", "orgnr", null)
 
         assertThat(xmlArbeidsgiver.sykepengesoeknad.fravaer.egenmeldingsperiodeListe).hasSize(1)
         assertThat(xmlArbeidsgiver.sykepengesoeknad.fravaer.egenmeldingsperiodeListe[0].fom).isEqualTo(fom)

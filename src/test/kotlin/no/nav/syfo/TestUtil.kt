@@ -20,7 +20,7 @@ val mockSykepengesoknad: Pair<Sykepengesoknad, AltinnInnsendelseEkstraData>
         val ekstra = AltinnInnsendelseEkstraData(
             fnr = fnr,
             navn = navn,
-            xml = sykepengesoknad2XMLByteArray(sykepengesoknad, mutableListOf(), fnr, juridiskOrgnummerArbeidsgiver),
+            xml = sykepengesoknad2XMLByteArray(sykepengesoknad, mutableListOf(), fnr, juridiskOrgnummerArbeidsgiver, null),
             pdf = ByteArray(0)
         )
         return Pair(sykepengesoknad, ekstra)

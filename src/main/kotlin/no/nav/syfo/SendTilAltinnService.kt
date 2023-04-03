@@ -8,6 +8,8 @@ import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.SendtSoknad
 import no.nav.syfo.domain.soknad.Sykepengesoknad
+import no.nav.syfo.egenmelding.EgenmeldingFraSykmeldingRepository
+import no.nav.syfo.egenmelding.egenmeldingsdager
 import no.nav.syfo.orgnummer.JuridiskOrgnummerRepository
 import no.nav.syfo.repository.SendtSoknadRepository
 import org.springframework.stereotype.Service
@@ -21,7 +23,8 @@ class SendTilAltinnService(
     private val sendtSoknadRepository: SendtSoknadRepository,
     private val registry: MeterRegistry,
     private val pdlClient: PdlClient,
-    private val juridiskOrgnummerRepository: JuridiskOrgnummerRepository
+    private val juridiskOrgnummerRepository: JuridiskOrgnummerRepository,
+    private val egenmeldingFraSykmeldingRepository: EgenmeldingFraSykmeldingRepository
 ) {
 
     val log = logger()
@@ -43,7 +46,8 @@ class SendTilAltinnService(
         val orgnrFraDb = juridiskOrgnummerRepository.findBySykmeldingId(sykmeldingId = sykepengesoknad.sykmeldingId!!) ?: throw RuntimeException("Mangler orgnummer i databasen")
         val juridiskOrgnummerArbeidsgiver = orgnrFraDb.juridiskOrgnummer ?: sykepengesoknad.arbeidsgiver.orgnummer
 
-        val xml = sykepengesoknad2XMLByteArray(sykepengesoknad, validationeventer, fnr, juridiskOrgnummerArbeidsgiver)
+        val egenmeldingsvar = egenmeldingFraSykmeldingRepository.findBySykmeldingId(sykmeldingId = sykepengesoknad.sykmeldingId)?.egenmeldingsdager()
+        val xml = sykepengesoknad2XMLByteArray(sykepengesoknad, validationeventer, fnr, juridiskOrgnummerArbeidsgiver, egenmeldingsvar)
 
         val ekstraData = AltinnInnsendelseEkstraData(
             fnr = fnr,
