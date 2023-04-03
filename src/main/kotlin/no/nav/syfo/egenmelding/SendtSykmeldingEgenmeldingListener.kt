@@ -23,7 +23,7 @@ class SendtSykmeldingEgenmeldingListener(
         topics = [SYKMELDINGSENDT_TOPIC],
         containerFactory = "sendtSykmeldingEgenmeldingContainerFactory",
         concurrency = "3",
-        properties = ["offset.reset=latest"],
+        properties = ["auto.offset.reset=latest"],
         id = "sykmelding-sendt-egenmelding",
         idIsGroup = true
     )
