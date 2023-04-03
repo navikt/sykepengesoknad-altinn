@@ -1,6 +1,7 @@
 package no.nav.syfo.orgnummer
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import no.nav.syfo.domain.SykmeldingKafkaMessage
 import no.nav.syfo.logger
 import no.nav.syfo.objectMapper
 import org.apache.kafka.clients.consumer.ConsumerRecord

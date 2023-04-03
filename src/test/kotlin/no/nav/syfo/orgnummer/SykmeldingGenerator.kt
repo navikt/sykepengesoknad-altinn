@@ -1,6 +1,7 @@
 package no.nav.syfo.orgnummer
 
 import no.nav.syfo.domain.Arbeidssituasjon
+import no.nav.syfo.domain.SykmeldingKafkaMessage
 import no.nav.syfo.model.Merknad
 import no.nav.syfo.model.sykmelding.arbeidsgiver.ArbeidsgiverAGDTO
 import no.nav.syfo.model.sykmelding.arbeidsgiver.ArbeidsgiverSykmelding

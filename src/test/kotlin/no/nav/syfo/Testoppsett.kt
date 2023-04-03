@@ -2,10 +2,10 @@ package no.nav.syfo
 
 import no.nav.helse.flex.sykepengesoknad.kafka.SykepengesoknadDTO
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
+import no.nav.syfo.domain.SykmeldingKafkaMessage
 import no.nav.syfo.kafka.SYKEPENGESOKNAD_TOPIC
 import no.nav.syfo.orgnummer.JuridiskOrgnummerRepository
 import no.nav.syfo.orgnummer.SYKMELDINGSENDT_TOPIC
-import no.nav.syfo.orgnummer.SykmeldingKafkaMessage
 import no.nav.syfo.repository.SendtSoknadRepository
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
+import kotlin.concurrent.thread
 
 private class PostgreSQLContainer12 : PostgreSQLContainer<PostgreSQLContainer12>("postgres:12-alpine")
 
