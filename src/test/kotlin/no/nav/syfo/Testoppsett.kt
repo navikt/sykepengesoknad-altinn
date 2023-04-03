@@ -2,10 +2,11 @@ package no.nav.syfo
 
 import no.nav.helse.flex.sykepengesoknad.kafka.SykepengesoknadDTO
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
+import no.nav.syfo.domain.SykmeldingKafkaMessage
+import no.nav.syfo.egenmelding.EgenmeldingFraSykmeldingRepository
 import no.nav.syfo.kafka.SYKEPENGESOKNAD_TOPIC
 import no.nav.syfo.orgnummer.JuridiskOrgnummerRepository
 import no.nav.syfo.orgnummer.SYKMELDINGSENDT_TOPIC
-import no.nav.syfo.orgnummer.SykmeldingKafkaMessage
 import no.nav.syfo.repository.SendtSoknadRepository
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -75,10 +76,14 @@ abstract class Testoppsett {
     @Autowired
     lateinit var juridiskOrgnummerRepository: JuridiskOrgnummerRepository
 
+    @Autowired
+    lateinit var egenmeldingFraSykmeldingRepository: EgenmeldingFraSykmeldingRepository
+
     @AfterEach
     internal fun tearDown() {
         juridiskOrgnummerRepository.deleteAll()
         sendtSoknadRepository.deleteAll()
+        egenmeldingFraSykmeldingRepository.deleteAll()
     }
 
     fun leggSøknadPåKafka(soknad: SykepengesoknadDTO) {

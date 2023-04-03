@@ -1,4 +1,4 @@
-package no.nav.syfo.orgnummer
+package no.nav.syfo.domain
 
 import no.nav.syfo.model.sykmelding.arbeidsgiver.ArbeidsgiverSykmelding
 import no.nav.syfo.model.sykmeldingstatus.KafkaMetadataDTO

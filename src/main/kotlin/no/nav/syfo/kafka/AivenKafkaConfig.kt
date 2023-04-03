@@ -87,6 +87,28 @@ class AivenKafkaConfig(
         return factory
     }
 
+    @Bean
+    fun sendtSykmeldingEgenmeldingContainerFactory(
+        kafkaErrorHandler: KafkaErrorHandler
+    ): ConcurrentKafkaListenerContainerFactory<String, String> {
+        val config = mapOf(
+            ConsumerConfig.GROUP_ID_CONFIG to "sykepengesoknad-altinn-sykmelding-egenmelding",
+            ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to kafkaAutoOffsetReset,
+            ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to false,
+            ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
+            ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
+            ConsumerConfig.MAX_POLL_RECORDS_CONFIG to "1"
+
+        ) + commonConfig()
+        val consumerFactory = DefaultKafkaConsumerFactory<String, String>(config)
+
+        val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
+        factory.consumerFactory = consumerFactory
+        factory.setCommonErrorHandler(kafkaErrorHandler)
+        factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL_IMMEDIATE
+        return factory
+    }
+
     fun skapProducer(): KafkaProducer<String, String> {
         val configs = producerConfig()
         return KafkaProducer<String, String>(configs)
