@@ -7,6 +7,7 @@ import no.nav.syfo.orgnummer.JuridiskOrgnummerRepository
 import no.nav.syfo.orgnummer.SYKMELDINGSENDT_TOPIC
 import no.nav.syfo.orgnummer.SykmeldingKafkaMessage
 import no.nav.syfo.repository.SendtSoknadRepository
+import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -14,14 +15,11 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
 
 private class PostgreSQLContainer12 : PostgreSQLContainer<PostgreSQLContainer12>("postgres:12-alpine")
-private class PdfGenerator :
-    GenericContainer<PdfGenerator>("ghcr.io/navikt/flex-sykepengesoknad-pdfgen/flex-sykepengesoknad-pdfgen:2022.03.08-07.39-85951878")
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest
@@ -31,9 +29,10 @@ abstract class Testoppsett {
     companion object {
         var altinnMockWebserver: MockWebServer
         var pdlMockWebserver: MockWebServer
+        var pdfMockWebserver: MockWebServer
 
         init {
-            KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.1.0")).also {
+            KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.3.2")).also {
                 it.start()
                 System.setProperty("spring.kafka.bootstrap-servers", it.bootstrapServers)
                 System.setProperty("KAFKA_BROKERS", it.bootstrapServers)
@@ -44,10 +43,7 @@ abstract class Testoppsett {
                 System.setProperty("spring.datasource.username", it.username)
                 System.setProperty("spring.datasource.password", it.password)
             }
-            PdfGenerator().withExposedPorts(8080).also {
-                it.start()
-                System.setProperty("pdfgen.url", "http://${it.host}:${it.firstMappedPort}")
-            }
+
             altinnMockWebserver = MockWebServer()
                 .also { it.start() }
                 .also {
@@ -57,6 +53,15 @@ abstract class Testoppsett {
             pdlMockWebserver = MockWebServer()
                 .also {
                     System.setProperty("PDL_URL", "http://localhost:${it.port}")
+                }
+
+            pdfMockWebserver = MockWebServer()
+                .also {
+                    it.dispatcher = object : okhttp3.mockwebserver.Dispatcher() {
+                        override fun dispatch(request: okhttp3.mockwebserver.RecordedRequest): MockResponse =
+                            MockResponse().setResponseCode(200).setBody("PDF")
+                    }
+                    System.setProperty("pdfgen.url", "http://localhost:${it.port}")
                 }
         }
     }
