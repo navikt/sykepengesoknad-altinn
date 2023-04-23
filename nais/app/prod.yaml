@@ -3,6 +3,8 @@ db_tier: db-custom-1-3840
 environment: prod
 bucketName: flex-sykepengesoknad-altinn-bucket-prod
 retentionDays: '1825'
+cpu: 400m
+memory: 800Mi
 external-host:
   - pdl-api.prod-fss-pub.nais.io
   - www.altinn.no
