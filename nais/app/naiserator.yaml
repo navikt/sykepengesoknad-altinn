@@ -31,10 +31,10 @@ spec:
     path: /internal/prometheus
   resources:
     limits:
-      memory: 1024Mi
+      memory: {{memory}}
     requests:
-      cpu: 100m
-      memory: 768Mi
+      cpu: {{cpu}}
+      memory: {{memory}}
   azure:
     application:
       enabled: true
