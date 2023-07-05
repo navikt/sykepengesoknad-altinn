@@ -67,6 +67,9 @@ class PDFSoknadTest {
                     tag = "YRKESSKADE"
                 ),
                 Sporsmal(
+                    tag = "YRKESSKADE_V2"
+                ),
+                Sporsmal(
                     tag = "ANSVARSERKLARING"
                 )
             )
