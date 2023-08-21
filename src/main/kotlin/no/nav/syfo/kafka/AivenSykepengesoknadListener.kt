@@ -33,20 +33,24 @@ class AivenSykepengesoknadListener(
         idIsGroup = false
     )
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
-        val sykepengesoknadDTO = cr.value().tilSykepengesoknadDTO()
+        try {
+            val sykepengesoknadDTO = cr.value().tilSykepengesoknadDTO()
 
-        if (sykepengesoknadDTO.skalBehandles()) {
-            val sykepengesoknad = sykepengesoknadDTO.whitelistetForArbeidsgiver().konverter()
-            try {
-                sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
-            } catch (e: Exception) {
-                log.error("Feiler ved sending av søknad ${sykepengesoknadDTO.id}, legger til rebehandling", e)
-                rebehandleSykepengesoknadProducer.send(sykepengesoknad)
+            if (sykepengesoknadDTO.skalBehandles()) {
+                val sykepengesoknad = sykepengesoknadDTO.whitelistetForArbeidsgiver().konverter()
+                try {
+                    sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
+                } catch (e: Exception) {
+                    log.error("Feiler ved sending av søknad ${sykepengesoknadDTO.id}, legger til rebehandling", e)
+                    rebehandleSykepengesoknadProducer.send(sykepengesoknad)
+                }
+            } else {
+                log.info("Ignorerer søknad ${sykepengesoknadDTO.id} med status ${sykepengesoknadDTO.status} og type ${sykepengesoknadDTO.type}")
             }
-        } else {
-            log.info("Ignorerer søknad ${sykepengesoknadDTO.id} med status ${sykepengesoknadDTO.status} og type ${sykepengesoknadDTO.type}")
+        } catch (e: Exception) {
+            log.error("Feiler ved konvertering av søknad", e)
+            acknowledgment.acknowledge()
         }
-
         acknowledgment.acknowledge()
     }
 
