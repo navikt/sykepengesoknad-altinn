@@ -1,6 +1,6 @@
 package no.nav.syfo.client.pdf
 
-import no.nav.syfo.domain.pdf.PDFSoknad
+import no.nav.syfo.domain.pdf.generatePDFSoknad
 import no.nav.syfo.domain.soknad.Soknadstype
 import no.nav.syfo.domain.soknad.Sykepengesoknad
 import org.springframework.beans.factory.annotation.Value
@@ -22,7 +22,7 @@ class PDFClient(
 
     @Retryable(backoff = Backoff(delay = 5000))
     fun getPDF(sykepengesoknad: Sykepengesoknad, fnr: String, navn: String): ByteArray {
-        val pdfSoknad = PDFSoknad(sykepengesoknad, fnr, navn)
+        val pdfSoknad = generatePDFSoknad(sykepengesoknad, fnr, navn)
 
         val url = when (sykepengesoknad.type) {
             Soknadstype.ARBEIDSTAKERE -> "$pdfgenUrl/api/v1/genpdf/syfosoknader/${PDFTemplate.ARBEIDSTAKERE}"

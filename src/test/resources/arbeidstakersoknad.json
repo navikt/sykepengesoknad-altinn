@@ -757,6 +757,54 @@
       ]
     },
     {
+      "id": "234234234",
+      "tag": "YRKESSKADE_V2",
+      "sporsmalstekst": "YRKESSKADE_V2",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "JA_NEI",
+      "kriterieForVisningAvUndersporsmal": null,
+      "svar": [],
+      "undersporsmal": []
+    },
+    {
+      "id": "234234234",
+      "tag": "ANDRE_INNTEKTSKILDER_V2",
+      "sporsmalstekst": "ANDRE_INNTEKTSKILDER_V2",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "JA_NEI",
+      "kriterieForVisningAvUndersporsmal": null,
+      "svar": [],
+      "undersporsmal": []
+    },
+    {
+      "id": "234234234234",
+      "tag": "ARBEID_UTENFOR_NORGE",
+      "sporsmalstekst": "ARBEID_UTENFOR_NORGE",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "JA_NEI",
+      "kriterieForVisningAvUndersporsmal": null,
+      "svar": [],
+      "undersporsmal": []
+    },
+    {
+      "id": "234234234",
+      "tag": "MEDLEMSKAP_UTFORT_ARBEID_UTENFOR_NORGE",
+      "sporsmalstekst": "MEDLEMSKAP_UTFORT_ARBEID_UTENFOR_NORGE",
+      "undertekst": null,
+      "min": null,
+      "max": null,
+      "svartype": "JA_NEI",
+      "kriterieForVisningAvUndersporsmal": null,
+      "svar": [],
+      "undersporsmal": []
+    },
+    {
       "id": "99",
       "tag": "VAER_KLAR_OVER_AT",
       "sporsmalstekst": "Vær klar over at:",
@@ -783,59 +831,6 @@
         }
       ],
       "undersporsmal": []
-    },
-    {
-      "id": "101",
-      "tag": "BETALER_ARBEIDSGIVER",
-      "sporsmalstekst": "Betaler arbeidsgiveren lønnen din når du er syk?",
-      "undertekst": null,
-      "min": null,
-      "max": null,
-      "svartype": "RADIO_GRUPPE",
-      "kriterieForVisningAvUndersporsmal": null,
-      "svar": [],
-      "undersporsmal": [
-        {
-          "id": "102",
-          "tag": "BETALER_ARBEIDSGIVER_JA",
-          "sporsmalstekst": "Ja",
-          "undertekst": "Arbeidsgiveren din mottar kopi av søknaden du sender til NAV.",
-          "min": null,
-          "max": null,
-          "svartype": "RADIO",
-          "kriterieForVisningAvUndersporsmal": null,
-          "svar": [],
-          "undersporsmal": []
-        },
-        {
-          "id": "103",
-          "tag": "BETALER_ARBEIDSGIVER_NEI",
-          "sporsmalstekst": "Nei",
-          "undertekst": "Søknaden sendes til NAV. Arbeidsgiveren din får ikke kopi.",
-          "min": null,
-          "max": null,
-          "svartype": "RADIO",
-          "kriterieForVisningAvUndersporsmal": null,
-          "svar": [],
-          "undersporsmal": []
-        },
-        {
-          "id": "104",
-          "tag": "BETALER_ARBEIDSGIVER_VET_IKKE",
-          "sporsmalstekst": "Vet ikke",
-          "undertekst": "Siden du ikke vet svaret på dette spørsmålet, vil arbeidsgiveren din motta en kopi av søknaden du sender til NAV.",
-          "min": null,
-          "max": null,
-          "svartype": "RADIO",
-          "kriterieForVisningAvUndersporsmal": null,
-          "svar": [
-            {
-              "verdi": "CHECKED"
-            }
-          ],
-          "undersporsmal": []
-        }
-      ]
     }
   ]
 }

@@ -1,6 +1,7 @@
 package no.nav.syfo.kafka
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import no.nav.helse.flex.sykepengesoknad.arbeidsgiverwhitelist.whitelistetForArbeidsgiver
 import no.nav.helse.flex.sykepengesoknad.kafka.ArbeidssituasjonDTO
 import no.nav.helse.flex.sykepengesoknad.kafka.SoknadsstatusDTO
 import no.nav.helse.flex.sykepengesoknad.kafka.SoknadstypeDTO
@@ -35,7 +36,7 @@ class AivenSykepengesoknadListener(
         val sykepengesoknadDTO = cr.value().tilSykepengesoknadDTO()
 
         if (sykepengesoknadDTO.skalBehandles()) {
-            val sykepengesoknad = sykepengesoknadDTO.konverter()
+            val sykepengesoknad = sykepengesoknadDTO.whitelistetForArbeidsgiver().konverter()
             try {
                 sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
             } catch (e: Exception) {
