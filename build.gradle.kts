@@ -14,18 +14,11 @@ version = "1"
 description = "sykepengesoknad-altinn"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
-val githubUser: String by project
-val githubPassword: String by project
-
 repositories {
     mavenCentral()
 
     maven {
-        url = uri("https://maven.pkg.github.com/navikt/maven-release")
-        credentials {
-            username = githubUser
-            password = githubPassword
-        }
+        url = uri("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
     }
 }
 
