@@ -99,7 +99,7 @@ tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
+        freeCompilerArgs = listOf("-Xjsr305=strict", "-Xmx2048M")
         jvmTarget = "17"
         if (System.getenv("CI") == "true") {
             kotlinOptions.allWarningsAsErrors = true
