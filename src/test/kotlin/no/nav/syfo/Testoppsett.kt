@@ -33,7 +33,7 @@ abstract class Testoppsett {
         var pdfMockWebserver: MockWebServer
 
         init {
-            KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.3.2")).also {
+            KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.4.1")).also {
                 it.start()
                 System.setProperty("spring.kafka.bootstrap-servers", it.bootstrapServers)
                 System.setProperty("KAFKA_BROKERS", it.bootstrapServers)
