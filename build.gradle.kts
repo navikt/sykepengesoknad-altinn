@@ -37,7 +37,7 @@ val gcsNioVersion = "0.127.4"
 val commonsTextVersion = "1.10.0"
 val jaxWsApiVersion = "1.1"
 val cxfVersion = "3.5.5"
-val bindApiVersion = "2.3.3"
+val bindApiVersion = "4.0.1"
 val jaxbRuntimeVersion = "2.4.0-b180830.0438"
 
 dependencies {
