@@ -33,7 +33,7 @@ class DTOListener(
     )
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         if (cr.key() in soknadIder) {
-            log.info("Mottok soknad ${cr.key()} med på kafka")
+            log.info("Mottok soknad ${cr.key()} på kafka")
             aivenSykepengesoknadListener.listen(cr, acknowledgment)
         }
 
