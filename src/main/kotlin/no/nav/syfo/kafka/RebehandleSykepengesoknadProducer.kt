@@ -1,7 +1,7 @@
 package no.nav.syfo.kafka
 
+import no.nav.helse.flex.sykepengesoknad.kafka.SykepengesoknadDTO
 import no.nav.syfo.BEHANDLINGSTIDSPUNKT
-import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.logger
 import no.nav.syfo.serialisertTilString
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -22,7 +22,7 @@ class RebehandleSykepengesoknadProducer(
     var producer = aivenKafkaConfig.skapProducer()
 
     fun send(
-        sykepengesoknad: Sykepengesoknad,
+        sykepengesoknadDTO: SykepengesoknadDTO,
         retries: Int = 20,
         sleepMillis: Long = 500
     ) {
@@ -31,8 +31,8 @@ class RebehandleSykepengesoknadProducer(
                 ProducerRecord(
                     RETRY_TOPIC,
                     null,
-                    sykepengesoknad.id,
-                    sykepengesoknad.serialisertTilString(),
+                    sykepengesoknadDTO.id,
+                    sykepengesoknadDTO.serialisertTilString(),
                     ArrayList<Header>().also {
                         it.add(
                             RecordHeader(
@@ -49,13 +49,13 @@ class RebehandleSykepengesoknadProducer(
                     log.warn("Topic auth exception, $retries retries igjen, sover i $sleepMillis ms: ", e)
                     Thread.sleep(sleepMillis)
                     producer = aivenKafkaConfig.skapProducer()
-                    return send(sykepengesoknad, retries - 1, sleepMillis * 2)
+                    return send(sykepengesoknadDTO, retries - 1, sleepMillis * 2)
                 } else {
                     log.error("Topic auth exception, ingen retries igjen :(", e)
                     throw e
                 }
             } else {
-                log.error("Det feiler når søknad ${sykepengesoknad.id} skal legges på rebehandle topic", e)
+                log.error("Det feiler når søknad ${sykepengesoknadDTO.id} skal legges på rebehandle topic", e)
                 throw e
             }
         }

@@ -1,7 +1,6 @@
 package no.nav.syfo.kafka
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import no.nav.helse.flex.sykepengesoknad.arbeidsgiverwhitelist.whitelistetForArbeidsgiver
 import no.nav.helse.flex.sykepengesoknad.kafka.ArbeidssituasjonDTO
 import no.nav.helse.flex.sykepengesoknad.kafka.SoknadsstatusDTO
 import no.nav.helse.flex.sykepengesoknad.kafka.SoknadstypeDTO
@@ -40,7 +39,7 @@ class AivenSykepengesoknadListener(
                 sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknadDTO)
             } catch (e: Exception) {
                 log.error("Feiler ved sending av søknad ${sykepengesoknadDTO.id}, legger til rebehandling", e)
-                rebehandleSykepengesoknadProducer.send(sykepengesoknad)
+                rebehandleSykepengesoknadProducer.send(sykepengesoknadDTO)
             }
         } else {
             log.info("Ignorerer søknad ${sykepengesoknadDTO.id} med status ${sykepengesoknadDTO.status} og type ${sykepengesoknadDTO.type}")
