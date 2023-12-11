@@ -36,9 +36,8 @@ class AivenSykepengesoknadListener(
         val sykepengesoknadDTO = cr.value().tilSykepengesoknadDTO()
 
         if (sykepengesoknadDTO.skalBehandles()) {
-            val sykepengesoknad = sykepengesoknadDTO.whitelistetForArbeidsgiver().konverter()
             try {
-                sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
+                sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknadDTO)
             } catch (e: Exception) {
                 log.error("Feiler ved sending av søknad ${sykepengesoknadDTO.id}, legger til rebehandling", e)
                 rebehandleSykepengesoknadProducer.send(sykepengesoknad)

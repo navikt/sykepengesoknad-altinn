@@ -2,14 +2,16 @@ package no.nav.syfo
 
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Tags
+import no.nav.helse.flex.sykepengesoknad.arbeidsgiverwhitelist.whitelistetForArbeidsgiver
+import no.nav.helse.flex.sykepengesoknad.kafka.SykepengesoknadDTO
 import no.nav.syfo.client.altinn.AltinnClient
 import no.nav.syfo.client.pdf.PDFClient
 import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.domain.AltinnInnsendelseEkstraData
 import no.nav.syfo.domain.SendtSoknad
-import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.egenmelding.EgenmeldingFraSykmeldingRepository
 import no.nav.syfo.egenmelding.egenmeldingsdager
+import no.nav.syfo.kafka.konverter
 import no.nav.syfo.orgnummer.JuridiskOrgnummerRepository
 import no.nav.syfo.repository.SendtSoknadRepository
 import org.springframework.stereotype.Service
@@ -29,15 +31,16 @@ class SendTilAltinnService(
 
     val log = logger()
 
-    fun sendSykepengesoknadTilAltinn(sykepengesoknad: Sykepengesoknad) {
-        if (sendtSoknadRepository.existsBySykepengesoknadId(sykepengesoknad.id)) {
-            log.info("Forsøkte å sende søknad om sykepenger med id ${sykepengesoknad.id} til Altinn som allerede er sendt")
+    fun sendSykepengesoknadTilAltinn(sykepengesoknadDTO: SykepengesoknadDTO) {
+        if (sendtSoknadRepository.existsBySykepengesoknadId(sykepengesoknadDTO.id)) {
+            log.info("Forsøkte å sende søknad om sykepenger med id ${sykepengesoknadDTO.id} til Altinn som allerede er sendt")
             return
         }
-        if (ettersendtTilNAV(sykepengesoknad)) {
-            log.info("Behandler ikke ettersending til NAV for ${sykepengesoknad.id}")
+        if (ettersendtTilNAV(sykepengesoknadDTO)) {
+            log.info("Behandler ikke ettersending til NAV for ${sykepengesoknadDTO.id}")
             return
         }
+        val sykepengesoknad = sykepengesoknadDTO.whitelistetForArbeidsgiver().konverter()
         val fnr = sykepengesoknad.fnr
         val navn = pdlClient.hentFormattertNavn(fnr)
 
@@ -68,6 +71,6 @@ class SendTilAltinnService(
         }
     }
 
-    private fun ettersendtTilNAV(sykepengesoknad: Sykepengesoknad) = sykepengesoknad.sendtNav != null &&
-        sykepengesoknad.sendtArbeidsgiver?.isBefore(sykepengesoknad.sendtNav) ?: false
+    private fun ettersendtTilNAV(sykepengesoknadDTO: SykepengesoknadDTO) = sykepengesoknadDTO.sendtNav != null &&
+        sykepengesoknadDTO.sendtArbeidsgiver?.isBefore(sykepengesoknadDTO.sendtNav) ?: false
 }
