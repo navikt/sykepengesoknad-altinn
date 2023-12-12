@@ -3,9 +3,9 @@
 package no.nav.syfo.kafka
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import no.nav.helse.flex.sykepengesoknad.kafka.SykepengesoknadDTO
 import no.nav.syfo.BEHANDLINGSTIDSPUNKT
 import no.nav.syfo.SendTilAltinnService
-import no.nav.syfo.domain.soknad.Sykepengesoknad
 import no.nav.syfo.logger
 import no.nav.syfo.objectMapper
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -36,7 +36,7 @@ class RebehandleSykepengesoknadListener(
         idIsGroup = false
     )
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
-        val sykepengesoknad = cr.value().tilSykepengesoknad()
+        val sykepengesoknadDTO = cr.value().tilSykepengesoknadDTO()
         val behandlingstidspunkt = cr.headers().lastHeader(BEHANDLINGSTIDSPUNKT)
             ?.value()
             ?.let { String(it, UTF_8) }
@@ -47,7 +47,7 @@ class RebehandleSykepengesoknadListener(
             val sovetid = behandlingstidspunkt.toEpochMilli() - Instant.now().toEpochMilli()
             if (sovetid > 0) {
                 log.info(
-                    "Mottok rebehandling av søknad ${sykepengesoknad.id} med behandlingstidspunkt ${
+                    "Mottok rebehandling av søknad ${sykepengesoknadDTO.id} med behandlingstidspunkt ${
                     behandlingstidspunkt.atOffset(
                         ZoneOffset.UTC
                     )
@@ -55,12 +55,12 @@ class RebehandleSykepengesoknadListener(
                 )
                 acknowledgment.nack(Duration.ofMillis(sovetid))
             } else {
-                sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknad)
+                sendTilAltinnService.sendSykepengesoknadTilAltinn(sykepengesoknadDTO)
                 acknowledgment.acknowledge()
             }
         } catch (e: Exception) {
-            rebehandleSykepengesoknadProducer.send(sykepengesoknad)
-            log.error("Uventet feil ved rebehandling av søknad ${sykepengesoknad.id}, legger søknaden tilbake på kø", e)
+            rebehandleSykepengesoknadProducer.send(sykepengesoknadDTO)
+            log.error("Uventet feil ved rebehandling av søknad ${sykepengesoknadDTO.id}, legger søknaden tilbake på kø", e)
 
             acknowledgment.acknowledge()
         }
@@ -74,5 +74,5 @@ class RebehandleSykepengesoknadListener(
         log.error("Consumer stoppet grunnet ${event.reason}, restarter app")
     }
 
-    fun String.tilSykepengesoknad(): Sykepengesoknad = objectMapper.readValue(this)
+    fun String.tilSykepengesoknadDTO(): SykepengesoknadDTO = objectMapper.readValue(this)
 }
