@@ -9,13 +9,14 @@ jobs:
     if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/dev-')
     name: Deploy topic to dev-gcp
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Deploy to dev-gcp
-        uses: nais/deploy/actions/deploy@master
+        uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: nais/topics/sykepengesoknad-altinn-retry-topic.yaml
           VARS: nais/topics/dev.json
@@ -24,13 +25,14 @@ jobs:
     if: github.ref == 'refs/heads/master'
     name: Deploy topic to prod-gcp
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Deploy to prod-gcp
-        uses: nais/deploy/actions/deploy@master
+        uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-gcp
           RESOURCE: nais/topics/sykepengesoknad-altinn-retry-topic.yaml
           VARS: nais/topics/prod.json
