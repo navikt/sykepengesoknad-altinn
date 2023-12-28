@@ -5,32 +5,11 @@ on:
       - nais/topics/**
       - .github/workflows/topic.yml
 jobs:
-  deploy-topic-to-dev:
-    if: github.ref_name == 'main' || startsWith(github.ref_name, 'dev-')
-    name: Deploy topic to dev-gcp
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Deploy to dev-gcp
-        uses: nais/deploy/actions/deploy@main
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-gcp
-          RESOURCE: nais/topics/sykepengesoknad-altinn-retry-topic.yaml
-          VARS: nais/topics/dev.json
-
-  deploy-topic-to-prod:
-    if: github.ref_name == 'main'
-    name: Deploy topic to prod-gcp
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Deploy to prod-gcp
-        uses: nais/deploy/actions/deploy@main
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: prod-gcp
-          RESOURCE: nais/topics/sykepengesoknad-altinn-retry-topic.yaml
-          VARS: nais/topics/prod.json
+  deploy-topic:
+    uses: navikt/flex-github-actions-workflows/.github/workflows/nais-deploy-dev-og-prod.yml@main
+    permissions:
+      id-token: write
+    with:
+      app: ${{ github.event.repository.name }}-topic
+      nais-template: nais/topics/sykepengesoknad-altinn-retry-topic.yaml
+    secrets: inherit
