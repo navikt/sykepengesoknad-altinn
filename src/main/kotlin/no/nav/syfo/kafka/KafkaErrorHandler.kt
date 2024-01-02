@@ -1,13 +1,13 @@
 package no.nav.syfo.kafka
 
-import no.nav.syfo.logger
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.consumer.ConsumerRecords
-import org.springframework.kafka.listener.*
+import org.springframework.kafka.listener.DefaultErrorHandler
+import org.springframework.kafka.listener.MessageListenerContainer
 import org.springframework.stereotype.Component
 import org.springframework.util.backoff.ExponentialBackOff
-import java.lang.Exception
+import no.nav.syfo.logger as slf4jLogger
 
 @Component
 class KafkaErrorHandler : DefaultErrorHandler(
@@ -17,7 +17,8 @@ class KafkaErrorHandler : DefaultErrorHandler(
     }
 ) {
 
-    val log = logger()
+    // Bruker aliased logger for unngå kollisjon med CommonErrorHandler.logger(): LogAccessor.
+    val log = slf4jLogger()
 
     override fun handleRemaining(
         thrownException: java.lang.Exception,
