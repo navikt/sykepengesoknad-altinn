@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:max-line-length")
+
 package no.nav.syfo.client.pdl
 
 import no.nav.syfo.Testoppsett
@@ -8,7 +10,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 class PdlClientTest : Testoppsett() {
-
     @Autowired
     private lateinit var pdlClient: PdlClient
 
@@ -34,14 +35,16 @@ class PdlClientTest : Testoppsett() {
         mockPdlResponse(
             GetPersonResponse(
                 errors = emptyList(),
-                data = ResponseData(
-                    hentPerson = HentPerson(
-                        listOf(
-                            Navn(fornavn = "TOR-HENRY", etternavn = "ROARSEN", mellomnavn = null)
-                        )
-                    )
-                )
-            )
+                data =
+                    ResponseData(
+                        hentPerson =
+                            HentPerson(
+                                listOf(
+                                    Navn(fornavn = "TOR-HENRY", etternavn = "ROARSEN", mellomnavn = null),
+                                ),
+                            ),
+                    ),
+            ),
         )
 
         val responseData = pdlClient.hentFormattertNavn("12345")
@@ -55,14 +58,16 @@ class PdlClientTest : Testoppsett() {
         mockPdlResponse(
             GetPersonResponse(
                 errors = emptyList(),
-                data = ResponseData(
-                    hentPerson = HentPerson(
-                        listOf(
-                            Navn(fornavn = "ÅGE", etternavn = "ÅÆØÅ", mellomnavn = "ROGER")
-                        )
-                    )
-                )
-            )
+                data =
+                    ResponseData(
+                        hentPerson =
+                            HentPerson(
+                                listOf(
+                                    Navn(fornavn = "ÅGE", etternavn = "ÅÆØÅ", mellomnavn = "ROGER"),
+                                ),
+                            ),
+                    ),
+            ),
         )
 
         val responseData = pdlClient.hentFormattertNavn("12345")

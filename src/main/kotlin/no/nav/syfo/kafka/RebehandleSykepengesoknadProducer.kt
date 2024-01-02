@@ -14,8 +14,7 @@ import java.time.OffsetDateTime
 @Component
 class RebehandleSykepengesoknadProducer(
     private val aivenKafkaConfig: AivenKafkaConfig,
-
-    @Value("\${rebehandling.delay.sekunder}") private val delaySekunder: Long
+    @Value("\${rebehandling.delay.sekunder}") private val delaySekunder: Long,
 ) {
     val log = logger()
     var producer = aivenKafkaConfig.skapProducer()
@@ -32,11 +31,11 @@ class RebehandleSykepengesoknadProducer(
                         it.add(
                             RecordHeader(
                                 BEHANDLINGSTIDSPUNKT,
-                                OffsetDateTime.now().plusSeconds(delaySekunder).toInstant().toEpochMilli().toString().toByteArray()
-                            )
+                                OffsetDateTime.now().plusSeconds(delaySekunder).toInstant().toEpochMilli().toString().toByteArray(),
+                            ),
                         )
-                    }
-                )
+                    },
+                ),
             ).get()
         } catch (e: Exception) {
             log.error("Det feiler når søknad ${sykepengesoknadDTO.id} skal legges på rebehandle topic", e)

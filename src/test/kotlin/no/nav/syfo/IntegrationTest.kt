@@ -11,7 +11,6 @@ import java.time.Duration
 import java.util.*
 
 class IntegrationTest : Testoppsett() {
-
     @Autowired
     private lateinit var storage: Storage
 
@@ -22,7 +21,9 @@ class IntegrationTest : Testoppsett() {
     fun `Sendt arbeidstaker søknad mottas og sendes til altinn`() {
         val id = UUID.randomUUID().toString()
         val enkelSoknad = mockSykepengesoknadDTO.copy(id = id)
-        juridiskOrgnummerRepository.save(JuridiskOrgnummer(orgnummer = "12345678", juridiskOrgnummer = "LEGAL123", sykmeldingId = enkelSoknad.sykmeldingId!!))
+        juridiskOrgnummerRepository.save(
+            JuridiskOrgnummer(orgnummer = "12345678", juridiskOrgnummer = "LEGAL123", sykmeldingId = enkelSoknad.sykmeldingId!!),
+        )
         mockPdlResponse()
         mockAltinnResponse()
 
@@ -41,7 +42,8 @@ class IntegrationTest : Testoppsett() {
         altinnRequest.externalShipmentReference `should be equal to` id
         val correspondence = altinnRequest.correspondence
         correspondence.serviceCode.value `should be equal to` "4751"
-        correspondence.content.value.messageTitle.value `should be equal to` "Søknad om sykepenger - 01.01.2019-09.01.2019 - Ole Gunnar (13068700000) - sendt til NAV"
+        correspondence.content.value.messageTitle.value `should be equal to`
+            "Søknad om sykepenger - 01.01.2019-09.01.2019 - Ole Gunnar (13068700000) - sendt til NAV"
 
         val attachments = correspondence.content.value.attachments.value.binaryAttachments.value.binaryAttachmentV2
         attachments shouldHaveSize 2

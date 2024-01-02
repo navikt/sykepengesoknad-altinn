@@ -26,7 +26,6 @@ private class PostgreSQLContainer12 : PostgreSQLContainer<PostgreSQLContainer12>
 @SpringBootTest
 @EnableMockOAuth2Server
 abstract class Testoppsett {
-
     companion object {
         var altinnMockWebserver: MockWebServer
         var pdlMockWebserver: MockWebServer
@@ -45,25 +44,29 @@ abstract class Testoppsett {
                 System.setProperty("spring.datasource.password", it.password)
             }
 
-            altinnMockWebserver = MockWebServer()
-                .also { it.start() }
-                .also {
-                    System.setProperty("altinn.url", "http://localhost:${it.port}")
-                }
-
-            pdlMockWebserver = MockWebServer()
-                .also {
-                    System.setProperty("PDL_URL", "http://localhost:${it.port}")
-                }
-
-            pdfMockWebserver = MockWebServer()
-                .also {
-                    it.dispatcher = object : okhttp3.mockwebserver.Dispatcher() {
-                        override fun dispatch(request: okhttp3.mockwebserver.RecordedRequest): MockResponse =
-                            MockResponse().setResponseCode(200).setBody("PDF")
+            altinnMockWebserver =
+                MockWebServer()
+                    .also { it.start() }
+                    .also {
+                        System.setProperty("altinn.url", "http://localhost:${it.port}")
                     }
-                    System.setProperty("pdfgen.url", "http://localhost:${it.port}")
-                }
+
+            pdlMockWebserver =
+                MockWebServer()
+                    .also {
+                        System.setProperty("PDL_URL", "http://localhost:${it.port}")
+                    }
+
+            pdfMockWebserver =
+                MockWebServer()
+                    .also {
+                        it.dispatcher =
+                            object : okhttp3.mockwebserver.Dispatcher() {
+                                override fun dispatch(request: okhttp3.mockwebserver.RecordedRequest): MockResponse =
+                                    MockResponse().setResponseCode(200).setBody("PDF")
+                            }
+                        System.setProperty("pdfgen.url", "http://localhost:${it.port}")
+                    }
         }
     }
 
@@ -92,8 +95,8 @@ abstract class Testoppsett {
                 SYKEPENGESOKNAD_TOPIC,
                 null,
                 soknad.id,
-                soknad.serialisertTilString()
-            )
+                soknad.serialisertTilString(),
+            ),
         )
     }
 
@@ -103,8 +106,8 @@ abstract class Testoppsett {
                 SYKMELDINGSENDT_TOPIC,
                 null,
                 sykmeldingKafkaMessage.kafkaMetadata.sykmeldingId,
-                sykmeldingKafkaMessage.serialisertTilString()
-            )
+                sykmeldingKafkaMessage.serialisertTilString(),
+            ),
         )
     }
 }

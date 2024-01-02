@@ -8,7 +8,9 @@ import javax.xml.bind.Unmarshaller
 
 fun ByteArray.tilXMLSykepengesoeknadArbeidsgiver(): XMLSykepengesoeknadArbeidsgiver {
     val jaxbContext =
-        JAXBContext.newInstance(no.nav.melding.virksomhet.sykepengesoeknadarbeidsgiver.v1.sykepengesoeknadarbeidsgiver.ObjectFactory::class.java)
+        JAXBContext.newInstance(
+            no.nav.melding.virksomhet.sykepengesoeknadarbeidsgiver.v1.sykepengesoeknadarbeidsgiver.ObjectFactory::class.java,
+        )
 
     val jaxbUnmarshaller: Unmarshaller = jaxbContext.createUnmarshaller()
     val tekst = String(this)

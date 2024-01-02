@@ -17,19 +17,23 @@ import org.springframework.web.client.RestTemplate
 @Component
 class PDFClient(
     private val pdfClientRestTemplate: RestTemplate,
-    @Value("\${pdfgen.url}") private val pdfgenUrl: String
+    @Value("\${pdfgen.url}") private val pdfgenUrl: String,
 ) {
-
     @Retryable(backoff = Backoff(delay = 5000))
-    fun getPDF(sykepengesoknad: Sykepengesoknad, fnr: String, navn: String): ByteArray {
+    fun getPDF(
+        sykepengesoknad: Sykepengesoknad,
+        fnr: String,
+        navn: String,
+    ): ByteArray {
         val pdfSoknad = generatePDFSoknad(sykepengesoknad, fnr, navn)
 
-        val url = when (sykepengesoknad.type) {
-            Soknadstype.ARBEIDSTAKERE -> "$pdfgenUrl/api/v1/genpdf/syfosoknader/${PDFTemplate.ARBEIDSTAKERE}"
-            Soknadstype.BEHANDLINGSDAGER -> "$pdfgenUrl/api/v1/genpdf/syfosoknader/${PDFTemplate.BEHANDLINGSDAGER}"
-            Soknadstype.GRADERT_REISETILSKUDD -> "$pdfgenUrl/api/v1/genpdf/syfosoknader/${PDFTemplate.GRADERTREISETILSKUDD}"
-            else -> throw RuntimeException("Har ikke implementert PDF-template for søknad av typen: ${sykepengesoknad.type}")
-        }
+        val url =
+            when (sykepengesoknad.type) {
+                Soknadstype.ARBEIDSTAKERE -> "$pdfgenUrl/api/v1/genpdf/syfosoknader/${PDFTemplate.ARBEIDSTAKERE}"
+                Soknadstype.BEHANDLINGSDAGER -> "$pdfgenUrl/api/v1/genpdf/syfosoknader/${PDFTemplate.BEHANDLINGSDAGER}"
+                Soknadstype.GRADERT_REISETILSKUDD -> "$pdfgenUrl/api/v1/genpdf/syfosoknader/${PDFTemplate.GRADERTREISETILSKUDD}"
+                else -> throw RuntimeException("Har ikke implementert PDF-template for søknad av typen: ${sykepengesoknad.type}")
+            }
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON

@@ -17,6 +17,8 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.zip.GZIPOutputStream
 
+private const val SYSTEM_USER_CODE = "NAV_DIGISYFO"
+
 @Component
 class AltinnClient(
     private val iCorrespondenceAgencyExternalBasic: ICorrespondenceAgencyExternalBasic,
@@ -25,23 +27,25 @@ class AltinnClient(
     @Value("\${altinn.password}") private val altinnPassword: String,
     private val storage: Storage,
     @Value("\${BUCKET_NAME}") val bucketName: String,
-    @Value("\${lagre.alle.dokumenter}") private val lagreAlleDokumenter: Boolean
-
+    @Value("\${lagre.alle.dokumenter}") private val lagreAlleDokumenter: Boolean,
 ) {
-
-    val log = logger()
-
-    val SYSTEM_USER_CODE = "NAV_DIGISYFO"
+    private val log = logger()
 
     fun sendSykepengesoknadTilArbeidsgiver(
         sykepengesoknad: Sykepengesoknad,
-        ekstraData: AltinnInnsendelseEkstraData
+        ekstraData: AltinnInnsendelseEkstraData,
     ): Int {
         val mappe = "${sykepengesoknad.id}/${mappeTidspunkt()}/"
-        fun lagreFil(filnavn: String, contentType: String, content: ByteArray) {
-            val blobInfo = BlobInfo.newBuilder(
-                BlobId.of(bucketName, mappe + filnavn)
-            ).setContentType(contentType).build()
+
+        fun lagreFil(
+            filnavn: String,
+            contentType: String,
+            content: ByteArray,
+        ) {
+            val blobInfo =
+                BlobInfo.newBuilder(
+                    BlobId.of(bucketName, mappe + filnavn),
+                ).setContentType(contentType).build()
             storage.create(blobInfo, content)
         }
         try {
@@ -53,43 +57,44 @@ class AltinnClient(
                 lagreFil(
                     filnavn = "sykepengesoknad.pdf",
                     contentType = "application/pdf",
-                    content = ekstraData.pdf
+                    content = ekstraData.pdf,
                 )
                 lagreFil(
                     filnavn = "sykepengesoknad.xml",
                     contentType = "application/xml",
-                    content = ekstraData.xml
+                    content = ekstraData.xml,
                 )
                 lagreFil(
                     filnavn = "correspondence.xml",
                     contentType = "application/xml",
-                    content = serialisertRequest.toByteArray()
+                    content = serialisertRequest.toByteArray(),
                 )
             }
             lagreFil(
                 filnavn = "correspondence.gz",
                 contentType = "application/gzip",
-                content = serialisertRequest.gzip()
+                content = serialisertRequest.gzip(),
             )
 
-            val receiptExternal = iCorrespondenceAgencyExternalBasic.insertCorrespondenceBasicV2(
-                altinnUsername,
-                altinnPassword,
-                SYSTEM_USER_CODE,
-                sykepengesoknad.id,
-                correspondence
-            )
+            val receiptExternal =
+                iCorrespondenceAgencyExternalBasic.insertCorrespondenceBasicV2(
+                    altinnUsername,
+                    altinnPassword,
+                    SYSTEM_USER_CODE,
+                    sykepengesoknad.id,
+                    correspondence,
+                )
             val serialisertReceipt = receiptExternal.serialiser()
             lagreFil(
                 filnavn = "receiptExternal.gz",
                 contentType = "application/gzip",
-                content = serialisertReceipt.gzip()
+                content = serialisertReceipt.gzip(),
             )
             if (lagreAlleDokumenter) {
                 lagreFil(
                     filnavn = "receiptExternal.xml",
                     contentType = "application/xml",
-                    content = serialisertReceipt.toByteArray()
+                    content = serialisertReceipt.toByteArray(),
                 )
             }
             if (receiptExternal.receiptStatusCode != ReceiptStatusEnum.OK) {
@@ -108,6 +113,5 @@ class AltinnClient(
         return bos.toByteArray()
     }
 
-    private fun mappeTidspunkt() =
-        Instant.now().truncatedTo(ChronoUnit.SECONDS).toString().replace("-", "").replace(":", "")
+    private fun mappeTidspunkt() = Instant.now().truncatedTo(ChronoUnit.SECONDS).toString().replace("-", "").replace(":", "")
 }

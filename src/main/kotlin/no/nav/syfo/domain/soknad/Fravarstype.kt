@@ -6,5 +6,5 @@ enum class Fravarstype {
     UTLANDSOPPHOLD,
     UTDANNING_FULLTID,
     UTDANNING_DELTID,
-    UKJENT
+    UKJENT,
 }

@@ -16,22 +16,26 @@ import javax.xml.validation.Schema
 import javax.xml.validation.SchemaFactory
 
 object JAXB {
-    private var SYKEPENGESOEKNAD_ARBEIDSGIVER_CONTEXT: JAXBContext
+    private var sykepengesoeknadArbeidsgiverContext: JAXBContext
 
     init {
         try {
-            SYKEPENGESOEKNAD_ARBEIDSGIVER_CONTEXT = JAXBContext.newInstance(
-                ObjectFactory::class.java
-            )
+            sykepengesoeknadArbeidsgiverContext =
+                JAXBContext.newInstance(
+                    ObjectFactory::class.java,
+                )
         } catch (jaxbException: JAXBException) {
             throw RuntimeException(jaxbException)
         }
     }
 
-    fun marshallSykepengesoeknadArbeidsgiver(element: Any?, handler: ValidationEventHandler?): String {
+    fun marshallSykepengesoeknadArbeidsgiver(
+        element: Any?,
+        handler: ValidationEventHandler?,
+    ): String {
         return try {
             val writer = StringWriter()
-            val marshaller = SYKEPENGESOEKNAD_ARBEIDSGIVER_CONTEXT.createMarshaller()
+            val marshaller = sykepengesoeknadArbeidsgiverContext.createMarshaller()
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, false)
             marshaller.schema = sykmeldingArbeidsgiverSchema()
             if (handler != null) marshaller.eventHandler = handler

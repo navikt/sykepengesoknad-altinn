@@ -21,15 +21,18 @@ import java.time.format.DateTimeFormatter
 import javax.xml.bind.JAXBElement
 import javax.xml.namespace.QName
 
+// OBS! VIKTIG! Denne må ikke endres, da kan feil personer få tilgang til sykepengesøknaden i Altinn!
+private const val SYKEPENGESOEKNAD_TJENESTEKODE = "4751"
+private const val SYKEPENGESOEKNAD_TJENESTEVERSJON = "1"
+
 @Component
 class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
+    private val log = logger()
 
-    val log = logger()
-
-    private val SYKEPENGESOEKNAD_TJENESTEKODE = "4751" // OBS! VIKTIG! Denne må ikke endres, da kan feil personer få tilgang til sykepengesøknaden i Altinn!
-    private val SYKEPENGESOEKNAD_TJENESTEVERSJON = "1"
-
-    fun sykepengesoeknadTilCorrespondence(sykepengesoknad: Sykepengesoknad, ekstraData: AltinnInnsendelseEkstraData): InsertCorrespondenceV2 {
+    fun sykepengesoeknadTilCorrespondence(
+        sykepengesoknad: Sykepengesoknad,
+        ekstraData: AltinnInnsendelseEkstraData,
+    ): InsertCorrespondenceV2 {
         val namespace = "http://schemas.altinn.no/services/ServiceEngine/Correspondence/2010/10"
         val binaryNamespace = "http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10"
 
@@ -42,15 +45,15 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
                 JAXBElement(
                     QName(namespace, "Reportee"),
                     String::class.java,
-                    getOrgnummerForSendingTilAltinn(sykepengesoknad.arbeidsgiver.orgnummer)
-                )
+                    getOrgnummerForSendingTilAltinn(sykepengesoknad.arbeidsgiver.orgnummer),
+                ),
             )
             .withMessageSender(
                 JAXBElement(
                     QName(namespace, "MessageSender"),
                     String::class.java,
-                    byggMessageSender(sykepengesoknad, ekstraData)
-                )
+                    byggMessageSender(sykepengesoknad, ekstraData),
+                ),
             )
             .withServiceCode(JAXBElement(QName(namespace, "ServiceCode"), String::class.java, SYKEPENGESOEKNAD_TJENESTEKODE))
             .withServiceEdition(JAXBElement(QName(namespace, "ServiceEdition"), String::class.java, SYKEPENGESOEKNAD_TJENESTEVERSJON))
@@ -58,7 +61,10 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
             .withContent(tilInnhold(namespace, binaryNamespace, tittel, sykepengesoeknadTekst, ekstraData))
     }
 
-    private fun opprettTittel(sykepengesoknad: Sykepengesoknad, ekstraData: AltinnInnsendelseEkstraData): String {
+    private fun opprettTittel(
+        sykepengesoknad: Sykepengesoknad,
+        ekstraData: AltinnInnsendelseEkstraData,
+    ): String {
         return when (sykepengesoknad.type) {
             Soknadstype.BEHANDLINGSDAGER -> tittelTekst("Søknad med enkeltstående behandlingsdager", sykepengesoknad, ekstraData)
             Soknadstype.GRADERT_REISETILSKUDD -> tittelTekst("Søknad om Gradert reisetilskudd", sykepengesoknad, ekstraData)
@@ -66,8 +72,14 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
         }
     }
 
-    private fun tittelTekst(type: String, sykepengesoknad: Sykepengesoknad, ekstraData: AltinnInnsendelseEkstraData): String {
-        return "$type - ${periodeSomTekst(sykepengesoknad)} - ${ekstraData.navn} (${ekstraData.fnr})${if (sykepengesoknad.sendtNav != null) " - sendt til NAV" else ""}"
+    private fun tittelTekst(
+        type: String,
+        sykepengesoknad: Sykepengesoknad,
+        ekstraData: AltinnInnsendelseEkstraData,
+    ): String {
+        return "$type - ${periodeSomTekst(
+            sykepengesoknad,
+        )} - ${ekstraData.navn} (${ekstraData.fnr})${if (sykepengesoknad.sendtNav != null) " - sendt til NAV" else ""}"
     }
 
     private fun opprettInnholdstekst(sykepengesoknad: Sykepengesoknad): String {
@@ -84,7 +96,10 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
         return ""
     }
 
-    private fun byggMessageSender(sykepengesoknad: Sykepengesoknad, ekstraData: AltinnInnsendelseEkstraData): String {
+    private fun byggMessageSender(
+        sykepengesoknad: Sykepengesoknad,
+        ekstraData: AltinnInnsendelseEkstraData,
+    ): String {
         if (sykepengesoknad.avsendertype == SYSTEM) {
             return "Autogenerert på grunn av et registrert dødsfall"
         }
@@ -97,7 +112,7 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
             QName(namespace, "Notifications"),
             NotificationBEList::class.java,
             NotificationBEList()
-                .withNotification(epostNotification(), smsNotification())
+                .withNotification(epostNotification(), smsNotification()),
         )
     }
 
@@ -108,8 +123,8 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
                 "<p>En ansatt i \$reporteeName$ (\$reporteeNumber$) har sendt inn en søknad om sykepenger.</p>" +
                     "<p>" +
                     "Logg inn på Altinn for å se søknaden.</p>" +
-                    "<p>Vennlig hilsen NAV.</p>"
-            )
+                    "<p>Vennlig hilsen NAV.</p>",
+            ),
         )
     }
 
@@ -117,12 +132,18 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
         return opprettSMSNotification(
             listOf(
                 "En ansatt i \$reporteeName$ (\$reporteeNumber$) har sendt inn en søknad om sykepenger. ",
-                "Logg inn på Altinn for å se søknaden. Vennlig hilsen NAV."
-            )
+                "Logg inn på Altinn for å se søknaden. Vennlig hilsen NAV.",
+            ),
         )
     }
 
-    private fun tilInnhold(namespace: String, binaryNamespace: String, tittel: String, sykepengesoeknadTekst: String, ekstraData: AltinnInnsendelseEkstraData): JAXBElement<ExternalContentV2> {
+    private fun tilInnhold(
+        namespace: String,
+        binaryNamespace: String,
+        tittel: String,
+        sykepengesoeknadTekst: String,
+        ekstraData: AltinnInnsendelseEkstraData,
+    ): JAXBElement<ExternalContentV2> {
         return JAXBElement(
             QName(namespace, "Content"),
             ExternalContentV2::class.java,
@@ -143,24 +164,36 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
                                     BinaryAttachmentExternalBEV2List()
                                         .withBinaryAttachmentV2(
                                             pdfVedlegg(binaryNamespace, ekstraData.pdf),
-                                            xmlVedlegg(binaryNamespace, ekstraData.xml)
-                                        )
-                                )
-                            )
-                    )
-                )
+                                            xmlVedlegg(binaryNamespace, ekstraData.xml),
+                                        ),
+                                ),
+                            ),
+                    ),
+                ),
         )
     }
 
-    private fun pdfVedlegg(binaryNamespace: String, pdf: ByteArray): BinaryAttachmentV2 {
+    private fun pdfVedlegg(
+        binaryNamespace: String,
+        pdf: ByteArray,
+    ): BinaryAttachmentV2 {
         return opprettBinaertVedlegg(binaryNamespace, pdf, SHOW_TO_ALL, "Sykepengesøknad", "Sykepengesøknad.pdf")
     }
 
-    private fun xmlVedlegg(binaryNamespace: String, xml: ByteArray): BinaryAttachmentV2 {
+    private fun xmlVedlegg(
+        binaryNamespace: String,
+        xml: ByteArray,
+    ): BinaryAttachmentV2 {
         return opprettBinaertVedlegg(binaryNamespace, xml, SHOW_TO_ALL, "Sykepengesøknad maskinlesbar", "sykepengesoeknad.xml")
     }
 
-    private fun opprettBinaertVedlegg(binaryNamespace: String, bytes: ByteArray, restriction: UserTypeRestriction, name: String, fileName: String): BinaryAttachmentV2 {
+    private fun opprettBinaertVedlegg(
+        binaryNamespace: String,
+        bytes: ByteArray,
+        restriction: UserTypeRestriction,
+        name: String,
+        fileName: String,
+    ): BinaryAttachmentV2 {
         return BinaryAttachmentV2()
             .withDestinationType(restriction)
             .withFileName(JAXBElement(QName(binaryNamespace, "FileName"), String::class.java, fileName))
@@ -168,7 +201,13 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
             .withFunctionType(AttachmentFunctionType.fromValue("Unspecified"))
             .withEncrypted(false)
             .withSendersReference(JAXBElement(QName(binaryNamespace, "SendersReference"), String::class.java, "senders ref"))
-            .withData(JAXBElement(QName("http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10", "Data"), ByteArray::class.java, bytes))
+            .withData(
+                JAXBElement(
+                    QName("http://www.altinn.no/services/ServiceEngine/ReporteeElementList/2010/10", "Data"),
+                    ByteArray::class.java,
+                    bytes,
+                ),
+            )
     }
 
     fun getOrgnummerForSendingTilAltinn(orgnummer: String) =

@@ -26,9 +26,8 @@ class SendTilAltinnService(
     private val registry: MeterRegistry,
     private val pdlClient: PdlClient,
     private val juridiskOrgnummerRepository: JuridiskOrgnummerRepository,
-    private val egenmeldingFraSykmeldingRepository: EgenmeldingFraSykmeldingRepository
+    private val egenmeldingFraSykmeldingRepository: EgenmeldingFraSykmeldingRepository,
 ) {
-
     val log = logger()
 
     fun sendSykepengesoknadTilAltinn(sykepengesoknadDTO: SykepengesoknadDTO) {
@@ -46,18 +45,25 @@ class SendTilAltinnService(
 
         val pdf = pdfClient.getPDF(sykepengesoknad, fnr, navn)
         val validationeventer: MutableList<ValidationEvent> = mutableListOf()
-        val orgnrFraDb = juridiskOrgnummerRepository.findBySykmeldingId(sykmeldingId = sykepengesoknad.sykmeldingId!!) ?: throw RuntimeException("Mangler orgnummer i databasen")
+        val orgnrFraDb =
+            juridiskOrgnummerRepository.findBySykmeldingId(
+                sykmeldingId = sykepengesoknad.sykmeldingId!!,
+            ) ?: throw RuntimeException("Mangler orgnummer i databasen")
         val juridiskOrgnummerArbeidsgiver = orgnrFraDb.juridiskOrgnummer ?: sykepengesoknad.arbeidsgiver.orgnummer
 
-        val egenmeldingsvar = egenmeldingFraSykmeldingRepository.findBySykmeldingId(sykmeldingId = sykepengesoknad.sykmeldingId)?.egenmeldingsdager()
+        val egenmeldingsvar =
+            egenmeldingFraSykmeldingRepository.findBySykmeldingId(
+                sykmeldingId = sykepengesoknad.sykmeldingId,
+            )?.egenmeldingsdager()
         val xml = sykepengesoknad2XMLByteArray(sykepengesoknad, validationeventer, fnr, juridiskOrgnummerArbeidsgiver, egenmeldingsvar)
 
-        val ekstraData = AltinnInnsendelseEkstraData(
-            fnr = fnr,
-            navn = navn,
-            pdf = pdf,
-            xml = xml
-        )
+        val ekstraData =
+            AltinnInnsendelseEkstraData(
+                fnr = fnr,
+                navn = navn,
+                pdf = pdf,
+                xml = xml,
+            )
 
         if (validationeventer.isEmpty()) {
             altinnClient.sendSykepengesoknadTilArbeidsgiver(sykepengesoknad, ekstraData)
@@ -71,6 +77,7 @@ class SendTilAltinnService(
         }
     }
 
-    private fun ettersendtTilNAV(sykepengesoknadDTO: SykepengesoknadDTO) = sykepengesoknadDTO.sendtNav != null &&
-        sykepengesoknadDTO.sendtArbeidsgiver?.isBefore(sykepengesoknadDTO.sendtNav) ?: false
+    private fun ettersendtTilNAV(sykepengesoknadDTO: SykepengesoknadDTO) =
+        sykepengesoknadDTO.sendtNav != null &&
+            sykepengesoknadDTO.sendtArbeidsgiver?.isBefore(sykepengesoknadDTO.sendtNav) ?: false
 }

@@ -5,7 +5,8 @@ enum class PDFTemplate(private val endpoint: String) {
     SELVSTENDIGNAERINGSDRIVENDE("selvstendignaeringsdrivende"),
     SYKEPENGERUTLAND("sykepengerutland"),
     GRADERTREISETILSKUDD("gradertreisetilskudd"),
-    BEHANDLINGSDAGER("behandlingsdager");
+    BEHANDLINGSDAGER("behandlingsdager"),
+    ;
 
     override fun toString(): String {
         return this.endpoint

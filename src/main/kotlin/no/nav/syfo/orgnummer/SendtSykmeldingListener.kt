@@ -13,9 +13,8 @@ const val SYKMELDINGSENDT_TOPIC = "teamsykmelding." + "syfo-sendt-sykmelding"
 
 @Component
 class SendtSykmeldingListener(
-    val juridiskOrgnummerRepository: JuridiskOrgnummerRepository
+    val juridiskOrgnummerRepository: JuridiskOrgnummerRepository,
 ) {
-
     private val log = logger()
 
     @KafkaListener(
@@ -23,9 +22,12 @@ class SendtSykmeldingListener(
         containerFactory = "sendtSykmeldingContainerFactory",
         concurrency = "3",
         id = "sykmelding-sendt",
-        idIsGroup = false
+        idIsGroup = false,
     )
-    fun listen(records: List<ConsumerRecord<String, String?>>, acknowledgment: Acknowledgment) {
+    fun listen(
+        records: List<ConsumerRecord<String, String?>>,
+        acknowledgment: Acknowledgment,
+    ) {
         records
             .mapNotNull { it.value()?.tilSykmeldingKafkaMessage() }
             .forEach {
@@ -38,10 +40,16 @@ class SendtSykmeldingListener(
                 val eksisterende = juridiskOrgnummerRepository.findBySykmeldingId(sykmeldingId)
                 if (eksisterende != null) {
                     if (eksisterende.juridiskOrgnummer != arbeidsgiver.juridiskOrgnummer) {
-                        log.warn("Mismatch mellom eksisterende juridisk orgnummer ${eksisterende.juridiskOrgnummer} og nytt ${arbeidsgiver.juridiskOrgnummer} for sykmelding $sykmeldingId")
+                        log.warn(
+                            "Mismatch mellom eksisterende juridisk orgnummer ${eksisterende.juridiskOrgnummer} og " +
+                                "nytt ${arbeidsgiver.juridiskOrgnummer} for sykmelding $sykmeldingId",
+                        )
                     }
                     if (eksisterende.orgnummer != arbeidsgiver.orgnummer) {
-                        log.warn("Mismatch mellom eksisterende orgnummer ${eksisterende.orgnummer} og nytt ${arbeidsgiver.orgnummer} for sykmelding $sykmeldingId")
+                        log.warn(
+                            "Mismatch mellom eksisterende orgnummer ${eksisterende.orgnummer} og " +
+                                "nytt ${arbeidsgiver.orgnummer} for sykmelding $sykmeldingId",
+                        )
                     }
                 } else {
                     juridiskOrgnummerRepository.save(
@@ -49,8 +57,8 @@ class SendtSykmeldingListener(
                             id = null,
                             sykmeldingId = sykmeldingId,
                             juridiskOrgnummer = arbeidsgiver.juridiskOrgnummer,
-                            orgnummer = arbeidsgiver.orgnummer
-                        )
+                            orgnummer = arbeidsgiver.orgnummer,
+                        ),
                     )
                 }
             }

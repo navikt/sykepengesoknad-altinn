@@ -4,5 +4,5 @@ class AltinnInnsendelseEkstraData(
     val fnr: String,
     val navn: String,
     val pdf: ByteArray,
-    val xml: ByteArray
+    val xml: ByteArray,
 )
