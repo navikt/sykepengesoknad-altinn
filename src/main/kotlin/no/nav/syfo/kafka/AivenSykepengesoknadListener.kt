@@ -18,10 +18,8 @@ const val SYKEPENGESOKNAD_TOPIC = "flex." + "sykepengesoknad"
 @Component
 class AivenSykepengesoknadListener(
     private val sendTilAltinnService: SendTilAltinnService,
-    private val rebehandleSykepengesoknadProducer: RebehandleSykepengesoknadProducer
-
+    private val rebehandleSykepengesoknadProducer: RebehandleSykepengesoknadProducer,
 ) {
-
     private val log = logger()
 
     @KafkaListener(
@@ -29,9 +27,12 @@ class AivenSykepengesoknadListener(
         concurrency = "3",
         containerFactory = "aivenKafkaListenerContainerFactory",
         id = "sykepengesoknad-sendt",
-        idIsGroup = false
+        idIsGroup = false,
     )
-    fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
+    fun listen(
+        cr: ConsumerRecord<String, String>,
+        acknowledgment: Acknowledgment,
+    ) {
         val sykepengesoknadDTO = cr.value().tilSykepengesoknadDTO()
 
         if (sykepengesoknadDTO.skalBehandles()) {
@@ -55,7 +56,7 @@ class AivenSykepengesoknadListener(
             this.type == SoknadstypeDTO.ARBEIDSTAKERE ||
                 (this.type == SoknadstypeDTO.GRADERT_REISETILSKUDD && this.arbeidssituasjon == ArbeidssituasjonDTO.ARBEIDSTAKER) ||
                 (this.type == SoknadstypeDTO.BEHANDLINGSDAGER && this.arbeidssituasjon == ArbeidssituasjonDTO.ARBEIDSTAKER)
-            ) &&
+        ) &&
             this.status == SoknadsstatusDTO.SENDT &&
             this.sendtArbeidsgiver != null
     }

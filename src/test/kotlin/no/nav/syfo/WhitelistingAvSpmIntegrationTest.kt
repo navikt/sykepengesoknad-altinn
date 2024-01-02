@@ -10,30 +10,30 @@ import java.time.Duration
 import java.util.*
 
 class WhitelistingAvSpmIntegrationTest : Testoppsett() {
-
     @Test
     fun `Sendt arbeidstaker søknad mottas og sendes til altinn`() {
         val id = UUID.randomUUID().toString()
         val enkelSoknad = mockSykepengesoknadDTO.copy(id = id)
         val tagsPåKafka = enkelSoknad.sporsmal!!.mapNotNull { it.tag }.toSet()
         tagsPåKafka.shouldHaveSize(14)
-        val sporsmalSomIkkeErWhitelistet = setOf(
-            "YRKESSKADE_V2",
-            "ANDRE_INNTEKTSKILDER_V2",
-            "ANDRE_INNTEKTSKILDER",
-            "MEDLEMSKAP_UTFORT_ARBEID_UTENFOR_NORGE",
-            "ARBEID_UTENFOR_NORGE"
-        )
+        val sporsmalSomIkkeErWhitelistet =
+            setOf(
+                "YRKESSKADE_V2",
+                "ANDRE_INNTEKTSKILDER_V2",
+                "ANDRE_INNTEKTSKILDER",
+                "MEDLEMSKAP_UTFORT_ARBEID_UTENFOR_NORGE",
+                "ARBEID_UTENFOR_NORGE",
+            )
         tagsPåKafka.shouldContainAll(
-            sporsmalSomIkkeErWhitelistet
+            sporsmalSomIkkeErWhitelistet,
         )
 
         juridiskOrgnummerRepository.save(
             JuridiskOrgnummer(
                 orgnummer = "12345678",
                 juridiskOrgnummer = "LEGAL123",
-                sykmeldingId = enkelSoknad.sykmeldingId!!
-            )
+                sykmeldingId = enkelSoknad.sykmeldingId!!,
+            ),
         )
         mockPdlResponse()
         mockAltinnResponse()
@@ -52,7 +52,7 @@ class WhitelistingAvSpmIntegrationTest : Testoppsett() {
         val tagsPåRequest = pdfRequest.sporsmal.mapNotNull { it.tag }.toSet()
 
         tagsPåRequest.shouldNotContainAny(
-            sporsmalSomIkkeErWhitelistet
+            sporsmalSomIkkeErWhitelistet,
         )
         tagsPåKafka.minus(tagsPåRequest).shouldBeEqualTo(sporsmalSomIkkeErWhitelistet)
         juridiskOrgnummerRepository.deleteAll()

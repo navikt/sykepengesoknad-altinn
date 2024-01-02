@@ -7,7 +7,6 @@ import java.time.LocalDate
 import javax.xml.bind.ValidationEvent
 
 class SykepengesoknadXMLMapperTest {
-
     @Test
     fun mapperSykepengesoknadTilXML() {
         val validationEventer: MutableList<ValidationEvent> = mutableListOf()
@@ -36,15 +35,17 @@ class SykepengesoknadXMLMapperTest {
     fun `mapper fravær før sykmeldingen`() {
         val fom = LocalDate.of(2020, 3, 15)
         val tom = LocalDate.of(2020, 3, 12)
-        val soknad = mockSykepengesoknad.first.copy(
-            fravarForSykmeldingen = listOf(
-                Periode(
-                    fom = fom,
-                    tom = tom
-                )
-            ),
-            egenmeldinger = emptyList()
-        )
+        val soknad =
+            mockSykepengesoknad.first.copy(
+                fravarForSykmeldingen =
+                    listOf(
+                        Periode(
+                            fom = fom,
+                            tom = tom,
+                        ),
+                    ),
+                egenmeldinger = emptyList(),
+            )
         val xmlArbeidsgiver =
             sykepengesoknad2XMLArbeidsgiver(soknad, "fnr", "orgnr", null)
 
@@ -57,14 +58,16 @@ class SykepengesoknadXMLMapperTest {
     fun `mapper egenmelding`() {
         val fom = LocalDate.of(2020, 3, 15)
         val tom = LocalDate.of(2020, 3, 12)
-        val soknad = mockSykepengesoknad.first.copy(
-            egenmeldinger = listOf(
-                Periode(
-                    fom = fom,
-                    tom = tom
-                )
+        val soknad =
+            mockSykepengesoknad.first.copy(
+                egenmeldinger =
+                    listOf(
+                        Periode(
+                            fom = fom,
+                            tom = tom,
+                        ),
+                    ),
             )
-        )
         val xmlArbeidsgiver =
             sykepengesoknad2XMLArbeidsgiver(soknad, "fnr", "orgnr", null)
 

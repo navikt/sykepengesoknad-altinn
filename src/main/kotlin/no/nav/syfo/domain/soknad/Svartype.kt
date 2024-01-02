@@ -23,5 +23,5 @@ enum class Svartype {
     DATOER,
     BELOP,
     KILOMETER,
-    BEKREFTELSESPUNKTER
+    BEKREFTELSESPUNKTER,
 }

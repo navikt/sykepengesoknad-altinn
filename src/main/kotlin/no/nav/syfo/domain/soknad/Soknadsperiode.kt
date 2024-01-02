@@ -9,6 +9,5 @@ data class Soknadsperiode(
     val faktiskGrad: Int? = null,
     val avtaltTimer: Double? = null,
     val faktiskTimer: Double? = null,
-    val sykmeldingstype: Sykmeldingstype? = null
-
+    val sykmeldingstype: Sykmeldingstype? = null,
 )

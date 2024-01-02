@@ -12,19 +12,21 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class SendTilAltinnServiceTest : Testoppsett() {
-
     val grunnSoknad: SykepengesoknadDTO =
         objectMapper.readValue(
             Application::class.java.getResource("/arbeidstakersoknad.json"),
-            SykepengesoknadDTO::class.java
+            SykepengesoknadDTO::class.java,
         )
 
     @Test
     fun senderIkkeTilAltinnHvisSoknadAlleredeErSendt() {
-        val soknad = grunnSoknad.copy(
-            id = UUID.randomUUID().toString()
+        val soknad =
+            grunnSoknad.copy(
+                id = UUID.randomUUID().toString(),
+            )
+        juridiskOrgnummerRepository.save(
+            JuridiskOrgnummer(orgnummer = "12345678", juridiskOrgnummer = "LEGAL123", sykmeldingId = soknad.sykmeldingId!!),
         )
-        juridiskOrgnummerRepository.save(JuridiskOrgnummer(orgnummer = "12345678", juridiskOrgnummer = "LEGAL123", sykmeldingId = soknad.sykmeldingId!!))
 
         mockPdlResponse()
         mockAltinnResponse()
@@ -47,12 +49,13 @@ class SendTilAltinnServiceTest : Testoppsett() {
 
     @Test
     fun ettersendingTilNavBehandlesIkke() {
-        val soknad = grunnSoknad.copy(
-            sendtArbeidsgiver = LocalDateTime.now().minusDays(1),
-            sendtNav = LocalDateTime.now(),
-            ettersending = true,
-            id = UUID.randomUUID().toString()
-        )
+        val soknad =
+            grunnSoknad.copy(
+                sendtArbeidsgiver = LocalDateTime.now().minusDays(1),
+                sendtNav = LocalDateTime.now(),
+                ettersending = true,
+                id = UUID.randomUUID().toString(),
+            )
 
         leggSøknadPåKafka(soknad)
 

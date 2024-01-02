@@ -19,11 +19,19 @@ fun opprettSMSNotification(text: List<String>): Notification {
     return opprettNotification(null, SMS, text)
 }
 
-private fun opprettNotification(fraEpost: String?, type: TransportType, text: List<String>): Notification {
+private fun opprettNotification(
+    fraEpost: String?,
+    type: TransportType,
+    text: List<String>,
+): Notification {
     return opprettNotification(fraEpost, type, konverterTilTextTokens(text))
 }
 
-private fun opprettNotification(fraEpost: String?, type: TransportType, textTokens: Array<TextToken>): Notification {
+private fun opprettNotification(
+    fraEpost: String?,
+    type: TransportType,
+    textTokens: Array<TextToken>,
+): Notification {
     if (textTokens.size != 2) {
         throw IllegalArgumentException("Antall textTokens må være 2. Var " + textTokens.size)
     }
@@ -31,7 +39,9 @@ private fun opprettNotification(fraEpost: String?, type: TransportType, textToke
     return Notification()
         .withLanguageCode(JAXBElement(QName(NOTIFICATION_NAMESPACE, "LanguageCode"), String::class.java, NORSK_BOKMAL))
         .withNotificationType(JAXBElement(QName(NOTIFICATION_NAMESPACE, "NotificationType"), String::class.java, "TokenTextOnly"))
-        .withFromAddress(if (fraEpost == null) null else JAXBElement<String>(QName(NOTIFICATION_NAMESPACE, "FromAddress"), String::class.java, fraEpost))
+        .withFromAddress(
+            if (fraEpost == null) null else JAXBElement(QName(NOTIFICATION_NAMESPACE, "FromAddress"), String::class.java, fraEpost),
+        )
         .withReceiverEndPoints(
             JAXBElement(
                 QName(NOTIFICATION_NAMESPACE, "ReceiverEndPoints"),
@@ -39,17 +49,19 @@ private fun opprettNotification(fraEpost: String?, type: TransportType, textToke
                 ReceiverEndPointBEList()
                     .withReceiverEndPoint(
                         ReceiverEndPoint()
-                            .withTransportType(JAXBElement(QName(NOTIFICATION_NAMESPACE, "TransportType"), TransportType::class.java, type))
-                    )
-            )
+                            .withTransportType(
+                                JAXBElement(QName(NOTIFICATION_NAMESPACE, "TransportType"), TransportType::class.java, type),
+                            ),
+                    ),
+            ),
         )
         .withTextTokens(
             JAXBElement(
                 QName(NOTIFICATION_NAMESPACE, "TextTokens"),
                 TextTokenSubstitutionBEList::class.java,
                 TextTokenSubstitutionBEList()
-                    .withTextToken(*textTokens)
-            )
+                    .withTextToken(*textTokens),
+            ),
         )
 }
 
@@ -57,7 +69,7 @@ private fun konverterTilTextTokens(texts: List<String>): Array<TextToken> {
     return texts
         .mapIndexed { index, text ->
             TextToken().withTokenNum(index).withTokenValue(
-                JAXBElement<String>(QName(NOTIFICATION_NAMESPACE, "TokenValue"), String::class.java, text)
+                JAXBElement<String>(QName(NOTIFICATION_NAMESPACE, "TokenValue"), String::class.java, text),
             )
         }
         .toTypedArray()

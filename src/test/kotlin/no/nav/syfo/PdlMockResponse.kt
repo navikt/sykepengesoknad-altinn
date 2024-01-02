@@ -10,20 +10,25 @@ import org.springframework.http.HttpHeaders.CONTENT_TYPE
 import org.springframework.http.MediaType
 
 fun mockPdlResponse(
-    hentNavnResponse: GetPersonResponse = GetPersonResponse(
-        errors = emptyList(),
-        data = ResponseData(
-            hentPerson = HentPerson(
-                navn = listOf(
-                    Navn(fornavn = "OLE", mellomnavn = null, etternavn = "GUNNAR")
-                )
-            )
-        )
-    )
+    hentNavnResponse: GetPersonResponse =
+        GetPersonResponse(
+            errors = emptyList(),
+            data =
+                ResponseData(
+                    hentPerson =
+                        HentPerson(
+                            navn =
+                                listOf(
+                                    Navn(fornavn = "OLE", mellomnavn = null, etternavn = "GUNNAR"),
+                                ),
+                        ),
+                ),
+        ),
 ) {
-    val response = MockResponse()
-        .setBody(hentNavnResponse.serialisertTilString())
-        .setHeader(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+    val response =
+        MockResponse()
+            .setBody(hentNavnResponse.serialisertTilString())
+            .setHeader(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 
     pdlMockWebserver.enqueue(response)
 }

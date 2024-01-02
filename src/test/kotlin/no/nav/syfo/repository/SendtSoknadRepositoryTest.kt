@@ -11,7 +11,6 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 
 class SendtSoknadRepositoryTest : Testoppsett() {
-
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
 
@@ -29,7 +28,9 @@ class SendtSoknadRepositoryTest : Testoppsett() {
         val sendteSoknader = sendtSoknadRepository.findAll().iterator().asSequence().toList()
         assertThat(sendteSoknader).hasSize(1)
         assertThat(sendteSoknader.first().sykepengesoknadId).isEqualTo("ressursId")
-        assertThat(sendteSoknader.first().sendt.truncatedTo(ChronoUnit.SECONDS)).isEqualTo(sendtSoknad.sendt.truncatedTo(ChronoUnit.SECONDS))
+        assertThat(
+            sendteSoknader.first().sendt.truncatedTo(ChronoUnit.SECONDS),
+        ).isEqualTo(sendtSoknad.sendt.truncatedTo(ChronoUnit.SECONDS))
     }
 
     @Test

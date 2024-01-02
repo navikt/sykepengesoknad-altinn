@@ -8,7 +8,7 @@ import no.nav.syfo.kafka.konverter
 val mockSykepengesoknadDTO: SykepengesoknadDTO =
     objectMapper.readValue(
         Application::class.java.getResource("/arbeidstakersoknad.json"),
-        SykepengesoknadDTO::class.java
+        SykepengesoknadDTO::class.java,
     )
 
 val mockSykepengesoknad: Pair<Sykepengesoknad, AltinnInnsendelseEkstraData>
@@ -17,19 +17,20 @@ val mockSykepengesoknad: Pair<Sykepengesoknad, AltinnInnsendelseEkstraData>
         val fnr = "12345678910"
         val navn = "Navn Navnesen"
         val juridiskOrgnummerArbeidsgiver = "999999999"
-        val ekstra = AltinnInnsendelseEkstraData(
-            fnr = fnr,
-            navn = navn,
-            xml = sykepengesoknad2XMLByteArray(sykepengesoknad, mutableListOf(), fnr, juridiskOrgnummerArbeidsgiver, null),
-            pdf = ByteArray(0)
-        )
+        val ekstra =
+            AltinnInnsendelseEkstraData(
+                fnr = fnr,
+                navn = navn,
+                xml = sykepengesoknad2XMLByteArray(sykepengesoknad, mutableListOf(), fnr, juridiskOrgnummerArbeidsgiver, null),
+                pdf = ByteArray(0),
+            )
         return Pair(sykepengesoknad, ekstra)
     }
 
 val mockGradertReisetilskuddSykepengesoknadDTO: SykepengesoknadDTO =
     objectMapper.readValue(
         Application::class.java.getResource("/gradertreisetilskuddarbeidstakersoknad.json"),
-        SykepengesoknadDTO::class.java
+        SykepengesoknadDTO::class.java,
     )
 
 val mockGradertReisetilskuddSykepengesoknad: Sykepengesoknad
@@ -40,7 +41,7 @@ val mockGradertReisetilskuddSykepengesoknad: Sykepengesoknad
 val mockSykepengesoknadBehandlingsdagerDTO: SykepengesoknadDTO =
     objectMapper.readValue(
         Application::class.java.getResource("/behandlingsdagersoknad.json"),
-        SykepengesoknadDTO::class.java
+        SykepengesoknadDTO::class.java,
     )
 
 val mockSykepengesoknadBehandlingsdager: Sykepengesoknad

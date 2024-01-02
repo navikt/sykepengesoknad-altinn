@@ -8,7 +8,6 @@ import org.springframework.web.client.RestTemplate
 
 @Configuration
 class PDFClientRestTemplateConfig {
-
     @Bean
     fun pdfClientRestTemplate(): RestTemplate {
         val restTemplate = RestTemplate()

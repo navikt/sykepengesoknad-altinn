@@ -24,7 +24,7 @@ const val RETRY_TOPIC = "flex." + "sykepengesoknad-altinn-retry"
 @Component
 class RebehandleSykepengesoknadListener(
     private val sendTilAltinnService: SendTilAltinnService,
-    private val rebehandleSykepengesoknadProducer: RebehandleSykepengesoknadProducer
+    private val rebehandleSykepengesoknadProducer: RebehandleSykepengesoknadProducer,
 ) {
     val log = logger()
 
@@ -33,25 +33,29 @@ class RebehandleSykepengesoknadListener(
         containerFactory = "aivenKafkaListenerContainerFactory",
         properties = ["auto.offset.reset=earliest"],
         id = "sykepengesoknad-sendt-retry",
-        idIsGroup = false
+        idIsGroup = false,
     )
-    fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
+    fun listen(
+        cr: ConsumerRecord<String, String>,
+        acknowledgment: Acknowledgment,
+    ) {
         val sykepengesoknadDTO = cr.value().tilSykepengesoknadDTO()
-        val behandlingstidspunkt = cr.headers().lastHeader(BEHANDLINGSTIDSPUNKT)
-            ?.value()
-            ?.let { String(it, UTF_8) }
-            ?.let { Instant.ofEpochMilli(it.toLong()) }
-            ?: Instant.now()
+        val behandlingstidspunkt =
+            cr.headers().lastHeader(BEHANDLINGSTIDSPUNKT)
+                ?.value()
+                ?.let { String(it, UTF_8) }
+                ?.let { Instant.ofEpochMilli(it.toLong()) }
+                ?: Instant.now()
 
         try {
             val sovetid = behandlingstidspunkt.toEpochMilli() - Instant.now().toEpochMilli()
             if (sovetid > 0) {
                 log.info(
                     "Mottok rebehandling av søknad ${sykepengesoknadDTO.id} med behandlingstidspunkt ${
-                    behandlingstidspunkt.atOffset(
-                        ZoneOffset.UTC
-                    )
-                    } sover i $sovetid millisekunder"
+                        behandlingstidspunkt.atOffset(
+                            ZoneOffset.UTC,
+                        )
+                    } sover i $sovetid millisekunder",
                 )
                 acknowledgment.nack(Duration.ofMillis(sovetid))
             } else {

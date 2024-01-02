@@ -5,5 +5,5 @@ enum class Sykmeldingstype {
     GRADERT,
     BEHANDLINGSDAGER,
     AVVENTENDE,
-    REISETILSKUDD
+    REISETILSKUDD,
 }

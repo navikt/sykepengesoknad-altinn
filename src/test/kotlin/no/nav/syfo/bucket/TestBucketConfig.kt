@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Profile
 
 @Configuration
 class TestBucketConfig {
-
     @Bean
     @Profile("test")
     fun bucket(): Storage {

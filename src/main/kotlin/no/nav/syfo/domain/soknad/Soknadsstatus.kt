@@ -7,5 +7,5 @@ enum class Soknadsstatus {
     UTKAST_TIL_KORRIGERING,
     KORRIGERT,
     AVBRUTT,
-    SLETTET
+    SLETTET,
 }

@@ -14,9 +14,8 @@ const val SYKMELDINGSENDT_TOPIC = "teamsykmelding." + "syfo-sendt-sykmelding"
 
 @Component
 class SendtSykmeldingEgenmeldingListener(
-    val egenmeldingFraSykmeldingRepository: EgenmeldingFraSykmeldingRepository
+    val egenmeldingFraSykmeldingRepository: EgenmeldingFraSykmeldingRepository,
 ) {
-
     private val log = logger()
 
     @KafkaListener(
@@ -25,13 +24,17 @@ class SendtSykmeldingEgenmeldingListener(
         concurrency = "3",
         properties = ["auto.offset.reset=latest"],
         id = "sykmelding-sendt-egenmelding",
-        idIsGroup = true
+        idIsGroup = true,
     )
-    fun listen(cr: ConsumerRecord<String, String?>, acknowledgment: Acknowledgment) {
-        val sykmeldingKafkaMessage = cr.value()?.tilSykmeldingKafkaMessage() ?: run {
-            acknowledgment.acknowledge()
-            return
-        }
+    fun listen(
+        cr: ConsumerRecord<String, String?>,
+        acknowledgment: Acknowledgment,
+    ) {
+        val sykmeldingKafkaMessage =
+            cr.value()?.tilSykmeldingKafkaMessage() ?: run {
+                acknowledgment.acknowledge()
+                return
+            }
 
         val sykmeldingId = sykmeldingKafkaMessage.event.sykmeldingId
 
@@ -41,11 +44,12 @@ class SendtSykmeldingEgenmeldingListener(
             }
         }
 
-        val egenmeldingsvar = sykmeldingKafkaMessage
-            .event
-            .sporsmals
-            ?.firstOrNull { it.shortName == ShortNameDTO.EGENMELDINGSDAGER }
-            ?.svar
+        val egenmeldingsvar =
+            sykmeldingKafkaMessage
+                .event
+                .sporsmals
+                ?.firstOrNull { it.shortName == ShortNameDTO.EGENMELDINGSDAGER }
+                ?.svar
 
         egenmeldingsvar?.let {
             if (egenmeldingFraSykmeldingRepository.findBySykmeldingId(sykmeldingId) == null) {
@@ -53,8 +57,8 @@ class SendtSykmeldingEgenmeldingListener(
                     EgenmeldingFraSykmelding(
                         id = null,
                         sykmeldingId = sykmeldingId,
-                        egenmeldingssvar = it
-                    )
+                        egenmeldingssvar = it,
+                    ),
                 )
             }
         }

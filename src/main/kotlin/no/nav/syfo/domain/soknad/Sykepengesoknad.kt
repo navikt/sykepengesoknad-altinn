@@ -35,7 +35,7 @@ data class Sykepengesoknad(
     val andreInntektskilder: List<Inntektskilde> = arrayListOf(),
     val sporsmal: List<Sporsmal> = arrayListOf(),
     val avsendertype: Avsendertype? = null,
-    val ettersending: Boolean = false
+    val ettersending: Boolean = false,
 ) {
     fun alleSporsmalOgUndersporsmal(): List<Sporsmal> {
         return flatten(sporsmal)

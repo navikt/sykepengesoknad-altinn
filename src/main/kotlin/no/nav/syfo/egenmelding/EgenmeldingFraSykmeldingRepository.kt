@@ -13,5 +13,5 @@ data class EgenmeldingFraSykmelding(
     @Id
     val id: String? = null,
     val sykmeldingId: String,
-    val egenmeldingssvar: String
+    val egenmeldingssvar: String,
 )

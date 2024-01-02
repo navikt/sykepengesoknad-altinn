@@ -8,9 +8,10 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class AltinnConfig {
-
     @Bean
-    fun iCorrespondenceAgencyExternalBasic(@Value("\${altinn.url}") altinnUrl: String): ICorrespondenceAgencyExternalBasic {
+    fun iCorrespondenceAgencyExternalBasic(
+        @Value("\${altinn.url}") altinnUrl: String,
+    ): ICorrespondenceAgencyExternalBasic {
         return JaxWsProxyFactoryBean().apply {
             address = "$altinnUrl/ServiceEngineExternal/CorrespondenceAgencyExternalBasic.svc"
             serviceClass = ICorrespondenceAgencyExternalBasic::class.java

@@ -9,16 +9,18 @@ import java.time.Duration
 import java.util.*
 
 class RebehandlingIntegrationTest : Testoppsett() {
-
     @Test
     fun `Sendt arbeidstaker søknad mottas, altinn kall feiler første gang, men neste gang går det og den sendes til altinn`() {
         val id = UUID.randomUUID().toString()
         val enkelSoknad = mockSykepengesoknadDTO.copy(id = id)
-        juridiskOrgnummerRepository.save(JuridiskOrgnummer(orgnummer = "12345678", juridiskOrgnummer = "LEGAL123", sykmeldingId = enkelSoknad.sykmeldingId!!))
+        juridiskOrgnummerRepository.save(
+            JuridiskOrgnummer(orgnummer = "12345678", juridiskOrgnummer = "LEGAL123", sykmeldingId = enkelSoknad.sykmeldingId!!),
+        )
 
-        val errorResponse = MockResponse()
-            .setBody("ERRÅRRR")
-            .setResponseCode(500)
+        val errorResponse =
+            MockResponse()
+                .setBody("ERRÅRRR")
+                .setResponseCode(500)
 
         // 3 ganger grunnet retryable
         pdlMockWebserver.enqueue(errorResponse)

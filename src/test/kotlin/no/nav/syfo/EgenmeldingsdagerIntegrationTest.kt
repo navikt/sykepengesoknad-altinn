@@ -17,7 +17,6 @@ import java.time.LocalDate
 import java.util.*
 
 class EgenmeldingsdagerIntegrationTest : Testoppsett() {
-
     @Autowired
     private lateinit var storage: Storage
 
@@ -33,8 +32,8 @@ class EgenmeldingsdagerIntegrationTest : Testoppsett() {
             JuridiskOrgnummer(
                 orgnummer = "12345678",
                 juridiskOrgnummer = "LEGAL123",
-                sykmeldingId = sykmeldingId
-            )
+                sykmeldingId = sykmeldingId,
+            ),
         )
         mockPdlResponse()
         mockAltinnResponse()
@@ -44,15 +43,16 @@ class EgenmeldingsdagerIntegrationTest : Testoppsett() {
                 sykmeldingId = sykmeldingId,
                 orgnummer = "12345678",
                 juridiskOrgnummer = "LEGAL123",
-                ekstraSporsmal = listOf(
-                    SporsmalOgSvarDTO(
-                        tekst = "Velg dagene du brukte egenmelding",
-                        shortName = ShortNameDTO.EGENMELDINGSDAGER,
-                        svar = "[\"2023-03-01\",\"2023-03-10\",\"2023-03-09\",\"2023-03-13\",\"2023-03-08\"]",
-                        svartype = SvartypeDTO.DAGER
-                    )
-                )
-            )
+                ekstraSporsmal =
+                    listOf(
+                        SporsmalOgSvarDTO(
+                            tekst = "Velg dagene du brukte egenmelding",
+                            shortName = ShortNameDTO.EGENMELDINGSDAGER,
+                            svar = "[\"2023-03-01\",\"2023-03-10\",\"2023-03-09\",\"2023-03-13\",\"2023-03-08\"]",
+                            svartype = SvartypeDTO.DAGER,
+                        ),
+                    ),
+            ),
         )
         await().atMost(Duration.ofSeconds(10))
             .until {
@@ -74,7 +74,8 @@ class EgenmeldingsdagerIntegrationTest : Testoppsett() {
         altinnRequest.externalShipmentReference `should be equal to` id
         val correspondence = altinnRequest.correspondence
         correspondence.serviceCode.value `should be equal to` "4751"
-        correspondence.content.value.messageTitle.value `should be equal to` "Søknad om sykepenger - 01.01.2019-09.01.2019 - Ole Gunnar (13068700000) - sendt til NAV"
+        correspondence.content.value.messageTitle.value `should be equal to`
+            "Søknad om sykepenger - 01.01.2019-09.01.2019 - Ole Gunnar (13068700000) - sendt til NAV"
 
         val attachments = correspondence.content.value.attachments.value.binaryAttachments.value.binaryAttachmentV2
         attachments shouldHaveSize 2
@@ -91,8 +92,9 @@ class EgenmeldingsdagerIntegrationTest : Testoppsett() {
         relaterteFiler.first { it.name.contains("receiptExternal.gz") }.contentType `should be equal to` "application/gzip"
         relaterteFiler.first { it.name.contains("sykepengesoknad.pdf") }.contentType `should be equal to` "application/pdf"
 
-        val soknadXml = relaterteFiler.first { it.name.contains("sykepengesoknad.xml") }.getContent()
-            .tilXMLSykepengesoeknadArbeidsgiver()
+        val soknadXml =
+            relaterteFiler.first { it.name.contains("sykepengesoknad.xml") }.getContent()
+                .tilXMLSykepengesoeknadArbeidsgiver()
         soknadXml.juridiskOrganisasjonsnummer `should be equal to` "LEGAL123"
         val egenmeldingsperiodeListe = soknadXml.sykepengesoeknad.fravaer.egenmeldingsperiodeListe
         egenmeldingsperiodeListe.size `should be equal to` 3
@@ -115,19 +117,22 @@ class EgenmeldingsdagerIntegrationTest : Testoppsett() {
                 sykmeldingId = sykmeldingId,
                 orgnummer = "12345678",
                 erSvarOppdatering = true,
-                ekstraSporsmal = listOf(
-                    SporsmalOgSvarDTO(
-                        tekst = "Velg dagene du brukte egenmelding",
-                        shortName = ShortNameDTO.EGENMELDINGSDAGER,
-                        svar = "[\"2023-03-01\",\"2023-03-10\",\"2023-03-09\",\"2023-03-13\",\"2023-03-08\"]",
-                        svartype = SvartypeDTO.DAGER
-                    )
-                )
-            )
+                ekstraSporsmal =
+                    listOf(
+                        SporsmalOgSvarDTO(
+                            tekst = "Velg dagene du brukte egenmelding",
+                            shortName = ShortNameDTO.EGENMELDINGSDAGER,
+                            svar = "[\"2023-03-01\",\"2023-03-10\",\"2023-03-09\",\"2023-03-13\",\"2023-03-08\"]",
+                            svartype = SvartypeDTO.DAGER,
+                        ),
+                    ),
+            ),
         )
         await().atMost(Duration.ofSeconds(10))
             .until {
-                egenmeldingFraSykmeldingRepository.findAll().toList().firstOrNull { it.sykmeldingId == sykmeldingId }?.egenmeldingsdager()?.size == 3
+                egenmeldingFraSykmeldingRepository.findAll().toList().firstOrNull {
+                    it.sykmeldingId == sykmeldingId
+                }?.egenmeldingsdager()?.size == 3
             }
 
         leggSykmeldingPåKafka(
@@ -135,19 +140,22 @@ class EgenmeldingsdagerIntegrationTest : Testoppsett() {
                 sykmeldingId = sykmeldingId,
                 orgnummer = "12345678",
                 erSvarOppdatering = true,
-                ekstraSporsmal = listOf(
-                    SporsmalOgSvarDTO(
-                        tekst = "Velg dagene du brukte egenmelding",
-                        shortName = ShortNameDTO.EGENMELDINGSDAGER,
-                        svar = "[\"2023-03-01\"]",
-                        svartype = SvartypeDTO.DAGER
-                    )
-                )
-            )
+                ekstraSporsmal =
+                    listOf(
+                        SporsmalOgSvarDTO(
+                            tekst = "Velg dagene du brukte egenmelding",
+                            shortName = ShortNameDTO.EGENMELDINGSDAGER,
+                            svar = "[\"2023-03-01\"]",
+                            svartype = SvartypeDTO.DAGER,
+                        ),
+                    ),
+            ),
         )
         await().atMost(Duration.ofSeconds(10))
             .until {
-                egenmeldingFraSykmeldingRepository.findAll().toList().firstOrNull { it.sykmeldingId == sykmeldingId }?.egenmeldingsdager()?.size == 1
+                egenmeldingFraSykmeldingRepository.findAll().toList().firstOrNull {
+                    it.sykmeldingId == sykmeldingId
+                }?.egenmeldingsdager()?.size == 1
             }
 
         leggSykmeldingPåKafka(
@@ -155,19 +163,22 @@ class EgenmeldingsdagerIntegrationTest : Testoppsett() {
                 sykmeldingId = sykmeldingId,
                 orgnummer = "12345678",
                 erSvarOppdatering = true,
-                ekstraSporsmal = listOf(
-                    SporsmalOgSvarDTO(
-                        tekst = "Velg dagene du brukte egenmelding",
-                        shortName = ShortNameDTO.EGENMELDINGSDAGER,
-                        svar = "[]",
-                        svartype = SvartypeDTO.DAGER
-                    )
-                )
-            )
+                ekstraSporsmal =
+                    listOf(
+                        SporsmalOgSvarDTO(
+                            tekst = "Velg dagene du brukte egenmelding",
+                            shortName = ShortNameDTO.EGENMELDINGSDAGER,
+                            svar = "[]",
+                            svartype = SvartypeDTO.DAGER,
+                        ),
+                    ),
+            ),
         )
         await().atMost(Duration.ofSeconds(10))
             .until {
-                egenmeldingFraSykmeldingRepository.findAll().toList().firstOrNull { it.sykmeldingId == sykmeldingId }?.egenmeldingsdager()?.size == 0
+                egenmeldingFraSykmeldingRepository.findAll().toList().firstOrNull {
+                    it.sykmeldingId == sykmeldingId
+                }?.egenmeldingsdager()?.size == 0
             }
     }
 }

@@ -25,34 +25,41 @@ fun SykepengesoknadDTO.konverter(): Sykepengesoknad {
         sendtNav = this.sendtNav,
         sendtArbeidsgiver = this.sendtArbeidsgiver,
         behandlingsdager = this.behandlingsdager ?: emptyList(),
-        egenmeldinger = this.egenmeldinger
-            ?.map { konverter(it) }
-            .orEmpty(),
-        fravarForSykmeldingen = this.fravarForSykmeldingen
-            ?.map { konverter(it) }
-            .orEmpty(),
-        papirsykmeldinger = this.papirsykmeldinger
-            ?.map { konverter(it) }
-            .orEmpty(),
-        fravar = this.fravar
-            ?.map { konverter(it) }
-            .orEmpty(),
-        andreInntektskilder = this.andreInntektskilder
-            ?.map { konverter(it) }
-            .orEmpty(),
-        soknadsperioder = this.soknadsperioder
-            ?.map { konverter(it) }
-            .orEmpty(),
-        sporsmal = this.sporsmal
-            ?.map { konverter(it) }
-            .orEmpty(),
-        ettersending = this.ettersending
+        egenmeldinger =
+            this.egenmeldinger
+                ?.map { konverter(it) }
+                .orEmpty(),
+        fravarForSykmeldingen =
+            this.fravarForSykmeldingen
+                ?.map { konverter(it) }
+                .orEmpty(),
+        papirsykmeldinger =
+            this.papirsykmeldinger
+                ?.map { konverter(it) }
+                .orEmpty(),
+        fravar =
+            this.fravar
+                ?.map { konverter(it) }
+                .orEmpty(),
+        andreInntektskilder =
+            this.andreInntektskilder
+                ?.map { konverter(it) }
+                .orEmpty(),
+        soknadsperioder =
+            this.soknadsperioder
+                ?.map { konverter(it) }
+                .orEmpty(),
+        sporsmal =
+            this.sporsmal
+                ?.map { konverter(it) }
+                .orEmpty(),
+        ettersending = this.ettersending,
     )
 }
 
 private fun konverter(svarDTO: SvarDTO): Svar {
     return Svar(
-        verdi = svarDTO.verdi
+        verdi = svarDTO.verdi,
     )
 }
 
@@ -66,12 +73,14 @@ private fun konverter(sporsmalDTO: SporsmalDTO): Sporsmal {
         min = sporsmalDTO.min,
         max = sporsmalDTO.max,
         kriterieForVisningAvUndersporsmal = enumValueOrNull(sporsmalDTO.kriterieForVisningAvUndersporsmal?.name),
-        svar = sporsmalDTO.svar
-            ?.map { konverter(it) }
-            .orEmpty(),
-        undersporsmal = sporsmalDTO.undersporsmal
-            ?.map { konverter(it) }
-            .orEmpty()
+        svar =
+            sporsmalDTO.svar
+                ?.map { konverter(it) }
+                .orEmpty(),
+        undersporsmal =
+            sporsmalDTO.undersporsmal
+                ?.map { konverter(it) }
+                .orEmpty(),
     )
 }
 
@@ -83,21 +92,21 @@ private fun konverter(soknadPeriodeDTO: SoknadsperiodeDTO): Soknadsperiode {
         faktiskGrad = soknadPeriodeDTO.faktiskGrad,
         avtaltTimer = soknadPeriodeDTO.avtaltTimer,
         faktiskTimer = soknadPeriodeDTO.faktiskTimer,
-        sykmeldingstype = enumValueOrNull(soknadPeriodeDTO.sykmeldingstype!!.name)
+        sykmeldingstype = enumValueOrNull(soknadPeriodeDTO.sykmeldingstype!!.name),
     )
 }
 
 private fun konverter(arbeidsgiverDTO: ArbeidsgiverDTO): Arbeidsgiver {
     return Arbeidsgiver(
         navn = arbeidsgiverDTO.navn!!,
-        orgnummer = arbeidsgiverDTO.orgnummer!!
+        orgnummer = arbeidsgiverDTO.orgnummer!!,
     )
 }
 
 private fun konverter(periodeDTO: PeriodeDTO): Periode {
     return Periode(
         fom = periodeDTO.fom!!,
-        tom = periodeDTO.tom!!
+        tom = periodeDTO.tom!!,
     )
 }
 
@@ -105,16 +114,15 @@ private fun konverter(fravarDTO: FravarDTO): Fravar {
     return Fravar(
         fom = fravarDTO.fom!!,
         tom = fravarDTO.tom,
-        type = Fravarstype.valueOf(fravarDTO.type!!.name)
+        type = Fravarstype.valueOf(fravarDTO.type!!.name),
     )
 }
 
 private fun konverter(inntektskildeDTO: InntektskildeDTO): Inntektskilde {
     return Inntektskilde(
         type = Inntektskildetype.valueOf(inntektskildeDTO.type!!.name),
-        sykmeldt = inntektskildeDTO.sykmeldt
+        sykmeldt = inntektskildeDTO.sykmeldt,
     )
 }
 
-private inline fun <reified T : Enum<*>> enumValueOrNull(name: String?): T? =
-    T::class.java.enumConstants.firstOrNull { it.name == name }
+private inline fun <reified T : Enum<*>> enumValueOrNull(name: String?): T? = T::class.java.enumConstants.firstOrNull { it.name == name }
