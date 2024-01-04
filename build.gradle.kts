@@ -25,7 +25,7 @@ repositories {
 
 ext["okhttp3.version"] = "4.9.3" // Token-support tester trenger Mockwebserver.
 
-val sykepengesoknadKafkaVersion = "2023.12.05-10.16-3ffa06f7"
+val sykepengesoknadKafkaVersion = "2024.01.03-12.09-aa206314"
 val logstashLogbackEncoderVersion = "7.4"
 val tjenestespesifikasjonerVersion = "2610.9b6de22"
 val testContainersVersion = "1.19.3"
