@@ -59,8 +59,7 @@ fun generatePDFSoknad(
             sykepengesoknad.sporsmal.sortedWith(
                 Comparator.comparingInt {
                     when (it.tag) {
-                        "BEKREFT_OPPLYSNINGER", "ANSVARSERKLARING" -> 1
-                        "VAER_KLAR_OVER_AT" -> 2
+                        "ANSVARSERKLARING" -> 1
                         else -> 0
                     }
                 },
