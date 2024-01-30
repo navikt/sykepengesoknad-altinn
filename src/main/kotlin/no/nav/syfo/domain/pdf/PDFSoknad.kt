@@ -55,15 +55,7 @@ fun generatePDFSoknad(
                 )
             },
         avsendertype = sykepengesoknad.avsendertype,
-        sporsmal =
-            sykepengesoknad.sporsmal.sortedWith(
-                Comparator.comparingInt {
-                    when (it.tag) {
-                        "ANSVARSERKLARING" -> 1
-                        else -> 0
-                    }
-                },
-            ),
+        sporsmal = sykepengesoknad.sporsmal,
         fnr = fnr,
         navn = navn,
     )
