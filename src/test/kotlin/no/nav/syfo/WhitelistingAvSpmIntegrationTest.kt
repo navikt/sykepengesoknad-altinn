@@ -23,7 +23,6 @@ class WhitelistingAvSpmIntegrationTest : Testoppsett() {
                 "ANDRE_INNTEKTSKILDER",
                 "MEDLEMSKAP_UTFORT_ARBEID_UTENFOR_NORGE",
                 "ARBEID_UTENFOR_NORGE",
-                "TIL_SLUTT",
                 "VAER_KLAR_OVER_AT",
                 "BEKREFT_OPPLYSNINGER",
             )
