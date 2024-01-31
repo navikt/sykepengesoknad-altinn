@@ -55,16 +55,7 @@ fun generatePDFSoknad(
                 )
             },
         avsendertype = sykepengesoknad.avsendertype,
-        sporsmal =
-            sykepengesoknad.sporsmal.sortedWith(
-                Comparator.comparingInt {
-                    when (it.tag) {
-                        "BEKREFT_OPPLYSNINGER", "ANSVARSERKLARING" -> 1
-                        "VAER_KLAR_OVER_AT" -> 2
-                        else -> 0
-                    }
-                },
-            ),
+        sporsmal = sykepengesoknad.sporsmal,
         fnr = fnr,
         navn = navn,
     )

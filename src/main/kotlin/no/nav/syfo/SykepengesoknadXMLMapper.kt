@@ -54,20 +54,8 @@ fun sykepengesoknad2XML(
         .withIdentdato(sykepengesoknad.startSykeforlop)
         .withSykmeldingSkrevetDato(sykepengesoknad.sykmeldingSkrevet?.toLocalDate())
         .withArbeidGjenopptattDato(sykepengesoknad.arbeidGjenopptatt)
-        .withHarBekreftetKorrektInformasjon(
-            "CHECKED".equals(
-                sykepengesoknad.getSporsmalMedTag("BEKREFT_OPPLYSNINGER").svar.getOrNull(
-                    0,
-                )?.verdi,
-            ),
-        )
-        .withHarBekreftetOpplysningsplikt(
-            "CHECKED".equals(
-                sykepengesoknad.getSporsmalMedTag("ANSVARSERKLARING").svar.getOrNull(
-                    0,
-                )?.verdi,
-            ),
-        )
+        .withHarBekreftetKorrektInformasjon(true)
+        .withHarBekreftetOpplysningsplikt(true)
         .withFravaer(sykepengesoknad2XMLFravar(sykepengesoknad, egenmeldingsvar ?: emptyList()))
         .withSykmeldingsperiodeListe(soknadsperioder2XMLSykmeldingsperiode(sykepengesoknad.soknadsperioder))
         .withUtdanning(fravar2XMLUtdanning(sykepengesoknad.fravar))
