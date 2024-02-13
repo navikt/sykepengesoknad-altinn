@@ -2,7 +2,7 @@ package no.nav.syfo
 
 import org.junit.jupiter.api.Test
 
-class ApplicationConfigTest : Testoppsett() {
+class ApplicationConfigTest : FellesTestOppsett() {
     @Test
     fun test() {
     }

@@ -1,12 +1,12 @@
 package no.nav.syfo.orgnummer
 
-import no.nav.syfo.Testoppsett
+import no.nav.syfo.FellesTestOppsett
 import org.amshove.kluent.*
 import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.Test
 import java.time.Duration
 
-class OrgnummerTest : Testoppsett() {
+class OrgnummerTest : FellesTestOppsett() {
     @Test
     fun `Sendt arbeidstaker sykmelding mottas og orgnumemr lagres`() {
         juridiskOrgnummerRepository.deleteAll()

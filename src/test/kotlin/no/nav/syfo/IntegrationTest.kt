@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value
 import java.time.Duration
 import java.util.*
 
-class IntegrationTest : Testoppsett() {
+class IntegrationTest : FellesTestOppsett() {
     @Autowired
     private lateinit var storage: Storage
 

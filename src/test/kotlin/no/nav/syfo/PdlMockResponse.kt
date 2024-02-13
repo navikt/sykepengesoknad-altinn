@@ -1,6 +1,6 @@
 package no.nav.syfo
 
-import no.nav.syfo.Testoppsett.Companion.pdlMockWebserver
+import no.nav.syfo.FellesTestOppsett.Companion.pdlMockWebserver
 import no.nav.syfo.client.pdl.GetPersonResponse
 import no.nav.syfo.client.pdl.HentPerson
 import no.nav.syfo.client.pdl.Navn

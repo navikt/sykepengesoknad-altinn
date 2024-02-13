@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.*
 
-class WhitelistingAvSpmIntegrationTest : Testoppsett() {
+class WhitelistingAvSpmIntegrationTest : FellesTestOppsett() {
     @Test
     fun `Sendt arbeidstaker søknad mottas og sendes til altinn`() {
         val id = UUID.randomUUID().toString()
