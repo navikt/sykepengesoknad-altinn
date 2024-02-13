@@ -26,7 +26,6 @@ private class PostgreSQLContainer14 : PostgreSQLContainer<PostgreSQLContainer14>
 @SpringBootTest
 @EnableMockOAuth2Server
 abstract class FellesTestOppsett {
-
     companion object {
         var altinnMockWebserver: MockWebServer
         var pdlMockWebserver: MockWebServer
