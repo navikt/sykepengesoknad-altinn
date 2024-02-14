@@ -16,7 +16,7 @@ import java.time.Duration
 import java.time.LocalDate
 import java.util.*
 
-class EgenmeldingsdagerIntegrationTest : Testoppsett() {
+class EgenmeldingsdagerIntegrationTest : FellesTestOppsett() {
     @Autowired
     private lateinit var storage: Storage
 

@@ -1,6 +1,6 @@
 package no.nav.syfo.repository
 
-import no.nav.syfo.Testoppsett
+import no.nav.syfo.FellesTestOppsett
 import no.nav.syfo.domain.SendtSoknad
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-class SendtSoknadRepositoryTest : Testoppsett() {
+class SendtSoknadRepositoryTest : FellesTestOppsett() {
     @Autowired
     private lateinit var jdbcTemplate: JdbcTemplate
 

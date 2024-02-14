@@ -20,24 +20,24 @@ import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
 
-private class PostgreSQLContainer12 : PostgreSQLContainer<PostgreSQLContainer12>("postgres:12-alpine")
+private class PostgreSQLContainer14 : PostgreSQLContainer<PostgreSQLContainer14>("postgres:14-alpine")
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest
 @EnableMockOAuth2Server
-abstract class Testoppsett {
+abstract class FellesTestOppsett {
     companion object {
         var altinnMockWebserver: MockWebServer
         var pdlMockWebserver: MockWebServer
         var pdfMockWebserver: MockWebServer
 
         init {
-            KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.4.1")).also {
+            KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.5.3")).also {
                 it.start()
                 System.setProperty("spring.kafka.bootstrap-servers", it.bootstrapServers)
                 System.setProperty("KAFKA_BROKERS", it.bootstrapServers)
             }
-            PostgreSQLContainer12().also {
+            PostgreSQLContainer14().also {
                 it.start()
                 System.setProperty("spring.datasource.url", "${it.jdbcUrl}&reWriteBatchedInserts=true")
                 System.setProperty("spring.datasource.username", it.username)

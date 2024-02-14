@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class SendTilAltinnServiceTest : Testoppsett() {
+class SendTilAltinnServiceTest : FellesTestOppsett() {
     val grunnSoknad: SykepengesoknadDTO =
         objectMapper.readValue(
             Application::class.java.getResource("/arbeidstakersoknad.json"),

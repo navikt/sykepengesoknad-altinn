@@ -1,7 +1,7 @@
 package no.nav.syfo
 
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2
-import no.nav.syfo.Testoppsett.Companion.altinnMockWebserver
+import no.nav.syfo.FellesTestOppsett.Companion.altinnMockWebserver
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
 import java.io.StringReader
