@@ -33,3 +33,4 @@ transaction-logs
 out/
 build/
 .gradle/
+.kotlin/
