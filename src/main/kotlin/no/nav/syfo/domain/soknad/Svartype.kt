@@ -24,4 +24,5 @@ enum class Svartype {
     BELOP,
     KILOMETER,
     BEKREFTELSESPUNKTER,
+    OPPSUMMERING,
 }
