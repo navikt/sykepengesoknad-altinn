@@ -34,7 +34,6 @@ val smCommonVersion = "2.0.8"
 val gcsVersion = "2.43.0"
 val gcsNioVersion = "0.127.23"
 val commonsTextVersion = "1.12.0"
-val jaxWsApiVersion = "1.1"
 val cxfVersion = "3.5.5"
 val bindApiVersion = "2.3.3"
 val jaxbRuntimeVersion = "2.4.0-b180830.0438"
@@ -46,7 +45,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("org.hibernate.validator:hibernate-validator")
     implementation("org.springframework.kafka:spring-kafka")
     implementation("org.postgresql:postgresql")
