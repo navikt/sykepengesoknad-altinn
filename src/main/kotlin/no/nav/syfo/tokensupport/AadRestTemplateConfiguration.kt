@@ -25,7 +25,6 @@ import java.util.function.Supplier
 @EnableJwtTokenValidation
 class AadRestTemplateConfiguration {
 
-
     @Bean
     fun httpClient(): CloseableHttpClient {
         val connectionManager = PoolingHttpClientConnectionManager()
@@ -70,9 +69,9 @@ class AadRestTemplateConfiguration {
         val requestFactory = HttpComponentsClientHttpRequestFactory(httpClient)
 
         return restTemplateBuilder
-            .requestFactory(Supplier { requestFactory })
             .setConnectTimeout(connectTimeout)
             .setReadTimeout(readTimeout)
+            .requestFactory(Supplier { requestFactory })
             .additionalInterceptors(bearerTokenInterceptor(clientProperties, oAuth2AccessTokenService))
             .build()
     }
