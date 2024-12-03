@@ -3,7 +3,7 @@ db_tier: db-f1-micro
 environment: dev
 bucketName: flex-sykepengesoknad-altinn-bucket-dev
 retentionDays: '2'
-cpu: 200m
+cpu: 50m
 memory: 500Mi
 external-host:
   - pdl-api.dev-fss-pub.nais.io
