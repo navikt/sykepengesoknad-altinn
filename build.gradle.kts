@@ -34,7 +34,7 @@ val smCommonVersion = "2.0.8"
 val gcsVersion = "2.45.0"
 val gcsNioVersion = "0.127.27"
 val commonsTextVersion = "1.12.0"
-val cxfVersion = "3.5.9"
+val cxfVersion = "4.0.6"
 val bindApiVersion = "2.3.3"
 val jaxbRuntimeVersion = "2.4.0-b180830.0438"
 
