@@ -32,7 +32,7 @@ abstract class FellesTestOppsett {
         var pdfMockWebserver: MockWebServer
 
         init {
-            KafkaContainer(DockerImageName.parse("apache/kafka-native")).also {
+            KafkaContainer(DockerImageName.parse("apache/kafka-native:3.8.1")).also {
                 it.start()
                 System.setProperty("spring.kafka.bootstrap-servers", it.bootstrapServers)
                 System.setProperty("KAFKA_BROKERS", it.bootstrapServers)
