@@ -77,6 +77,11 @@ dependencies {
     implementation("org.apache.cxf:cxf-spring-boot-starter-jaxws:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-ws-security:$cxfVersion")
+    constraints {
+        implementation("org.bouncycastle:bcprov-jdk15on:1.70") {
+            because("Fixes CVE-2018-1000613 and GHSA-4446-656p-f54g")
+        }
+    }
     implementation("org.apache.cxf:cxf-rt-ws-policy:$cxfVersion")
 
     implementation("no.nav.tjenestespesifikasjoner:behandle-altinnmelding-v1-tjenestespesifikasjon:$tjenestespesifikasjonerVersion")
