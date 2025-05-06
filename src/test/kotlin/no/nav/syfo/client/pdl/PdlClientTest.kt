@@ -25,7 +25,8 @@ class PdlClientTest : FellesTestOppsett() {
         val request = pdlMockWebserver.takeRequest()
         request.headers["Behandlingsnummer"] `should be equal to` "B128"
         request.headers["Tema"] `should be equal to` "SYK"
-        request.body.readUtf8() `should be equal to` "{\"query\":\"\\nquery(\$ident: ID!){\\n  hentPerson(ident: \$ident) {\\n  \\tnavn(historikk: false) {\\n  \\t  fornavn\\n  \\t  mellomnavn\\n  \\t  etternavn\\n    }\\n  }\\n}\\n\",\"variables\":{\"ident\":\"12345678901\"}}"
+        request.body.readUtf8() `should be equal to`
+            "{\"query\":\"\\nquery(\$ident: ID!){\\n  hentPerson(ident: \$ident) {\\n  \\tnavn(historikk: false) {\\n  \\t  fornavn\\n  \\t  mellomnavn\\n  \\t  etternavn\\n    }\\n  }\\n}\\n\",\"variables\":{\"ident\":\"12345678901\"}}"
 
         request.headers["Authorization"]!!.shouldStartWith("Bearer ey")
     }

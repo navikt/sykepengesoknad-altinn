@@ -26,7 +26,9 @@ private const val SYKEPENGESOEKNAD_TJENESTEKODE = "4751"
 private const val SYKEPENGESOEKNAD_TJENESTEVERSJON = "1"
 
 @Component
-class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
+class SoknadAltinnMapper(
+    private val toggle: EnvironmentToggles,
+) {
     private val log = logger()
 
     fun sykepengesoeknadTilCorrespondence(
@@ -47,15 +49,13 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
                     String::class.java,
                     getOrgnummerForSendingTilAltinn(sykepengesoknad.arbeidsgiver.orgnummer),
                 ),
-            )
-            .withMessageSender(
+            ).withMessageSender(
                 JAXBElement(
                     QName(namespace, "MessageSender"),
                     String::class.java,
                     byggMessageSender(sykepengesoknad, ekstraData),
                 ),
-            )
-            .withServiceCode(JAXBElement(QName(namespace, "ServiceCode"), String::class.java, SYKEPENGESOEKNAD_TJENESTEKODE))
+            ).withServiceCode(JAXBElement(QName(namespace, "ServiceCode"), String::class.java, SYKEPENGESOEKNAD_TJENESTEKODE))
             .withServiceEdition(JAXBElement(QName(namespace, "ServiceEdition"), String::class.java, SYKEPENGESOEKNAD_TJENESTEVERSJON))
             .withNotifications(opprettNotifications(namespace))
             .withContent(tilInnhold(namespace, binaryNamespace, tittel, sykepengesoeknadTekst, ekstraData))
@@ -64,23 +64,21 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
     private fun opprettTittel(
         sykepengesoknad: Sykepengesoknad,
         ekstraData: AltinnInnsendelseEkstraData,
-    ): String {
-        return when (sykepengesoknad.type) {
+    ): String =
+        when (sykepengesoknad.type) {
             Soknadstype.BEHANDLINGSDAGER -> tittelTekst("Søknad med enkeltstående behandlingsdager", sykepengesoknad, ekstraData)
             Soknadstype.GRADERT_REISETILSKUDD -> tittelTekst("Søknad om Gradert reisetilskudd", sykepengesoknad, ekstraData)
             else -> tittelTekst("Søknad om sykepenger", sykepengesoknad, ekstraData)
         }
-    }
 
     private fun tittelTekst(
         type: String,
         sykepengesoknad: Sykepengesoknad,
         ekstraData: AltinnInnsendelseEkstraData,
-    ): String {
-        return "$type - ${periodeSomTekst(
+    ): String =
+        "$type - ${periodeSomTekst(
             sykepengesoknad,
         )} - ${ekstraData.navn} (${ekstraData.fnr})${if (sykepengesoknad.sendtNav != null) " - sendt til NAV" else ""}"
-    }
 
     private fun opprettInnholdstekst(sykepengesoknad: Sykepengesoknad): String {
         try {
@@ -107,17 +105,16 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
         return ekstraData.navn + " - " + ekstraData.fnr
     }
 
-    private fun opprettNotifications(namespace: String): JAXBElement<NotificationBEList> {
-        return JAXBElement(
+    private fun opprettNotifications(namespace: String): JAXBElement<NotificationBEList> =
+        JAXBElement(
             QName(namespace, "Notifications"),
             NotificationBEList::class.java,
             NotificationBEList()
                 .withNotification(epostNotification(), smsNotification()),
         )
-    }
 
-    private fun epostNotification(): Notification {
-        return opprettEpostNotification(
+    private fun epostNotification(): Notification =
+        opprettEpostNotification(
             listOf(
                 "Ny søknad om sykepenger i Altinn",
                 "<p>En ansatt i \$reporteeName$ (\$reporteeNumber$) har sendt inn en søknad om sykepenger.</p>" +
@@ -126,16 +123,14 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
                     "<p>Vennlig hilsen NAV.</p>",
             ),
         )
-    }
 
-    private fun smsNotification(): Notification {
-        return opprettSMSNotification(
+    private fun smsNotification(): Notification =
+        opprettSMSNotification(
             listOf(
                 "En ansatt i \$reporteeName$ (\$reporteeNumber$) har sendt inn en søknad om sykepenger. ",
                 "Logg inn på Altinn for å se søknaden. Vennlig hilsen NAV.",
             ),
         )
-    }
 
     private fun tilInnhold(
         namespace: String,
@@ -143,8 +138,8 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
         tittel: String,
         sykepengesoeknadTekst: String,
         ekstraData: AltinnInnsendelseEkstraData,
-    ): JAXBElement<ExternalContentV2> {
-        return JAXBElement(
+    ): JAXBElement<ExternalContentV2> =
+        JAXBElement(
             QName(namespace, "Content"),
             ExternalContentV2::class.java,
             ExternalContentV2()
@@ -171,21 +166,16 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
                     ),
                 ),
         )
-    }
 
     private fun pdfVedlegg(
         binaryNamespace: String,
         pdf: ByteArray,
-    ): BinaryAttachmentV2 {
-        return opprettBinaertVedlegg(binaryNamespace, pdf, SHOW_TO_ALL, "Sykepengesøknad", "Sykepengesøknad.pdf")
-    }
+    ): BinaryAttachmentV2 = opprettBinaertVedlegg(binaryNamespace, pdf, SHOW_TO_ALL, "Sykepengesøknad", "Sykepengesøknad.pdf")
 
     private fun xmlVedlegg(
         binaryNamespace: String,
         xml: ByteArray,
-    ): BinaryAttachmentV2 {
-        return opprettBinaertVedlegg(binaryNamespace, xml, SHOW_TO_ALL, "Sykepengesøknad maskinlesbar", "sykepengesoeknad.xml")
-    }
+    ): BinaryAttachmentV2 = opprettBinaertVedlegg(binaryNamespace, xml, SHOW_TO_ALL, "Sykepengesøknad maskinlesbar", "sykepengesoeknad.xml")
 
     private fun opprettBinaertVedlegg(
         binaryNamespace: String,
@@ -193,8 +183,8 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
         restriction: UserTypeRestriction,
         name: String,
         fileName: String,
-    ): BinaryAttachmentV2 {
-        return BinaryAttachmentV2()
+    ): BinaryAttachmentV2 =
+        BinaryAttachmentV2()
             .withDestinationType(restriction)
             .withFileName(JAXBElement(QName(binaryNamespace, "FileName"), String::class.java, fileName))
             .withName(JAXBElement(QName(binaryNamespace, "Name"), String::class.java, name))
@@ -208,7 +198,6 @@ class SoknadAltinnMapper(private val toggle: EnvironmentToggles) {
                     bytes,
                 ),
             )
-    }
 
     fun getOrgnummerForSendingTilAltinn(orgnummer: String) =
         if (toggle.isProd() || toggle.allowsOrgnummer(orgnummer)) {

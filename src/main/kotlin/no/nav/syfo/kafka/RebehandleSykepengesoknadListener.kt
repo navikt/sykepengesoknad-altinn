@@ -41,7 +41,9 @@ class RebehandleSykepengesoknadListener(
     ) {
         val sykepengesoknadDTO = cr.value().tilSykepengesoknadDTO()
         val behandlingstidspunkt =
-            cr.headers().lastHeader(BEHANDLINGSTIDSPUNKT)
+            cr
+                .headers()
+                .lastHeader(BEHANDLINGSTIDSPUNKT)
                 ?.value()
                 ?.let { String(it, UTF_8) }
                 ?.let { Instant.ofEpochMilli(it.toLong()) }

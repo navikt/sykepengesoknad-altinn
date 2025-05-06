@@ -5,17 +5,18 @@ import no.nav.syfo.domain.soknad.Periode
 import no.nav.syfo.objectMapper
 import java.time.LocalDate
 
-fun EgenmeldingFraSykmelding.egenmeldingsdager(): List<Periode> {
-    return egenmeldingssvar.let { objectMapper.readValue(it) as List<String> }
+fun EgenmeldingFraSykmelding.egenmeldingsdager(): List<Periode> =
+    egenmeldingssvar
+        .let { objectMapper.readValue(it) as List<String> }
         .map { LocalDate.parse(it) }
         .groupConsecutiveDays()
-}
 
 fun List<LocalDate>.groupConsecutiveDays(): List<Periode> {
     if (this.isEmpty()) {
         return emptyList()
     }
-    return this.sorted()
+    return this
+        .sorted()
         .fold(emptyList()) { perioder, dato ->
             if (perioder.isEmpty() || perioder.last().tom.plusDays(1) != dato) {
                 perioder + Periode(dato, dato)

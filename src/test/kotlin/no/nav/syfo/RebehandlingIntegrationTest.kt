@@ -33,7 +33,8 @@ class RebehandlingIntegrationTest : FellesTestOppsett() {
         leggSøknadPåKafka(enkelSoknad)
 
         // Det skal ta ca 10 sekunder grunnet rebehandlinga
-        await().between(Duration.ofSeconds(8), Duration.ofSeconds(30))
+        await()
+            .between(Duration.ofSeconds(8), Duration.ofSeconds(30))
             .until {
                 sendtSoknadRepository.existsBySykepengesoknadId(id)
             }

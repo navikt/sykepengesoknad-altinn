@@ -54,7 +54,8 @@ class EgenmeldingsdagerIntegrationTest : FellesTestOppsett() {
                     ),
             ),
         )
-        await().atMost(Duration.ofSeconds(10))
+        await()
+            .atMost(Duration.ofSeconds(10))
             .until {
                 egenmeldingFraSykmeldingRepository.findAll().toList().firstOrNull { it.sykmeldingId == sykmeldingId } != null
             }
@@ -64,7 +65,8 @@ class EgenmeldingsdagerIntegrationTest : FellesTestOppsett() {
         // Håndterer duplikat
         leggSøknadPåKafka(enkelSoknad)
 
-        await().atMost(Duration.ofSeconds(10))
+        await()
+            .atMost(Duration.ofSeconds(10))
             .until {
                 sendtSoknadRepository.existsBySykepengesoknadId(id)
             }
@@ -93,7 +95,9 @@ class EgenmeldingsdagerIntegrationTest : FellesTestOppsett() {
         relaterteFiler.first { it.name.contains("sykepengesoknad.pdf") }.contentType `should be equal to` "application/pdf"
 
         val soknadXml =
-            relaterteFiler.first { it.name.contains("sykepengesoknad.xml") }.getContent()
+            relaterteFiler
+                .first { it.name.contains("sykepengesoknad.xml") }
+                .getContent()
                 .tilXMLSykepengesoeknadArbeidsgiver()
         soknadXml.juridiskOrganisasjonsnummer `should be equal to` "LEGAL123"
         val egenmeldingsperiodeListe = soknadXml.sykepengesoeknad.fravaer.egenmeldingsperiodeListe
@@ -128,11 +132,16 @@ class EgenmeldingsdagerIntegrationTest : FellesTestOppsett() {
                     ),
             ),
         )
-        await().atMost(Duration.ofSeconds(10))
+        await()
+            .atMost(Duration.ofSeconds(10))
             .until {
-                egenmeldingFraSykmeldingRepository.findAll().toList().firstOrNull {
-                    it.sykmeldingId == sykmeldingId
-                }?.egenmeldingsdager()?.size == 3
+                egenmeldingFraSykmeldingRepository
+                    .findAll()
+                    .toList()
+                    .firstOrNull {
+                        it.sykmeldingId == sykmeldingId
+                    }?.egenmeldingsdager()
+                    ?.size == 3
             }
 
         leggSykmeldingPåKafka(
@@ -151,11 +160,16 @@ class EgenmeldingsdagerIntegrationTest : FellesTestOppsett() {
                     ),
             ),
         )
-        await().atMost(Duration.ofSeconds(10))
+        await()
+            .atMost(Duration.ofSeconds(10))
             .until {
-                egenmeldingFraSykmeldingRepository.findAll().toList().firstOrNull {
-                    it.sykmeldingId == sykmeldingId
-                }?.egenmeldingsdager()?.size == 1
+                egenmeldingFraSykmeldingRepository
+                    .findAll()
+                    .toList()
+                    .firstOrNull {
+                        it.sykmeldingId == sykmeldingId
+                    }?.egenmeldingsdager()
+                    ?.size == 1
             }
 
         leggSykmeldingPåKafka(
@@ -174,11 +188,16 @@ class EgenmeldingsdagerIntegrationTest : FellesTestOppsett() {
                     ),
             ),
         )
-        await().atMost(Duration.ofSeconds(10))
+        await()
+            .atMost(Duration.ofSeconds(10))
             .until {
-                egenmeldingFraSykmeldingRepository.findAll().toList().firstOrNull {
-                    it.sykmeldingId == sykmeldingId
-                }?.egenmeldingsdager()?.size == 0
+                egenmeldingFraSykmeldingRepository
+                    .findAll()
+                    .toList()
+                    .firstOrNull {
+                        it.sykmeldingId == sykmeldingId
+                    }?.egenmeldingsdager()
+                    ?.size == 0
             }
     }
 }

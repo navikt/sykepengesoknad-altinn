@@ -11,9 +11,7 @@ class AivenKafkaProducerConfig(
     private val aivenKafkaConfig: AivenKafkaConfig,
 ) {
     @Bean
-    fun aivenKafkaProducer(): KafkaProducer<String, String> {
-        return KafkaProducer<String, String>(producerConfig())
-    }
+    fun aivenKafkaProducer(): KafkaProducer<String, String> = KafkaProducer<String, String>(producerConfig())
 
     private fun producerConfig() =
         mapOf(

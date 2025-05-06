@@ -51,13 +51,12 @@ class AivenSykepengesoknadListener(
 
     fun String.tilSykepengesoknadDTO(): SykepengesoknadDTO = objectMapper.readValue(this)
 
-    fun SykepengesoknadDTO.skalBehandles(): Boolean {
-        return (
+    fun SykepengesoknadDTO.skalBehandles(): Boolean =
+        (
             this.type == SoknadstypeDTO.ARBEIDSTAKERE ||
                 (this.type == SoknadstypeDTO.GRADERT_REISETILSKUDD && this.arbeidssituasjon == ArbeidssituasjonDTO.ARBEIDSTAKER) ||
                 (this.type == SoknadstypeDTO.BEHANDLINGSDAGER && this.arbeidssituasjon == ArbeidssituasjonDTO.ARBEIDSTAKER)
         ) &&
             this.status == SoknadsstatusDTO.SENDT &&
             this.sendtArbeidsgiver != null
-    }
 }

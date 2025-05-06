@@ -37,20 +37,19 @@ data class Sykepengesoknad(
     val avsendertype: Avsendertype? = null,
     val ettersending: Boolean = false,
 ) {
-    fun alleSporsmalOgUndersporsmal(): List<Sporsmal> {
-        return flatten(sporsmal)
+    fun alleSporsmalOgUndersporsmal(): List<Sporsmal> =
+        flatten(sporsmal)
             .toList()
-    }
 
-    fun getSporsmalMedTag(tag: String): Sporsmal {
-        return alleSporsmalOgUndersporsmal().stream()
+    fun getSporsmalMedTag(tag: String): Sporsmal =
+        alleSporsmalOgUndersporsmal()
+            .stream()
             .filter { s -> s.tag.equals(tag) }
             .findFirst()
             .orElseThrow { RuntimeException("Søknaden inneholder ikke spørsmål med tag: $tag") }
-    }
 
-    private fun flatten(nonFlatList: List<Sporsmal>): Stream<Sporsmal> {
-        return nonFlatList.stream()
+    private fun flatten(nonFlatList: List<Sporsmal>): Stream<Sporsmal> =
+        nonFlatList
+            .stream()
             .flatMap { sporsmal -> Stream.concat(Stream.of(sporsmal), flatten(sporsmal.undersporsmal)) }
-    }
 }

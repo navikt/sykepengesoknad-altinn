@@ -11,40 +11,39 @@ fun sykepengesoknad2XMLByteArray(
     fnr: String,
     juridiskOrgnummerArbeidsgiver: String?,
     egenmeldingsvar: List<Periode>?,
-): ByteArray {
-    return JAXB.marshallSykepengesoeknadArbeidsgiver(
-        ObjectFactory().createSykepengesoeknadArbeidsgiver(
-            sykepengesoknad2XMLArbeidsgiver(
-                sykepengesoknad,
-                fnr,
-                juridiskOrgnummerArbeidsgiver,
-                egenmeldingsvar,
+): ByteArray =
+    JAXB
+        .marshallSykepengesoeknadArbeidsgiver(
+            ObjectFactory().createSykepengesoeknadArbeidsgiver(
+                sykepengesoknad2XMLArbeidsgiver(
+                    sykepengesoknad,
+                    fnr,
+                    juridiskOrgnummerArbeidsgiver,
+                    egenmeldingsvar,
+                ),
             ),
-        ),
-    ) { event ->
-        validationeventer.add(event)
-        true
-    }.toByteArray()
-}
+        ) { event ->
+            validationeventer.add(event)
+            true
+        }.toByteArray()
 
 fun sykepengesoknad2XMLArbeidsgiver(
     sykepengesoknad: Sykepengesoknad,
     fnr: String,
     juridiskOrgnummerArbeidsgiver: String?,
     egenmeldingsvar: List<Periode>?,
-): XMLSykepengesoeknadArbeidsgiver {
-    return XMLSykepengesoeknadArbeidsgiver()
+): XMLSykepengesoeknadArbeidsgiver =
+    XMLSykepengesoeknadArbeidsgiver()
         .withJuridiskOrganisasjonsnummer(juridiskOrgnummerArbeidsgiver)
         .withVirksomhetsnummer(sykepengesoknad.arbeidsgiver.orgnummer)
         .withSykepengesoeknad(sykepengesoknad2XML(sykepengesoknad, fnr, egenmeldingsvar))
-}
 
 fun sykepengesoknad2XML(
     sykepengesoknad: Sykepengesoknad,
     fnr: String,
     egenmeldingsvar: List<Periode>?,
-): XMLSykepengesoeknad {
-    return XMLSykepengesoeknad()
+): XMLSykepengesoeknad =
+    XMLSykepengesoeknad()
         .withSykepengesoeknadId(sykepengesoknad.id)
         .withSykmeldingId(sykepengesoknad.sykmeldingId)
         .withKorrigerer(sykepengesoknad.korrigerer)
@@ -62,21 +61,18 @@ fun sykepengesoknad2XML(
         .withAnnenInntektskildeListe(emptyList())
         .withSendtTilArbeidsgiverDato(sykepengesoknad.sendtArbeidsgiver?.toLocalDate())
         .withSendtTilNAVDato(sykepengesoknad.sendtNav?.toLocalDate())
-}
 
-fun soknadsperioder2XMLSykmeldingsperiode(soknadsperioder: List<Soknadsperiode>): List<XMLSykmeldingsperiode> {
-    return soknadsperioder
+fun soknadsperioder2XMLSykmeldingsperiode(soknadsperioder: List<Soknadsperiode>): List<XMLSykmeldingsperiode> =
+    soknadsperioder
         .map { soknadsperiode ->
             XMLSykmeldingsperiode()
                 .withGraderingsperiode(
                     XMLPeriode()
                         .withFom(soknadsperiode.fom)
                         .withTom(soknadsperiode.tom),
-                )
-                .withSykmeldingsgrad(soknadsperiode.sykmeldingsgrad)
+                ).withSykmeldingsgrad(soknadsperiode.sykmeldingsgrad)
                 .withKorrigertArbeidstid(soknadsperiode2XMLKorrigertArbeidstid(soknadsperiode))
         }
-}
 
 private val soknadsperiode2XMLKorrigertArbeidstid = { soknadsperiode: Soknadsperiode ->
     when {
@@ -85,8 +81,7 @@ private val soknadsperiode2XMLKorrigertArbeidstid = { soknadsperiode: Soknadsper
                 .withArbeidstimerNormaluke(
                     soknadsperiode.avtaltTimer
                         ?: throw RuntimeException("avtaltTimer er null - denne skal være satt"),
-                )
-                .withFaktiskeArbeidstimer(
+                ).withFaktiskeArbeidstimer(
                     XMLFaktiskeArbeidstimer()
                         .withArbeidstimer(soknadsperiode.faktiskTimer)
                         .withBeregnetArbeidsgrad(soknadsperiode.faktiskGrad),
@@ -97,8 +92,7 @@ private val soknadsperiode2XMLKorrigertArbeidstid = { soknadsperiode: Soknadsper
                 .withArbeidstimerNormaluke(
                     soknadsperiode.avtaltTimer
                         ?: throw RuntimeException("avtaltTimer er null - denne skal være satt"),
-                )
-                .withArbeidsgrad(soknadsperiode.faktiskGrad)
+                ).withArbeidsgrad(soknadsperiode.faktiskGrad)
 
         else -> null
     }
@@ -111,15 +105,14 @@ private val fravar2XMLUtdanning = { fravarListe: List<Fravar> ->
             XMLUtdanning()
                 .withFom(fravar.fom)
                 .withErFulltidsstudie(Fravarstype.UTDANNING_FULLTID == fravar.type)
-        }
-        .firstOrNull()
+        }.firstOrNull()
 }
 
 fun sykepengesoknad2XMLFravar(
     sykepengesoknad: Sykepengesoknad,
     egenmeldingsvar: List<Periode>,
-): XMLFravaer? {
-    return if (sykepengesoknad.egenmeldinger.isEmpty() &&
+): XMLFravaer? =
+    if (sykepengesoknad.egenmeldinger.isEmpty() &&
         sykepengesoknad.fravarForSykmeldingen.isEmpty() &&
         sykepengesoknad.fravar.isEmpty() &&
         egenmeldingsvar.isEmpty()
@@ -141,10 +134,8 @@ fun sykepengesoknad2XMLFravar(
                     sykepengesoknad.fravar,
                     sykepengesoknad.soktUtenlandsopphold,
                 ),
-            )
-            .withEgenmeldingsperiodeListe(listOrNull(egenmeldingerOgFravarFor))
+            ).withEgenmeldingsperiodeListe(listOrNull(egenmeldingerOgFravarFor))
     }
-}
 
 private val fravar2XMLOppholdUtenforNorge = { fravar: List<Fravar>, soktUtenlandsopphold: Boolean? ->
     val periodeliste = listOrNull(fravar2XMLPeriode(fravar, Fravarstype.UTLANDSOPPHOLD))
@@ -178,10 +169,9 @@ private val fravar2XMLPeriode = { fravarListe: List<Fravar>, type: Fravarstype -
         }
 }
 
-private inline fun <reified T> listOrNull(list: List<T>?): List<T>? {
-    return if (list.isNullOrEmpty()) {
+private inline fun <reified T> listOrNull(list: List<T>?): List<T>? =
+    if (list.isNullOrEmpty()) {
         null
     } else {
         list
     }
-}

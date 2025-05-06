@@ -42,7 +42,8 @@ class WhitelistingAvSpmIntegrationTest : FellesTestOppsett() {
 
         leggSøknadPåKafka(enkelSoknad)
 
-        await().atMost(Duration.ofSeconds(10))
+        await()
+            .atMost(Duration.ofSeconds(10))
             .until {
                 sendtSoknadRepository.existsBySykepengesoknadId(id)
             }

@@ -11,10 +11,10 @@ class AltinnConfig {
     @Bean
     fun iCorrespondenceAgencyExternalBasic(
         @Value("\${altinn.url}") altinnUrl: String,
-    ): ICorrespondenceAgencyExternalBasic {
-        return JaxWsProxyFactoryBean().apply {
-            address = "$altinnUrl/ServiceEngineExternal/CorrespondenceAgencyExternalBasic.svc"
-            serviceClass = ICorrespondenceAgencyExternalBasic::class.java
-        }.create(ICorrespondenceAgencyExternalBasic::class.java)
-    }
+    ): ICorrespondenceAgencyExternalBasic =
+        JaxWsProxyFactoryBean()
+            .apply {
+                address = "$altinnUrl/ServiceEngineExternal/CorrespondenceAgencyExternalBasic.svc"
+                serviceClass = ICorrespondenceAgencyExternalBasic::class.java
+            }.create(ICorrespondenceAgencyExternalBasic::class.java)
 }

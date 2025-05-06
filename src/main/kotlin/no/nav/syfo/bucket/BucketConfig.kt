@@ -10,7 +10,5 @@ import org.springframework.context.annotation.Profile
 class BucketConfig {
     @Bean
     @Profile("default")
-    fun bucket(): Storage {
-        return StorageOptions.getDefaultInstance().service
-    }
+    fun bucket(): Storage = StorageOptions.getDefaultInstance().service
 }

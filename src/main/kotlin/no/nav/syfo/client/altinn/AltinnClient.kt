@@ -43,9 +43,11 @@ class AltinnClient(
             content: ByteArray,
         ) {
             val blobInfo =
-                BlobInfo.newBuilder(
-                    BlobId.of(bucketName, mappe + filnavn),
-                ).setContentType(contentType).build()
+                BlobInfo
+                    .newBuilder(
+                        BlobId.of(bucketName, mappe + filnavn),
+                    ).setContentType(contentType)
+                    .build()
             storage.create(blobInfo, content)
         }
         try {
@@ -113,5 +115,11 @@ class AltinnClient(
         return bos.toByteArray()
     }
 
-    private fun mappeTidspunkt() = Instant.now().truncatedTo(ChronoUnit.SECONDS).toString().replace("-", "").replace(":", "")
+    private fun mappeTidspunkt() =
+        Instant
+            .now()
+            .truncatedTo(ChronoUnit.SECONDS)
+            .toString()
+            .replace("-", "")
+            .replace(":", "")
 }
