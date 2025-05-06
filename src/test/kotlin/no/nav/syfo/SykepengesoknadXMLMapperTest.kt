@@ -50,8 +50,14 @@ class SykepengesoknadXMLMapperTest {
             sykepengesoknad2XMLArbeidsgiver(soknad, "fnr", "orgnr", null)
 
         assertThat(xmlArbeidsgiver.sykepengesoeknad.fravaer.egenmeldingsperiodeListe).hasSize(1)
-        assertThat(xmlArbeidsgiver.sykepengesoeknad.fravaer.egenmeldingsperiodeListe[0].fom).isEqualTo(fom)
-        assertThat(xmlArbeidsgiver.sykepengesoeknad.fravaer.egenmeldingsperiodeListe[0].tom).isEqualTo(tom)
+        assertThat(
+            xmlArbeidsgiver.sykepengesoeknad.fravaer.egenmeldingsperiodeListe[0]
+                .fom,
+        ).isEqualTo(fom)
+        assertThat(
+            xmlArbeidsgiver.sykepengesoeknad.fravaer.egenmeldingsperiodeListe[0]
+                .tom,
+        ).isEqualTo(tom)
     }
 
     @Test
@@ -72,7 +78,13 @@ class SykepengesoknadXMLMapperTest {
             sykepengesoknad2XMLArbeidsgiver(soknad, "fnr", "orgnr", null)
 
         assertThat(xmlArbeidsgiver.sykepengesoeknad.fravaer.egenmeldingsperiodeListe).hasSize(1)
-        assertThat(xmlArbeidsgiver.sykepengesoeknad.fravaer.egenmeldingsperiodeListe[0].fom).isEqualTo(fom)
-        assertThat(xmlArbeidsgiver.sykepengesoeknad.fravaer.egenmeldingsperiodeListe[0].tom).isEqualTo(tom)
+        assertThat(
+            xmlArbeidsgiver.sykepengesoeknad.fravaer.egenmeldingsperiodeListe[0]
+                .fom,
+        ).isEqualTo(fom)
+        assertThat(
+            xmlArbeidsgiver.sykepengesoeknad.fravaer.egenmeldingsperiodeListe[0]
+                .tom,
+        ).isEqualTo(tom)
     }
 }

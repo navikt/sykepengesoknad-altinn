@@ -11,7 +11,8 @@ class PDFClientRestTemplateConfig {
     @Bean
     fun pdfClientRestTemplate(): RestTemplate {
         val restTemplate = RestTemplate()
-        restTemplate.messageConverters.stream()
+        restTemplate.messageConverters
+            .stream()
             .filter { AbstractJackson2HttpMessageConverter::class.java.isInstance(it) }
             .map { AbstractJackson2HttpMessageConverter::class.java.cast(it) }
             .map { t: AbstractJackson2HttpMessageConverter? -> t?.objectMapper }

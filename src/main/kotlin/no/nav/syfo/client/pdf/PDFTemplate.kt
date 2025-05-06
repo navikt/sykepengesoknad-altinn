@@ -1,6 +1,8 @@
 package no.nav.syfo.client.pdf
 
-enum class PDFTemplate(private val endpoint: String) {
+enum class PDFTemplate(
+    private val endpoint: String,
+) {
     ARBEIDSTAKERE("arbeidstakere"),
     SELVSTENDIGNAERINGSDRIVENDE("selvstendignaeringsdrivende"),
     SYKEPENGERUTLAND("sykepengerutland"),
@@ -8,7 +10,5 @@ enum class PDFTemplate(private val endpoint: String) {
     BEHANDLINGSDAGER("behandlingsdager"),
     ;
 
-    override fun toString(): String {
-        return this.endpoint
-    }
+    override fun toString(): String = this.endpoint
 }

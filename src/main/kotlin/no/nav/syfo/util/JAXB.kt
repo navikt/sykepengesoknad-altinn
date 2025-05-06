@@ -32,8 +32,8 @@ object JAXB {
     fun marshallSykepengesoeknadArbeidsgiver(
         element: Any?,
         handler: ValidationEventHandler?,
-    ): String {
-        return try {
+    ): String =
+        try {
             val writer = StringWriter()
             val marshaller = sykepengesoeknadArbeidsgiverContext.createMarshaller()
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, false)
@@ -48,7 +48,6 @@ object JAXB {
         } catch (e: IOException) {
             throw RuntimeException("Feil ved marshall av sykepengesøknaden", e)
         }
-    }
 
     @Throws(IOException::class, SAXException::class)
     private fun sykmeldingArbeidsgiverSchema(): Schema {

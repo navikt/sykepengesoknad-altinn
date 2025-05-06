@@ -24,18 +24,23 @@ class OrgnummerTest : FellesTestOppsett() {
             sykmeldingKafkaMessage,
         )
 
-        await().atMost(Duration.ofSeconds(10))
+        await()
+            .atMost(Duration.ofSeconds(10))
             .until {
                 juridiskOrgnummerRepository.count() == 1L
             }
 
-        juridiskOrgnummerRepository.findBySykmeldingId(
-            sykmeldingKafkaMessage.sykmelding.id,
-        )!!.juridiskOrgnummer `should be equal to` juridiskOrgnummer1
+        juridiskOrgnummerRepository
+            .findBySykmeldingId(
+                sykmeldingKafkaMessage.sykmelding.id,
+            )!!
+            .juridiskOrgnummer `should be equal to` juridiskOrgnummer1
 
-        juridiskOrgnummerRepository.findBySykmeldingId(
-            sykmeldingKafkaMessage.sykmelding.id,
-        )!!.orgnummer `should be equal to` orgnummer1
+        juridiskOrgnummerRepository
+            .findBySykmeldingId(
+                sykmeldingKafkaMessage.sykmelding.id,
+            )!!
+            .orgnummer `should be equal to` orgnummer1
 
         juridiskOrgnummerRepository.deleteAll()
     }

@@ -18,7 +18,9 @@ fun InsertCorrespondenceV2.serialiser(): String {
 fun ReceiptExternal.serialiser(): String {
     val writer = StringWriter()
     val context: JAXBContext = JAXBContext.newInstance(ReceiptExternal::class.java)
-    val objectFactory = no.altinn.schemas.services.intermediary.receipt._2009._10.ObjectFactory()
+    val objectFactory =
+        no.altinn.schemas.services.intermediary.receipt._2009._10
+            .ObjectFactory()
     val m = context.createMarshaller()
     m.marshal(objectFactory.createReceiptExternal(this), writer)
     return writer.toString()

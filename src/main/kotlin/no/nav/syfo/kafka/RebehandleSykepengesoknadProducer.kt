@@ -21,22 +21,29 @@ class RebehandleSykepengesoknadProducer(
 
     fun send(sykepengesoknadDTO: SykepengesoknadDTO) {
         try {
-            producer.send(
-                ProducerRecord(
-                    RETRY_TOPIC,
-                    null,
-                    sykepengesoknadDTO.id,
-                    sykepengesoknadDTO.serialisertTilString(),
-                    ArrayList<Header>().also {
-                        it.add(
-                            RecordHeader(
-                                BEHANDLINGSTIDSPUNKT,
-                                OffsetDateTime.now().plusSeconds(delaySekunder).toInstant().toEpochMilli().toString().toByteArray(),
-                            ),
-                        )
-                    },
-                ),
-            ).get()
+            producer
+                .send(
+                    ProducerRecord(
+                        RETRY_TOPIC,
+                        null,
+                        sykepengesoknadDTO.id,
+                        sykepengesoknadDTO.serialisertTilString(),
+                        ArrayList<Header>().also {
+                            it.add(
+                                RecordHeader(
+                                    BEHANDLINGSTIDSPUNKT,
+                                    OffsetDateTime
+                                        .now()
+                                        .plusSeconds(delaySekunder)
+                                        .toInstant()
+                                        .toEpochMilli()
+                                        .toString()
+                                        .toByteArray(),
+                                ),
+                            )
+                        },
+                    ),
+                ).get()
         } catch (e: Exception) {
             log.error("Det feiler når søknad ${sykepengesoknadDTO.id} skal legges på rebehandle topic", e)
             throw e

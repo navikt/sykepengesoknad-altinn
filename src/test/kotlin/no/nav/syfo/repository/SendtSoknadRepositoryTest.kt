@@ -25,7 +25,12 @@ class SendtSoknadRepositoryTest : FellesTestOppsett() {
 
         sendtSoknadRepository.save(sendtSoknad)
 
-        val sendteSoknader = sendtSoknadRepository.findAll().iterator().asSequence().toList()
+        val sendteSoknader =
+            sendtSoknadRepository
+                .findAll()
+                .iterator()
+                .asSequence()
+                .toList()
         assertThat(sendteSoknader).hasSize(1)
         assertThat(sendteSoknader.first().sykepengesoknadId).isEqualTo("ressursId")
         assertThat(

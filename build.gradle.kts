@@ -98,6 +98,10 @@ dependencies {
     testImplementation("com.google.cloud:google-cloud-nio:$gcsNioVersion")
 }
 
+ktlint {
+    version.set("1.5.0")
+}
+
 kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_21)

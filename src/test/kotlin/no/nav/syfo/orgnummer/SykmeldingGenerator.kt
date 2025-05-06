@@ -45,8 +45,7 @@ fun skapSykmeldingKafkaMessage(
             fom = basisdato.minusDays(20),
             tom = basisdato.plusDays(15),
             merknader = listOf(Merknad(type = "UGYLDIG_TILBAKEDATERING", beskrivelse = "Hey")),
-        )
-            .copy(harRedusertArbeidsgiverperiode = true)
+        ).copy(harRedusertArbeidsgiverperiode = true)
 
     return SykmeldingKafkaMessage(
         sykmelding = sykmelding,
@@ -63,8 +62,8 @@ private fun getSykmeldingDto(
     reisetilskudd: Boolean = false,
     gradert: GradertDTO? = null,
     merknader: List<Merknad>? = null,
-): ArbeidsgiverSykmelding {
-    return ArbeidsgiverSykmelding(
+): ArbeidsgiverSykmelding =
+    ArbeidsgiverSykmelding(
         id = sykmeldingId,
         sykmeldingsperioder =
             listOf(
@@ -110,7 +109,6 @@ private fun getSykmeldingDto(
         utenlandskSykmelding = null,
         signaturDato = null,
     )
-}
 
 private fun skapSykmeldingStatusKafkaMessageDTO(
     arbeidssituasjon: Arbeidssituasjon = Arbeidssituasjon.NAERINGSDRIVENDE,
@@ -121,8 +119,8 @@ private fun skapSykmeldingStatusKafkaMessageDTO(
     sykmeldingId: String = UUID.randomUUID().toString(),
     ekstraSporsmal: List<SporsmalOgSvarDTO>,
     erSvarOppdatering: Boolean?,
-): SykmeldingStatusKafkaMessageDTO {
-    return SykmeldingStatusKafkaMessageDTO(
+): SykmeldingStatusKafkaMessageDTO =
+    SykmeldingStatusKafkaMessageDTO(
         event =
             SykmeldingStatusKafkaEventDTO(
                 statusEvent = statusEvent,
@@ -148,4 +146,3 @@ private fun skapSykmeldingStatusKafkaMessageDTO(
                 fnr = fnr,
             ),
     )
-}

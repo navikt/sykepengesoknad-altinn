@@ -52,9 +52,10 @@ class SendTilAltinnService(
         val juridiskOrgnummerArbeidsgiver = orgnrFraDb.juridiskOrgnummer ?: sykepengesoknad.arbeidsgiver.orgnummer
 
         val egenmeldingsvar =
-            egenmeldingFraSykmeldingRepository.findBySykmeldingId(
-                sykmeldingId = sykepengesoknad.sykmeldingId,
-            )?.egenmeldingsdager()
+            egenmeldingFraSykmeldingRepository
+                .findBySykmeldingId(
+                    sykmeldingId = sykepengesoknad.sykmeldingId,
+                )?.egenmeldingsdager()
         val xml = sykepengesoknad2XMLByteArray(sykepengesoknad, validationeventer, fnr, juridiskOrgnummerArbeidsgiver, egenmeldingsvar)
 
         val ekstraData =

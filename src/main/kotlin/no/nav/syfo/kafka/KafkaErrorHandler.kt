@@ -10,12 +10,13 @@ import org.springframework.util.backoff.ExponentialBackOff
 import no.nav.syfo.logger as slf4jLogger
 
 @Component
-class KafkaErrorHandler : DefaultErrorHandler(
-    ExponentialBackOff(1000L, 1.5).apply {
-        // 8 minutter, som er mindre enn max.poll.interval.ms på 10 minutter.
-        maxInterval = 60_000L * 8
-    },
-) {
+class KafkaErrorHandler :
+    DefaultErrorHandler(
+        ExponentialBackOff(1000L, 1.5).apply {
+            // 8 minutter, som er mindre enn max.poll.interval.ms på 10 minutter.
+            maxInterval = 60_000L * 8
+        },
+    ) {
     // Bruker aliased logger for unngå kollisjon med CommonErrorHandler.logger(): LogAccessor.
     val log = slf4jLogger()
 

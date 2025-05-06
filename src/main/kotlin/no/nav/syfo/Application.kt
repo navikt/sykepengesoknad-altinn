@@ -21,9 +21,7 @@ fun main(args: Array<String>) {
     runApplication<Application>(*args)
 }
 
-inline fun <reified T> T.logger(): Logger {
-    return LoggerFactory.getLogger(T::class.java)
-}
+inline fun <reified T> T.logger(): Logger = LoggerFactory.getLogger(T::class.java)
 
 val objectMapper: ObjectMapper =
     ObjectMapper().apply {

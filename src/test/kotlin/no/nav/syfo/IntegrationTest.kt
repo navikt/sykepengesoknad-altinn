@@ -32,7 +32,8 @@ class IntegrationTest : FellesTestOppsett() {
         // Håndterer duplikat
         leggSøknadPåKafka(enkelSoknad)
 
-        await().atMost(Duration.ofSeconds(10))
+        await()
+            .atMost(Duration.ofSeconds(10))
             .until {
                 sendtSoknadRepository.existsBySykepengesoknadId(id)
             }

@@ -33,8 +33,8 @@ fun generatePDFSoknad(
     sykepengesoknad: Sykepengesoknad,
     fnr: String,
     navn: String,
-): PDFSoknad {
-    return PDFSoknad(
+): PDFSoknad =
+    PDFSoknad(
         soknadsId = sykepengesoknad.id,
         soknadstype = sykepengesoknad.type,
         innsendtDato = sykepengesoknad.sendtNav?.toLocalDate(),
@@ -59,4 +59,3 @@ fun generatePDFSoknad(
         fnr = fnr,
         navn = navn,
     )
-}

@@ -11,9 +11,7 @@ class EnvironmentToggles(
 
     fun isDevGcp(): Boolean = "dev-gcp" == fasitEnvironmentName
 
-    fun allowsOrgnummer(orgnummer: String): Boolean {
-        return allowedOrgnummer.contains(orgnummer)
-    }
+    fun allowsOrgnummer(orgnummer: String): Boolean = allowedOrgnummer.contains(orgnummer)
 }
 
 val allowedOrgnummer =

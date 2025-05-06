@@ -11,21 +11,15 @@ private val NORSK_BOKMAL = "1044"
 private val FRA_EPOST_ALTINN = "noreply@altinn.no"
 private val NOTIFICATION_NAMESPACE = "http://schemas.altinn.no/services/ServiceEngine/Notification/2009/10"
 
-fun opprettEpostNotification(text: List<String>): Notification {
-    return opprettNotification(FRA_EPOST_ALTINN, EMAIL, text)
-}
+fun opprettEpostNotification(text: List<String>): Notification = opprettNotification(FRA_EPOST_ALTINN, EMAIL, text)
 
-fun opprettSMSNotification(text: List<String>): Notification {
-    return opprettNotification(null, SMS, text)
-}
+fun opprettSMSNotification(text: List<String>): Notification = opprettNotification(null, SMS, text)
 
 private fun opprettNotification(
     fraEpost: String?,
     type: TransportType,
     text: List<String>,
-): Notification {
-    return opprettNotification(fraEpost, type, konverterTilTextTokens(text))
-}
+): Notification = opprettNotification(fraEpost, type, konverterTilTextTokens(text))
 
 private fun opprettNotification(
     fraEpost: String?,
@@ -41,8 +35,7 @@ private fun opprettNotification(
         .withNotificationType(JAXBElement(QName(NOTIFICATION_NAMESPACE, "NotificationType"), String::class.java, "TokenTextOnly"))
         .withFromAddress(
             if (fraEpost == null) null else JAXBElement(QName(NOTIFICATION_NAMESPACE, "FromAddress"), String::class.java, fraEpost),
-        )
-        .withReceiverEndPoints(
+        ).withReceiverEndPoints(
             JAXBElement(
                 QName(NOTIFICATION_NAMESPACE, "ReceiverEndPoints"),
                 ReceiverEndPointBEList::class.java,
@@ -54,8 +47,7 @@ private fun opprettNotification(
                             ),
                     ),
             ),
-        )
-        .withTextTokens(
+        ).withTextTokens(
             JAXBElement(
                 QName(NOTIFICATION_NAMESPACE, "TextTokens"),
                 TextTokenSubstitutionBEList::class.java,
@@ -65,12 +57,10 @@ private fun opprettNotification(
         )
 }
 
-private fun konverterTilTextTokens(texts: List<String>): Array<TextToken> {
-    return texts
+private fun konverterTilTextTokens(texts: List<String>): Array<TextToken> =
+    texts
         .mapIndexed { index, text ->
             TextToken().withTokenNum(index).withTokenValue(
                 JAXBElement<String>(QName(NOTIFICATION_NAMESPACE, "TokenValue"), String::class.java, text),
             )
-        }
-        .toTypedArray()
-}
+        }.toTypedArray()
