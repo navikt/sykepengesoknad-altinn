@@ -61,7 +61,7 @@ dependencies {
     implementation("no.nav.helse.flex:sykepengesoknad-kafka:$sykepengesoknadKafkaVersion")
 
     // https://stackoverflow.com/questions/71313332/exception-java-lang-noclassdeffounderror-javax-activation-datahandler
-    implementation("com.sun.mail:jakarta.mail:2.0.1")
+    implementation("com.sun.mail:jakarta.mail:2.0.2")
     implementation("javax.xml.soap:saaj-api:1.3.5")
     implementation("com.sun.xml.messaging.saaj:saaj-impl:3.0.4")
 
