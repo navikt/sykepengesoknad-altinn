@@ -36,7 +36,7 @@ val gcsNioVersion = "0.128.4"
 val commonsTextVersion = "1.14.0"
 val cxfVersion = "3.5.9"
 val bindApiVersion = "2.3.3"
-val jaxbRuntimeVersion = "2.4.0-b180830.0438"
+val jaxbRuntimeVersion = "4.0.6"
 
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
