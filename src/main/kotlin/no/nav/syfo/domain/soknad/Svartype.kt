@@ -25,4 +25,5 @@ enum class Svartype {
     KILOMETER,
     BEKREFTELSESPUNKTER,
     OPPSUMMERING,
+    AAR_MAANED,
 }
