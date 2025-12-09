@@ -23,11 +23,11 @@ private const val SYSTEM_USER_CODE = "NAV_DIGISYFO"
 class AltinnClient(
     private val iCorrespondenceAgencyExternalBasic: ICorrespondenceAgencyExternalBasic,
     private val soknadAltinnMapper: SoknadAltinnMapper,
-    @Value("\${altinn.username}") private val altinnUsername: String,
-    @Value("\${altinn.password}") private val altinnPassword: String,
+    @param:Value("\${altinn.username}") private val altinnUsername: String,
+    @param:Value("\${altinn.password}") private val altinnPassword: String,
     private val storage: Storage,
-    @Value("\${BUCKET_NAME}") val bucketName: String,
-    @Value("\${lagre.alle.dokumenter}") private val lagreAlleDokumenter: Boolean,
+    @param:Value("\${BUCKET_NAME}") val bucketName: String,
+    @param:Value("\${lagre.alle.dokumenter}") private val lagreAlleDokumenter: Boolean,
 ) {
     private val log = logger()
 

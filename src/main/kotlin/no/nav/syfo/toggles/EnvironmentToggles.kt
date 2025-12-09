@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class EnvironmentToggles(
-    @Value("\${NAIS_CLUSTER_NAME}") private val fasitEnvironmentName: String,
+    @param:Value("\${NAIS_CLUSTER_NAME}") private val fasitEnvironmentName: String,
 ) {
     fun isProd(): Boolean = "prod-gcp" == fasitEnvironmentName
 
