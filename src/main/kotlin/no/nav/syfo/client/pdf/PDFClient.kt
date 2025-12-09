@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate
 @Component
 class PDFClient(
     private val pdfClientRestTemplate: RestTemplate,
-    @Value("\${pdfgen.url}") private val pdfgenUrl: String,
+    @param:Value("\${pdfgen.url}") private val pdfgenUrl: String,
 ) {
     @Retryable(backoff = Backoff(delay = 5000))
     fun getPDF(
