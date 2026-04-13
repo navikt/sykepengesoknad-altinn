@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 class SendTilAltinnServiceTest : FellesTestOppsett() {
     val grunnSoknad: SykepengesoknadDTO =
         objectMapper.readValue(
-            Application::class.java.getResource("/arbeidstakersoknad.json"),
+            checkNotNull(Application::class.java.getResource("/arbeidstakersoknad.json")).readText(),
             SykepengesoknadDTO::class.java,
         )
 

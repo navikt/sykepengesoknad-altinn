@@ -7,7 +7,7 @@ import no.nav.syfo.kafka.konverter
 
 val mockSykepengesoknadDTO: SykepengesoknadDTO =
     objectMapper.readValue(
-        Application::class.java.getResource("/arbeidstakersoknad.json"),
+        checkNotNull(Application::class.java.getResource("/arbeidstakersoknad.json")).readText(),
         SykepengesoknadDTO::class.java,
     )
 
@@ -29,7 +29,7 @@ val mockSykepengesoknad: Pair<Sykepengesoknad, AltinnInnsendelseEkstraData>
 
 val mockGradertReisetilskuddSykepengesoknadDTO: SykepengesoknadDTO =
     objectMapper.readValue(
-        Application::class.java.getResource("/gradertreisetilskuddarbeidstakersoknad.json"),
+        checkNotNull(Application::class.java.getResource("/gradertreisetilskuddarbeidstakersoknad.json")).readText(),
         SykepengesoknadDTO::class.java,
     )
 
@@ -40,7 +40,7 @@ val mockGradertReisetilskuddSykepengesoknad: Sykepengesoknad
 
 val mockSykepengesoknadBehandlingsdagerDTO: SykepengesoknadDTO =
     objectMapper.readValue(
-        Application::class.java.getResource("/behandlingsdagersoknad.json"),
+        checkNotNull(Application::class.java.getResource("/behandlingsdagersoknad.json")).readText(),
         SykepengesoknadDTO::class.java,
     )
 
