@@ -82,7 +82,7 @@ dependencies {
     }
 
     // Then declare the version you actually want
-    implementation("org.bouncycastle:bcprov-jdk18on:1.83")
+    implementation("org.bouncycastle:bcprov-jdk18on:1.84")
     implementation("org.apache.cxf:cxf-rt-ws-policy:$cxfVersion")
 
     implementation("no.nav.tjenestespesifikasjoner:behandle-altinnmelding-v1-tjenestespesifikasjon:$tjenestespesifikasjonerVersion")
