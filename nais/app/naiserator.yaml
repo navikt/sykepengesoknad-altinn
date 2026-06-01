@@ -52,6 +52,11 @@ spec:
         databases:
           - name: sykepengesoknad-altinn-db
             envVarPrefix: DB
+        flags:
+        {{#each db_flags}}
+          - name: {{@key}}
+            value: "{{this}}"
+        {{/each}}
     buckets:
       - name: {{ bucketName }}
         publicAccessPrevention: true
