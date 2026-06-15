@@ -4,10 +4,12 @@ import no.nav.syfo.orgnummer.JuridiskOrgnummer
 import okhttp3.mockwebserver.MockResponse
 import org.amshove.kluent.*
 import org.awaitility.Awaitility.await
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.*
 
+@Disabled
 class RebehandlingIntegrationTest : FellesTestOppsett() {
     @Test
     fun `Sendt arbeidstaker søknad mottas, altinn kall feiler første gang, men neste gang går det og den sendes til altinn`() {

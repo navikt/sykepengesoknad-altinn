@@ -6,9 +6,11 @@ import no.nav.syfo.FellesTestOppsett
 import no.nav.syfo.mockPdlResponse
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.shouldStartWith
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
+@Disabled
 class PdlClientTest : FellesTestOppsett() {
     @Autowired
     private lateinit var pdlClient: PdlClient

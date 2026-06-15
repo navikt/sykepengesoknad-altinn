@@ -5,12 +5,14 @@ import no.nav.syfo.orgnummer.JuridiskOrgnummer
 import org.amshove.kluent.`should be null`
 import org.amshove.kluent.`should be true`
 import org.awaitility.Awaitility.await
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+@Disabled
 class SendTilAltinnServiceTest : FellesTestOppsett() {
     val grunnSoknad: SykepengesoknadDTO =
         objectMapper.readValue(

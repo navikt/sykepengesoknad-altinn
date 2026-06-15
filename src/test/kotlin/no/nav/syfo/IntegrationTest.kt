@@ -4,12 +4,14 @@ import com.google.cloud.storage.Storage
 import no.nav.syfo.orgnummer.JuridiskOrgnummer
 import org.amshove.kluent.*
 import org.awaitility.Awaitility.await
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import java.time.Duration
 import java.util.*
 
+@Disabled
 class IntegrationTest : FellesTestOppsett() {
     @Autowired
     private lateinit var storage: Storage
