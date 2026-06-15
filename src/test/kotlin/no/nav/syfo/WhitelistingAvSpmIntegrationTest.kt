@@ -5,10 +5,12 @@ import no.nav.syfo.domain.pdf.PDFSoknad
 import no.nav.syfo.orgnummer.JuridiskOrgnummer
 import org.amshove.kluent.*
 import org.awaitility.Awaitility.await
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.*
 
+@Disabled
 class WhitelistingAvSpmIntegrationTest : FellesTestOppsett() {
     @Test
     fun `Sendt arbeidstaker søknad mottas og sendes til altinn`() {

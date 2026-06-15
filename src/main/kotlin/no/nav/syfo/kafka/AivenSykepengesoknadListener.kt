@@ -41,6 +41,7 @@ class AivenSykepengesoknadListener(
         val norskTidspunkt = Instant.now().tilOsloLocalDateTime()
         if (norskTidspunkt.isAfter(LocalDateTime.of(2026, 6, 15, 12, 0))) {
             log.info("Behandler ikke søknad: ${sykepengesoknadDTO.id} som skal til Altinn siden klokken er: $norskTidspunkt")
+            acknowledgment.acknowledge()
             return
         }
 
