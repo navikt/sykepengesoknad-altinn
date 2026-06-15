@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.retry.annotation.EnableRetry
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 const val BEHANDLINGSTIDSPUNKT = "behandlingstidspunkt"
 
@@ -32,3 +35,5 @@ val objectMapper: ObjectMapper =
     }
 
 fun Any.serialisertTilString(): String = objectMapper.writeValueAsString(this)
+
+fun Instant.tilOsloLocalDateTime(): LocalDateTime = this.atZone(ZoneId.of("Europe/Oslo")).toLocalDateTime()
