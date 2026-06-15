@@ -8,6 +8,7 @@ import no.nav.syfo.BEHANDLINGSTIDSPUNKT
 import no.nav.syfo.SendTilAltinnService
 import no.nav.syfo.logger
 import no.nav.syfo.objectMapper
+import no.nav.syfo.tilOsloLocalDateTime
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.context.event.EventListener
 import org.springframework.kafka.annotation.KafkaListener
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component
 import java.nio.charset.StandardCharsets.UTF_8
 import java.time.Duration
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 const val RETRY_TOPIC = "flex." + "sykepengesoknad-altinn-retry"
@@ -40,6 +42,13 @@ class RebehandleSykepengesoknadListener(
         acknowledgment: Acknowledgment,
     ) {
         val sykepengesoknadDTO = cr.value().tilSykepengesoknadDTO()
+
+        val norskTidspunkt = Instant.now().tilOsloLocalDateTime()
+        if (norskTidspunkt.isAfter(LocalDateTime.of(2026, 6, 15, 12, 0))) {
+            log.info("Rebehandler ikke søknad: ${sykepengesoknadDTO.id} som skal til Altinn siden klokken er: $norskTidspunkt")
+            return
+        }
+
         val behandlingstidspunkt =
             cr
                 .headers()

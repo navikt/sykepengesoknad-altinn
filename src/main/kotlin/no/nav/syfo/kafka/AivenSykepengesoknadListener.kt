@@ -8,10 +8,13 @@ import no.nav.helse.flex.sykepengesoknad.kafka.SykepengesoknadDTO
 import no.nav.syfo.SendTilAltinnService
 import no.nav.syfo.logger
 import no.nav.syfo.objectMapper
+import no.nav.syfo.tilOsloLocalDateTime
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
+import java.time.Instant
+import java.time.LocalDateTime
 
 const val SYKEPENGESOKNAD_TOPIC = "flex." + "sykepengesoknad"
 
@@ -34,6 +37,12 @@ class AivenSykepengesoknadListener(
         acknowledgment: Acknowledgment,
     ) {
         val sykepengesoknadDTO = cr.value().tilSykepengesoknadDTO()
+
+        val norskTidspunkt = Instant.now().tilOsloLocalDateTime()
+        if (norskTidspunkt.isAfter(LocalDateTime.of(2026, 6, 15, 12, 0))) {
+            log.info("Behandler ikke søknad: ${sykepengesoknadDTO.id} som skal til Altinn siden klokken er: $norskTidspunkt")
+            return
+        }
 
         if (sykepengesoknadDTO.skalBehandles()) {
             try {
