@@ -868,7 +868,6 @@
   "ettersending": false,
   "mottaker": "ARBEIDSGIVER_OG_NAV",
   "egenmeldtSykmelding": false,
-  "harRedusertVenteperiode": null,
   "behandlingsdager": null,
   "permitteringer": [
     {
