@@ -47,6 +47,7 @@ spec:
   gcp:
     sqlInstances:
       - type: POSTGRES_14
+        cascadingDelete: true
         tier: {{db_tier}}
         diskAutoresize: true
         databases:
@@ -59,6 +60,7 @@ spec:
         {{/each}}
     buckets:
       - name: {{ bucketName }}
+        cascadingDelete: true
         publicAccessPrevention: true
         retentionPeriodDays: {{ retentionDays }}
         lifecycleCondition:
